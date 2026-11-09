@@ -1,4 +1,4 @@
-import json
+import argparse
 import platform
 import subprocess
 from pathlib import Path
@@ -9,7 +9,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
 from mixres.io import atomic_json
 
-output = Path("env")
+parser = argparse.ArgumentParser()
+parser.add_argument("--output", default="env")
+args = parser.parse_args()
+output = Path(args.output)
 output.mkdir(exist_ok=True)
 (output / "actual-requirements.lock").write_text(subprocess.check_output([sys.executable, "-m", "pip", "freeze"], text=True))
 atomic_json(output / "actual-environment.json", {"python": sys.version, "platform": platform.platform(),

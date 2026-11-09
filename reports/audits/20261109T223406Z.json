@@ -1,0 +1,68 @@
+{
+  "arms": {
+    "A1": {
+      "auc3": 1.4766321146910764,
+      "auc30": 49.52395511168405,
+      "auc5": 4.9102220416437135,
+      "latency_s": 0.353428095811978,
+      "peak_mem_gb_max": 5.6032609939575195,
+      "scenes": 5
+    },
+    "A2": {
+      "auc3": 1.6527703969834604,
+      "auc30": 51.82065723035742,
+      "auc5": 4.861729594957692,
+      "latency_s": 0.3577324848040007,
+      "peak_mem_gb_max": 5.606818199157715,
+      "scenes": 5
+    },
+    "A3": {
+      "auc3": 12.873600273882161,
+      "auc30": 82.17513192014475,
+      "auc5": 29.537637544165296,
+      "latency_s": 0.501680557790678,
+      "peak_mem_gb_max": 5.827023029327393,
+      "scenes": 5
+    },
+    "A4": {
+      "auc3": 7.664844059268323,
+      "auc30": 66.72265872266614,
+      "auc5": 21.75177131296863,
+      "latency_s": 0.5117908065905794,
+      "peak_mem_gb_max": 5.691116809844971,
+      "scenes": 5
+    }
+  },
+  "checksummed_members": 41,
+  "evaluations_rescored": 20,
+  "exploratory": true,
+  "fp32_T1": {
+    "chess": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "local_points": 0.0,
+      "points": 0.0
+    },
+    "fire": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "local_points": 0.0,
+      "points": 0.0
+    }
+  },
+  "git_commit": "65af845d721ad556b66c09075deaa3bd733cb2c6",
+  "latency_ratio_A4_A3": 1.0201527618379818,
+  "limitations": [
+    "Five-scene exploratory seed 42 only; not frozen paper evidence",
+    "A2-A1 position-only sanity gain is not established",
+    "No demonstrated runtime speedup of A4 over A3 in this session",
+    "No reconstruction, A8 information ceiling, extra seeds or other models evaluated"
+  ],
+  "scene_warnings": [
+    {
+      "auc30_gain_A4_A2": -24.050670261626905,
+      "auc3_gain_A4_A2": 1.8878197405229118,
+      "scene": "office"
+    }
+  ]
+}

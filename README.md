@@ -34,7 +34,7 @@ bash launch.sh --max-seconds 3600
 
 The time limit is checked between arm evaluations. It is not a hard billing cap and does not stop or terminate a pod. Leave budget for the longest in-flight evaluation and result transfer. The default run uses 1 warm-up and 3 timed passes, and does not silently change precision/resolution if it fails.
 
-All paid inference requires CUDA. CPU unit tests are separate. The full checkpoint has not yet passed T1 on CUDA, and no experiment results exist.
+All paid inference requires CUDA. CPU unit tests are separate. The first GPU session is now complete: full-checkpoint fp32 T1 passed on two scenes and all 20 A1-A4 evaluations completed. The pod was terminated after verified download. See reports/README.md for every exported artifact and docs/decisions.md for the complete decision trail.
 
 ## Resume and preserve results
 

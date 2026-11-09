@@ -1,0 +1,2 @@
+# Preserve exported CSV bytes, including their standard CRLF record separators.
+*.csv -text whitespace=cr-at-eol

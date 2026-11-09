@@ -1,0 +1,43 @@
+{
+  "initial_credit_usd_reported_by_user": 15,
+  "live_prepaid_balance_usd": null,
+  "live_balance_verified": false,
+  "standalone_watchdog_authenticated": false,
+  "runpod_api_key_present": false,
+  "unattended_paid_deployment_allowed": false,
+  "unattended_blockers": [
+    "Interactive MCP OAuth is not an independent watchdog credential",
+    "Connected MCP/REST v2 billing reads do not expose live prepaid balance",
+    "No RUNPOD_API_KEY is present; do not extract stored OAuth credentials"
+  ],
+  "planning_only_not_verified_balance": {
+    "first_session_cost_reserve_usd": 1,
+    "minimum_credit_reserve_usd": 3,
+    "maximum_future_session_spend_usd": 1,
+    "requires_live_balance_and_independent_cleanup_before_deploy": true
+  },
+  "first_session": {
+    "pod_id": "y9fmrpnrpscv0b",
+    "gpu": "NVIDIA A40",
+    "gpu_count": 1,
+    "cloud": "SECURE",
+    "data_center": "CA-MTL-1",
+    "image": "runpod/pytorch:2.2.0-py3.10-cuda12.1.1-devel-ubuntu22.04",
+    "compute_usd_per_hour": 0.59,
+    "container_disk_gb": 30,
+    "storage_usd_per_gb_month": 0.10,
+    "persistent_mounts": [],
+    "network_volumes_created": [],
+    "execution_git_commit": "65af845d721ad556b66c09075deaa3bd733cb2c6",
+    "archive": "artifacts/session-20261109T223406Z.tar.gz",
+    "archive_sha256": "a947f97c055c980d95e829858ecdd4139ae65e24aa2419aa7d902b9145bc7868",
+    "verified_member_count": 41,
+    "local_download_verified_before_termination": true,
+    "termination_response_status": 204,
+    "post_termination_get_status": 404,
+    "post_termination_list_pods": [],
+    "billing_records_at_post_session_reads": [],
+    "final_charge_usd": null,
+    "billing_note": "No settled record returned yet; this is not evidence of a free run"
+  }
+}

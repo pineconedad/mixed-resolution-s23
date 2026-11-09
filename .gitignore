@@ -6,10 +6,10 @@ __pycache__/
 *.egg-info/
 .env
 .env.*
-data/
-checkpoints/
-cache/
-artifacts/
+/data/
+/checkpoints/
+/cache/
+/artifacts/
 runs/**
 !runs/views/
 !runs/views/**

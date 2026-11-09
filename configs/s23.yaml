@@ -1,0 +1,18 @@
+study: s23
+models: [pi3, da3, vggt]
+development_datasets: [eth3d, scannetpp, 7scenes]
+held_out_datasets: [dtu, hiroom]
+budgets: [4096, 8192]
+development_seed: 42
+main_seed: 1000
+extra_seeds: [2000, 3000]
+arms: [A0, A1, A2, A3, A4, A5, A6, A7, A8]
+extra_seed_arms: [A1, A2, A3, A4, A8]
+extra_seed_budgets: [4096]
+pool_op: [area, bilinear]
+lift_op: [bilinear, nearest]
+rmfa_layers: [all, first_half, first_quarter]
+head_grid: [lo, hi]
+legacy_s7_configs: null
+legacy_s1_s5_results: null
+da3_checkpoint: null

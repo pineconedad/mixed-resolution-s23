@@ -1,0 +1,5 @@
+export CUBLAS_WORKSPACE_CONFIG=:4096:8
+export PYTHONHASHSEED=0
+export HF_HOME="${HF_HOME:-$PWD/cache/huggingface}"
+export XFORMERS_DISABLED=1
+export PYTHONPATH="$PWD/third_party/Pi3${PYTHONPATH:+:$PYTHONPATH}"

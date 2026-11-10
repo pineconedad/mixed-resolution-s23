@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mixres.io import atomic_json
 
 
-def session(session_id, config, smoke_only=False, model="pi3", validation_only=False):
+def session(session_id, config, smoke_only=False, model="pi3", validation_only=False, skip_unit_tests=False):
     if not session_id.isalnum():
         raise ValueError("Invalid session id")
     root = Path(__file__).resolve().parents[1]
@@ -43,6 +43,11 @@ def session(session_id, config, smoke_only=False, model="pi3", validation_only=F
         ("environment", [python, "scripts/record_environment.py"]),
         ("identity", [python, "scripts/01_sanity.py", "--config", config]),
     ]
+    if (root / ".venv/pyvenv.cfg").is_file():
+        steps = [(phase, command) for phase, command in steps if phase != "venv"]
+    if skip_unit_tests:
+        steps = [(phase, command) for phase, command in steps if phase != "tests"]
+        state["unit_tests_skipped_by_user_request"] = True
     if not smoke_only and not validation_only:
         steps.extend([
         ("experiments", [python, "scripts/04_run.py", "--config", config,
@@ -89,5 +94,6 @@ if __name__ == "__main__":
     parser.add_argument("--smoke-only", action="store_true")
     parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
     parser.add_argument("--validation-only", action="store_true")
+    parser.add_argument("--skip-unit-tests", action="store_true")
     args = parser.parse_args()
-    raise SystemExit(session(args.session_id, args.config, args.smoke_only, args.model, args.validation_only))
+    raise SystemExit(session(args.session_id, args.config, args.smoke_only, args.model, args.validation_only, args.skip_unit_tests))

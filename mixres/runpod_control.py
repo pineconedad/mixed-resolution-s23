@@ -111,6 +111,8 @@ class RunpodControl:
         raise AccessError("Stop was requested but compute shutdown is not confirmed")
 
     async def terminate_owned(self, receipt, verified_backup):
+        if receipt.get("cleanup_action") == "stop":
+            raise AccessError("User-named pod is authorized for stopping, not deletion")
         # The caller must supply a receipt from the local archive verifier.
         if (verified_backup.get("pod_id") != receipt["pod_id"]
                 or verified_backup.get("session_id") != receipt.get("session_id")

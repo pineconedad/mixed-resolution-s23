@@ -153,10 +153,12 @@ def test_watchdog_refuses_container_only_results():
     module.verify_storage_and_ssh(pod, receipt)
     with pytest.raises(AccessError, match="outside"):
         module.verify_storage_and_ssh(pod, {**receipt, "remote_root": "/tmp/s23"})
+    assert module.verify_storage_and_ssh({**pod, "ssh": {"direct": None}}, receipt) is False
 
 
 @pytest.mark.parametrize("final_backup_ok", [True, False])
-def test_watchdog_never_terminates_from_a_periodic_live_snapshot(tmp_path, monkeypatch, final_backup_ok):
+@pytest.mark.parametrize("ssh_metadata_present", [True, False])
+def test_watchdog_never_terminates_from_a_periodic_live_snapshot(tmp_path, monkeypatch, final_backup_ok, ssh_metadata_present):
     module = script("watch_pod")
     from mixres.io import atomic_json
     receipt = {"created_by_workflow": "mixres-s23", "pod_id": "test-pod",
@@ -172,7 +174,7 @@ def test_watchdog_never_terminates_from_a_periodic_live_snapshot(tmp_path, monke
     class Control:
         async def owned_pod(self, _):
             return {"status": "RUNNING", "mounts": {"persistent": {"path": "/workspace"}},
-                    "ssh": {"direct": {"host": "testhost", "port": 22}}}
+                    "ssh": {"direct": {"host": "testhost", "port": 22} if ssh_metadata_present else None}}
         async def stop_owned(self, _):
             actions.append("stop")
         async def terminate_owned(self, _, proof):

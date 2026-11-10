@@ -16,7 +16,7 @@ async def make(args):
         pod = await control.call("get-pod", {"id": args.pod_id})
     if pod.get("id") != args.pod_id or pod.get("createdAt") != args.created_at:
         raise RuntimeError("Fresh pod read does not match the explicit create receipt")
-    if pod.get("env", {}).get("S23_SESSION_ID") != args.session_id:
+    if not args.user_named and pod.get("env", {}).get("S23_SESSION_ID") != args.session_id:
         raise RuntimeError("Pod does not carry this workflow's create-time session marker")
     direct = pod.get("ssh", {}).get("direct")
     if not direct:
@@ -28,14 +28,22 @@ async def make(args):
     destination = Path(args.destination).resolve()
     destination.mkdir(parents=True, exist_ok=True)
     receipt = {"created_by_workflow": "mixres-s23", "pod_id": args.pod_id,
+               "resource_origin": "user_named" if args.user_named else "conversation_created",
+               "cleanup_action": "stop" if args.user_named else "terminate",
                "created_at": args.created_at, "session_id": args.session_id,
                "ssh_host": direct["host"], "ssh_port": direct["port"],
                "ssh_key": str(Path.home() / ".ssh/id_ed25519"), "remote_root": "/workspace/s23",
                "results_mount": "/workspace", "balance_at_create": balance,
                "model": args.model, "validation_only": args.validation_only,
+               "worker_python": args.worker_python, "skip_unit_tests": args.skip_unit_tests,
                "hourly_total": pod["cost"] + (pod["disk"] + persistent["size"]) * 0.10 / 730,
                "reserve_usd": 3, "session_cap_usd": 1, "max_seconds": 3600,
                "heartbeat": str(destination / "heartbeat"), "done_marker": str(destination / "done.json")}
+    if args.known_hosts:
+        trust = Path(args.known_hosts).resolve()
+        if not trust.is_file():
+            raise RuntimeError("Recovery host-key trust file does not exist")
+        receipt["ssh_known_hosts"] = str(trust)
     atomic_json(destination / "receipt.json", receipt)
     print(str(destination / "receipt.json"))
 
@@ -48,6 +56,10 @@ if __name__ == "__main__":
     parser.add_argument("--destination", required=True)
     parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
     parser.add_argument("--validation-only", action="store_true")
+    parser.add_argument("--known-hosts")
+    parser.add_argument("--user-named", action="store_true")
+    parser.add_argument("--skip-unit-tests", action="store_true")
+    parser.add_argument("--worker-python", default="python")
     args = parser.parse_args()
     try:
         asyncio.run(make(args))

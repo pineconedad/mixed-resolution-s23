@@ -1,0 +1,20 @@
+{
+  "pod_id": "fdfgojnize4i4c",
+  "created_at": "2026-11-10T09:47:08.73Z",
+  "session_id": "vggtvalidate20261110a",
+  "gpu": "NVIDIA A40",
+  "data_center": "CA-MTL-1",
+  "compute_usd_per_hour": 0.59,
+  "status_at_last_read": "RUNNING",
+  "container_uptime_seconds_at_last_read": 285,
+  "requested_ports": ["22/tcp"],
+  "direct_ssh_at_last_read": null,
+  "container_boot_log": "Start script(s) finished, pod is ready to use.",
+  "container_boot_log_utc": "2026-11-10T09:47:13.383369474Z",
+  "failure": "No direct TCP SSH mapping after bounded readiness wait",
+  "source_transferred": false,
+  "research_inputs_transferred": false,
+  "inference_started": false,
+  "research_outputs_produced": false,
+  "cleanup": "Delete this conversation-created empty pod; no experimental data exists to recover"
+}

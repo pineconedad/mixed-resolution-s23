@@ -43,11 +43,13 @@ if __name__ == "__main__":
     model = receipt.get("model", "pi3")
     if model not in {"pi3", "vggt"}:
         raise SystemExit("Unknown model in ownership receipt")
-    config = "configs/vggt-validation.yaml" if model == "vggt" and receipt.get("validation_only") else "configs/diagnostic.yaml"
+    config = ("configs/vggt-validation.yaml" if receipt.get("validation_only") else "configs/diagnostic-vggt.yaml") if model == "vggt" else "configs/diagnostic.yaml"
     remote = ("env -C " + shlex.quote(receipt["remote_root"])
-              + " python scripts/run_session.py --session-id " + shlex.quote(receipt["session_id"])
+              + " " + shlex.quote(receipt.get("worker_python", "python"))
+              + " scripts/run_session.py --session-id " + shlex.quote(receipt["session_id"])
               + (" --smoke-only" if args.smoke_only else " --config " + config + " --model " + model)
-              + (" --validation-only" if receipt.get("validation_only") else ""))
+              + (" --validation-only" if receipt.get("validation_only") else "")
+              + (" --skip-unit-tests" if receipt.get("skip_unit_tests") else ""))
     with (destination / "ssh-console.log").open("w") as output:
         process = subprocess.Popen(ssh_base(receipt) + [remote], stdin=subprocess.DEVNULL,
                                    stdout=output, stderr=subprocess.STDOUT)
@@ -66,7 +68,10 @@ if __name__ == "__main__":
         raise SystemExit("Watchdog exited without a final shutdown receipt; inspect the owned pod immediately")
     final = read_json(destination / "final.json")
     print(json.dumps(final, indent=2))
-    if not final.get("terminated"):
+    backup = final.get("backup") or {}
+    stopped_as_requested = (receipt.get("cleanup_action") == "stop" and final.get("compute_stopped")
+                            and backup.get("job_quiescent") and backup.get("all_members_verified"))
+    if not final.get("terminated") and not stopped_as_requested:
         raise SystemExit("Compute stopped but persistent data remains until backup is recovered")
     if process.returncode != 0:
         raise SystemExit("Worker failed; outputs were preserved and the pod was terminated")

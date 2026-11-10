@@ -25,7 +25,8 @@ from mixres.safety import Budget, verified_backup
 
 
 def ssh_base(receipt):
-    return ["ssh", "-i", receipt["ssh_key"], "-p", str(receipt["ssh_port"]),
+    trust = ["-o", "UserKnownHostsFile=" + receipt["ssh_known_hosts"]] if receipt.get("ssh_known_hosts") else []
+    return ["ssh", "-i", receipt["ssh_key"], "-p", str(receipt["ssh_port"]), *trust,
             "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=15",
             "root@" + receipt["ssh_host"]]
 
@@ -52,6 +53,7 @@ def sync_backup(receipt, destination):
     destination.mkdir(parents=True, exist_ok=True)
     target = destination / Path(remote_path).name
     transfer = ["scp", "-i", receipt["ssh_key"], "-P", str(receipt["ssh_port"]),
+                *(["-o", "UserKnownHostsFile=" + receipt["ssh_known_hosts"]] if receipt.get("ssh_known_hosts") else []),
                 "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=15",
                 "root@" + receipt["ssh_host"] + ":" + root + "/" + remote_path, str(target)]
     subprocess.run(transfer, capture_output=True, timeout=120, check=True)
@@ -67,8 +69,10 @@ def verify_storage_and_ssh(pod, receipt):
     if not Path(receipt["remote_root"]).is_relative_to(Path(persistent["path"])):
         raise AccessError("Remote project is outside persistent storage")
     direct = pod.get("ssh", {}).get("direct") or {}
-    if direct.get("host") != receipt["ssh_host"] or direct.get("port") != receipt["ssh_port"]:
-        raise AccessError("Fresh pod SSH mapping does not match the ownership receipt")
+    # Runtime SSH metadata may temporarily disappear while the established route
+    # still works. Do not follow a changed route; validate the pinned host key and
+    # session-bound archive instead. Failed transfer still stops compute below.
+    return direct.get("host") == receipt["ssh_host"] and direct.get("port") == receipt["ssh_port"]
 
 
 async def watch(receipt_path, destination, interval=60):
@@ -106,16 +110,24 @@ async def watch(receipt_path, destination, interval=60):
                 return
             if pod["status"] in {"EXITED", "ERROR"}:
                 event("compute_not_running", status=pod["status"], unverified_data_retained=True)
+                atomic_json(destination / "final.json", {"pod_id": receipt["pod_id"],
+                            "reason": "already_stopped", "compute_stopped": True,
+                            "terminated": False, "persistent_data_retained": True})
                 return
             try:
-                verify_storage_and_ssh(pod, receipt)
-            except Exception:
+                metadata_matches = verify_storage_and_ssh(pod, receipt)
+            except AccessError as error:
                 await control.stop_owned(receipt)
-                event("unsafe_storage_or_ssh_compute_stopped")
+                event("unsafe_storage_compute_stopped", reason=str(error))
+                atomic_json(destination / "final.json", {"pod_id": receipt["pod_id"],
+                            "reason": "unsafe_storage", "compute_stopped": True,
+                            "terminated": False, "persistent_data_retained": True})
                 return
             try:
                 proof = await asyncio.to_thread(sync_backup, receipt, destination)
                 event("backup_verified", **{k: v for k, v in proof.items() if k != "pod_id"})
+                if not metadata_matches:
+                    event("ssh_metadata_changed_pinned_backup_verified")
                 if not (destination / "ready.json").exists():
                     atomic_json(destination / "ready.json", {"pid": os.getpid(),
                                 "pod_id": receipt["pod_id"], "balance_usd": initial_balance,
@@ -150,14 +162,16 @@ async def watch(receipt_path, destination, interval=60):
                 await control.stop_owned(receipt)
                 event("compute_stopped", reason=reason)
                 can_terminate = final_proof is not None and final_proof.get("job_quiescent") is True
-                if can_terminate:
+                if can_terminate and receipt.get("cleanup_action", "terminate") == "terminate":
                     await control.terminate_owned(receipt, final_proof)
                     event("terminated_after_verified_backup")
+                elif can_terminate:
+                    event("user_named_pod_stopped_after_verified_backup", storage_billing_continues=True)
                 else:
                     event("persistent_disk_retained", reason="latest_backup_unverified",
                           storage_billing_continues=True)
                 atomic_json(destination / "final.json", {"pod_id": receipt["pod_id"], "reason": reason,
-                            "compute_stopped": True, "terminated": can_terminate,
+                            "compute_stopped": True, "terminated": can_terminate and receipt.get("cleanup_action", "terminate") == "terminate",
                             "backup": final_proof or proof})
                 return
             await asyncio.sleep(interval)

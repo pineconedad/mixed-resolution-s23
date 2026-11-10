@@ -1,9 +1,16 @@
 {
   "datasets": {
+    "7scenes": {
+      "expected_bytes": 3553806786,
+      "expected_sha256": "4fc12afe9922c975068abd8918b897580926a932b718ad7646f6822205ef5b88",
+      "status": "verified",
+      "verified_utc": "2026-11-10T19:09:10.970982+00:00"
+    },
     "eth3d": {
       "expected_bytes": 15101568883,
       "expected_sha256": "2a12b961e72566e194d707db02f2be65686ff12ad5f4347cb16b4c266b2d6917",
-      "status": "downloading"
+      "status": "verified",
+      "verified_utc": "2026-11-10T19:06:01.853613+00:00"
     }
   },
   "repo": "depth-anything/DA3-BENCH",

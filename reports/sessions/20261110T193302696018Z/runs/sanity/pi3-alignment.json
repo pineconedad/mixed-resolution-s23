@@ -1,0 +1,270 @@
+{
+  "T9": "unavailable: no historical results supplied",
+  "comparisons": [
+    {
+      "global_trace": [
+        {
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 17,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 19,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 21,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 23,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 25,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 27,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 29,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 31,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 33,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 35,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "local_points": 0.0,
+        "points": 0.0
+      },
+      "scene": "chess"
+    },
+    {
+      "global_trace": [
+        {
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 17,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 19,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 21,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 23,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 25,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 27,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 29,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 31,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 33,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 35,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "local_points": 0.0,
+        "points": 0.0
+      },
+      "scene": "fire"
+    }
+  ],
+  "provenance": {
+    "checkpoint": "yyfz233/Pi3",
+    "checkpoint_revision": "ae722e7039287d0c8fde9f11f197f804f44b510c",
+    "checkpoint_sha256": "33580e4702ac671558aedeab1148fd08118f7ce45bdbeb99f3e3cf340062875d",
+    "config_hash": "28d396562bd4675242e07127f7f774146dcdf11a6ba1b01caa2bf41417fe3319",
+    "cpu_threads": 4,
+    "cuda_version": "12.4",
+    "dirty_tree": false,
+    "driver_version": "595.91.07",
+    "git_commit": "c641e12dcff0cf2e1f3727a5afdc797e218af5ec",
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "model_config_hash": "81d6b296739adffdf3ccb906e9a7dddf5dca7a57a869991ba8b1571d20b32265",
+    "precision": "bf16",
+    "upstream_commit": "9fa3ddb3f8d53041f8b2738df404f62223bbaa7b",
+    "versions": {
+      "Pillow": "11.1.0",
+      "huggingface-hub": "0.28.1",
+      "numpy": "1.26.4",
+      "safetensors": "0.5.3",
+      "torch": "2.5.1",
+      "torchvision": "0.20.1"
+    },
+    "views_hash": "30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09"
+  },
+  "scope": "alignment-pi3-fp32-T1",
+  "status": "passed",
+  "test_precision": "fp32"
+}

@@ -1,8 +1,8 @@
 {
   "initial_credit_usd_reported_by_user": 15,
-  "live_prepaid_balance_usd": 14.1638793367,
+  "live_prepaid_balance_usd": 13.8291713412,
   "live_balance_verified": true,
-  "live_balance_observed_utc": "2026-11-10T18:26:05.378161+00:00",
+  "live_balance_observed_utc": "2026-11-10T20:10:54.144810+00:00",
   "balance_source": "official runpodctl v3.1.0 user.clientBalance",
   "standalone_watchdog_authenticated": true,
   "standalone_watchdog_live_tested": true,
@@ -30,6 +30,34 @@
     "requires_live_balance_and_independent_cleanup_before_deploy": true
   },
   "guarded_sessions": [
+    {
+      "session_id": "pihifullpi320261110a",
+      "pod_id": "4nxu8680ho6djb",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "compute_usd_per_hour": 0.50,
+      "purpose": "forty full-scope nominal-rho Pi3 controls",
+      "alignment_protocol": "all_applicable_positions_nominal_rho",
+      "final_backup_sha256": "edc4f24cef5342b4227d8af515b615a0a7f6bfa54b0be6232506b7c3d2d60eab",
+      "verified_members": 74,
+      "terminated_by_watchdog": true,
+      "post_termination_get_status": 404,
+      "artifacts": "reports/control/pihifullpi320261110a",
+      "restored_outputs": "reports/sessions/20261110T193302696018Z"
+    },
+    {
+      "session_id": "pihifullvggt20261110a",
+      "pod_id": "wt1xd1rp465nvp",
+      "gpu": "NVIDIA RTX A5000",
+      "compute_usd_per_hour": 0.27,
+      "purpose": "forty full-scope nominal-rho VGGT controls",
+      "alignment_protocol": "all_applicable_positions_nominal_rho",
+      "final_backup_sha256": "a99c8b7e7e664e9e6cec50904b01f6a92f2d9fea14454089a3b177ad3651266e",
+      "verified_members": 74,
+      "terminated_by_watchdog": true,
+      "post_termination_get_status": 404,
+      "artifacts": "reports/control/pihifullvggt20261110a",
+      "restored_outputs": "reports/sessions/20261110T195438248290Z"
+    },
     {
       "session_id": "userl40svggt20261110a",
       "pod_id": "u64lksix8j610q",

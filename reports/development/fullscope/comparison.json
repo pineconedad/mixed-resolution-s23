@@ -1,0 +1,400 @@
+{
+  "alignment_protocol": "all_applicable_positions_nominal_rho",
+  "models": {
+    "Pi3": {
+      "limitations": "Exploratory seed 42; hardware/timing provenance is not pooled",
+      "provenance": {
+        "checkpoint": "yyfz233/Pi3",
+        "checkpoint_revision": "ae722e7039287d0c8fde9f11f197f804f44b510c",
+        "checkpoint_sha256": "33580e4702ac671558aedeab1148fd08118f7ce45bdbeb99f3e3cf340062875d",
+        "config_hash": "28d396562bd4675242e07127f7f774146dcdf11a6ba1b01caa2bf41417fe3319",
+        "cpu_threads": 4,
+        "cuda_version": "12.4",
+        "dirty_tree": false,
+        "driver_version": "595.91.07",
+        "git_commit": "c641e12dcff0cf2e1f3727a5afdc797e218af5ec",
+        "gpu_name": "NVIDIA GeForce RTX 3090",
+        "model_config_hash": "81d6b296739adffdf3ccb906e9a7dddf5dca7a57a869991ba8b1571d20b32265",
+        "precision": "bf16",
+        "upstream_commit": "9fa3ddb3f8d53041f8b2738df404f62223bbaa7b",
+        "versions": {
+          "Pillow": "11.1.0",
+          "huggingface-hub": "0.28.1",
+          "numpy": "1.26.4",
+          "safetensors": "0.5.3",
+          "torch": "2.5.1",
+          "torchvision": "0.20.1"
+        },
+        "views_hash": "30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09"
+      },
+      "summary": {
+        "arms_expected": [
+          "A1",
+          "A2",
+          "A3",
+          "A8",
+          "A4",
+          "A5",
+          "A6",
+          "A7"
+        ],
+        "arms_found": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7",
+          "A8"
+        ],
+        "exploratory": true,
+        "information_recovery": {
+          "R": 0.9705881987043506,
+          "ci95": [
+            0.9018856030038142,
+            1.0231538079104077
+          ],
+          "denominator": {
+            "ci95": [
+              5.314928931517841,
+              18.155540865458054
+            ],
+            "mean": 11.742331273350723,
+            "n": 5,
+            "two_se": 7.409453652188795
+          },
+          "gain": {
+            "ci95": [
+              5.226948609149199,
+              17.414307407683122
+            ],
+            "mean": 11.396968159191243,
+            "n": 5,
+            "two_se": 7.020014248858795
+          }
+        },
+        "means_auc3": {
+          "A1": 1.4766321146910806,
+          "A2": 5.601578089798205,
+          "A3": 12.873600273882326,
+          "A4": 8.3355979129397,
+          "A5": 8.414681060591054,
+          "A6": 1.6243627657111346,
+          "A7": 3.937928250253087,
+          "A8": 13.218963388041804
+        },
+        "missing_or_failed": {
+          "A1": [],
+          "A2": [],
+          "A3": [],
+          "A4": [],
+          "A5": [],
+          "A6": [],
+          "A7": [],
+          "A8": []
+        },
+        "paired": {
+          "A2-A1": {
+            "ci95": [
+              1.6231889501753862,
+              6.279519563398543
+            ],
+            "mean": 4.124945975107125,
+            "n": 5,
+            "two_se": 2.6281160382708246
+          },
+          "A3-A2": {
+            "ci95": [
+              3.4092565238836556,
+              11.13478784428458
+            ],
+            "mean": 7.2720221840841175,
+            "n": 5,
+            "two_se": 4.434302078845173
+          },
+          "A4-A2": {
+            "ci95": [
+              0.8228314351471511,
+              4.963242512421691
+            ],
+            "mean": 2.7340198231414945,
+            "n": 5,
+            "two_se": 2.487375135205012
+          },
+          "A5-A4": {
+            "ci95": [
+              -1.9277323070455967,
+              1.8427990861223518
+            ],
+            "mean": 0.07908314765135423,
+            "n": 5,
+            "two_se": 2.116612566425125
+          },
+          "A6-A4": {
+            "ci95": [
+              -10.42919141743073,
+              -2.6160537299175615
+            ],
+            "mean": -6.711235147228566,
+            "n": 5,
+            "two_se": 4.463345595524765
+          },
+          "A7-A4": {
+            "ci95": [
+              -8.18662570014023,
+              -0.9010652449167494
+            ],
+            "mean": -4.397669662686613,
+            "n": 5,
+            "two_se": 4.389471080734821
+          },
+          "A8-A3": {
+            "ci95": [
+              -0.2680054797737984,
+              1.3382169717972445
+            ],
+            "mean": 0.3453631141594796,
+            "n": 5,
+            "two_se": 0.9876695343356416
+          }
+        },
+        "recovery": {
+          "R": 0.3759641752916123,
+          "ci95": [
+            0.1926504365628401,
+            0.6955162269172882
+          ],
+          "denominator": {
+            "ci95": [
+              3.4092565238836556,
+              11.13478784428458
+            ],
+            "mean": 7.2720221840841175,
+            "n": 5,
+            "two_se": 4.434302078845173
+          },
+          "gain": {
+            "ci95": [
+              0.8228314351471511,
+              4.963242512421691
+            ],
+            "mean": 2.7340198231414945,
+            "n": 5,
+            "two_se": 2.487375135205012
+          }
+        },
+        "scenes_expected": [
+          "chess",
+          "fire",
+          "heads",
+          "office",
+          "pumpkin"
+        ],
+        "scenes_paired": [
+          "chess",
+          "fire",
+          "heads",
+          "office",
+          "pumpkin"
+        ]
+      }
+    },
+    "VGGT": {
+      "limitations": "Exploratory seed 42; hardware/timing provenance is not pooled",
+      "provenance": {
+        "checkpoint": "facebook/VGGT-1B",
+        "checkpoint_revision": "860abec7937da0a4c03c41d3c269c366e82abdf9",
+        "checkpoint_sha256": "f164acf60724910d8fe1578bb499d800850c7bb0948db7555c413f9fbe60467e",
+        "config_hash": "87d3d414497c870fceb5b0195f80912eb5d4ffde7ba627b85f9e46cd41d0c6e1",
+        "cpu_threads": 4,
+        "cuda_version": "12.1",
+        "dirty_tree": false,
+        "driver_version": "595.91.07",
+        "git_commit": "c641e12dcff0cf2e1f3727a5afdc797e218af5ec",
+        "gpu_name": "NVIDIA RTX A5000",
+        "model_config_hash": "c4a1380edefb9b069f6e97efea43bfc26f9d889b7d964c790e84e78966a7d920",
+        "precision": "bf16",
+        "upstream_commit": "a288dd0f14786c93483e45524328726ab7b1b4ce",
+        "versions": {
+          "Pillow": "11.1.0",
+          "huggingface-hub": "0.28.1",
+          "numpy": "1.26.1",
+          "safetensors": "0.5.3",
+          "torch": "2.3.1",
+          "torchvision": "0.18.1"
+        },
+        "views_hash": "30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09"
+      },
+      "summary": {
+        "arms_expected": [
+          "A1",
+          "A2",
+          "A3",
+          "A8",
+          "A4",
+          "A5",
+          "A6",
+          "A7"
+        ],
+        "arms_found": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7",
+          "A8"
+        ],
+        "exploratory": true,
+        "information_recovery": {
+          "R": null,
+          "ci95": null,
+          "denominator": {
+            "ci95": [
+              3.380393202655476,
+              9.862394671117992
+            ],
+            "mean": 7.260853997068537,
+            "n": 5,
+            "two_se": 3.8724862347852005
+          },
+          "gain": {
+            "ci95": [
+              1.6951134075137286,
+              5.5103967276468095
+            ],
+            "mean": 3.8475406295845245,
+            "n": 5,
+            "two_se": 2.279553527470812
+          },
+          "reason": "Bootstrap denominator crosses zero; ratio interval is unstable"
+        },
+        "means_auc3": {
+          "A1": 0.5998836331410379,
+          "A2": 3.1503266714216087,
+          "A3": 4.447424262725562,
+          "A4": 1.3143641211866888,
+          "A5": 2.0384684276099216,
+          "A6": 1.0647662082161118,
+          "A7": 1.0979680162773504,
+          "A8": 7.8607376302095755
+        },
+        "missing_or_failed": {
+          "A1": [],
+          "A2": [],
+          "A3": [],
+          "A4": [],
+          "A5": [],
+          "A6": [],
+          "A7": [],
+          "A8": []
+        },
+        "paired": {
+          "A2-A1": {
+            "ci95": [
+              0.5703308559903821,
+              4.74562347157818
+            ],
+            "mean": 2.5504430382805707,
+            "n": 5,
+            "two_se": 2.4364119262684705
+          },
+          "A3-A2": {
+            "ci95": [
+              -0.38977079269870973,
+              2.9153485435162407
+            ],
+            "mean": 1.297097591303953,
+            "n": 5,
+            "two_se": 1.8909136640400976
+          },
+          "A4-A2": {
+            "ci95": [
+              -3.7478889414295162,
+              0.027154881980837552
+            ],
+            "mean": -1.8359625502349204,
+            "n": 5,
+            "two_se": 2.167397122197475
+          },
+          "A5-A4": {
+            "ci95": [
+              0.23504194952719573,
+              1.2785287755753463
+            ],
+            "mean": 0.7241043064232329,
+            "n": 5,
+            "two_se": 0.5927437130206726
+          },
+          "A6-A4": {
+            "ci95": [
+              -0.8741368777895859,
+              0.1476080885179697
+            ],
+            "mean": -0.2495979129705769,
+            "n": 5,
+            "two_se": 0.6316330077986033
+          },
+          "A7-A4": {
+            "ci95": [
+              -0.5510908209926939,
+              0.1845871617148977
+            ],
+            "mean": -0.21639610490933822,
+            "n": 5,
+            "two_se": 0.4414521108515455
+          },
+          "A8-A3": {
+            "ci95": [
+              1.6394093960102742,
+              4.889016543471844
+            ],
+            "mean": 3.413313367484014,
+            "n": 5,
+            "two_se": 1.8997078235494171
+          }
+        },
+        "recovery": {
+          "R": null,
+          "ci95": null,
+          "denominator": {
+            "ci95": [
+              -0.38977079269870973,
+              2.9153485435162407
+            ],
+            "mean": 1.297097591303953,
+            "n": 5,
+            "two_se": 1.8909136640400976
+          },
+          "gain": {
+            "ci95": [
+              -3.7478889414295162,
+              0.027154881980837552
+            ],
+            "mean": -1.8359625502349204,
+            "n": 5,
+            "two_se": 2.167397122197475
+          },
+          "reason": "Upsampling gain is not significantly positive; report raw differences"
+        },
+        "scenes_expected": [
+          "chess",
+          "fire",
+          "heads",
+          "office",
+          "pumpkin"
+        ],
+        "scenes_paired": [
+          "chess",
+          "fire",
+          "heads",
+          "office",
+          "pumpkin"
+        ]
+      }
+    }
+  },
+  "views_hash": "30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09"
+}

@@ -1,0 +1,57 @@
+PHASE venv
+PHASE dependencies
+PHASE install
+PHASE dependency_check
+No broken requirements found.
+PHASE checkpoint
+Verified checkpoint: checkpoints/pi3/model.safetensors
+PHASE environment
+PHASE identity
+Warning, cannot find cuda-compiled version of RoPE2D, using a slow pytorch version instead
+pi3 checkpoint-backed fp32 identity gate passed on two scenes
+PHASE experiments
+Warning, cannot find cuda-compiled version of RoPE2D, using a slow pytorch version instead
+chess A1: completed AUC@3=2.2176604376771896
+chess A2: completed AUC@3=8.248880099990377
+chess A3: completed AUC@3=20.23768961854317
+chess A8: completed AUC@3=22.525081795904043
+chess A4: completed AUC@3=11.55287143643338
+chess A5: completed AUC@3=14.665288815905383
+chess A6: completed AUC@3=2.088100323896792
+chess A7: completed AUC@3=4.960476661394624
+fire A1: completed AUC@3=3.218801908105834
+fire A2: completed AUC@3=8.901213665056883
+fire A3: completed AUC@3=17.262133225552745
+fire A8: completed AUC@3=17.108353458596618
+fire A4: completed AUC@3=16.06436076943837
+fire A5: completed AUC@3=12.603530822431994
+fire A6: completed AUC@3=3.3238529939129213
+fire A7: completed AUC@3=4.424327565729765
+heads A1: completed AUC@3=0.0
+heads A2: completed AUC@3=6.826373367707646
+heads A3: completed AUC@3=18.494073679618374
+heads A8: completed AUC@3=18.13665503017289
+heads A4: completed AUC@3=9.118137541737857
+heads A5: completed AUC@3=9.985222555333252
+heads A6: completed AUC@3=1.3827382307082836
+heads A7: completed AUC@3=6.1116230969501935
+office A1: completed AUC@3=0.0
+office A2: completed AUC@3=0.0
+office A3: completed AUC@3=0.8436536234275328
+office A8: completed AUC@3=1.0299805997766154
+office A4: completed AUC@3=0.0
+office A5: completed AUC@3=0.0
+office A6: completed AUC@3=0.0
+office A7: completed AUC@3=1.1687993387529878
+pumpkin A1: completed AUC@3=1.946698227672378
+pumpkin A2: completed AUC@3=4.031423316236122
+pumpkin A3: completed AUC@3=7.5304512222697975
+pumpkin A8: completed AUC@3=7.29474605575885
+pumpkin A4: completed AUC@3=4.942619817088894
+pumpkin A5: completed AUC@3=4.819363109284644
+pumpkin A6: completed AUC@3=1.3271222800376758
+pumpkin A7: completed AUC@3=3.024414588437864
+PHASE aggregate
+Paired scenes: 5/5; arms: 8/8
+{'exploratory': True, 'scenes_expected': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'scenes_paired': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'arms_expected': ['A1', 'A2', 'A3', 'A8', 'A4', 'A5', 'A6', 'A7'], 'arms_found': ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'], 'missing_or_failed': {'A1': [], 'A2': [], 'A3': [], 'A8': [], 'A4': [], 'A5': [], 'A6': [], 'A7': []}, 'means_auc3': {'A1': 1.4766321146910806, 'A2': 5.601578089798205, 'A3': 12.873600273882326, 'A8': 13.218963388041804, 'A4': 8.3355979129397, 'A5': 8.414681060591054, 'A6': 1.6243627657111346, 'A7': 3.937928250253087}, 'paired': {'A4-A2': {'mean': 2.7340198231414945, 'ci95': [0.8228314351471511, 4.963242512421691], 'two_se': 2.487375135205012, 'n': 5}, 'A3-A2': {'mean': 7.2720221840841175, 'ci95': [3.4092565238836556, 11.13478784428458], 'two_se': 4.434302078845173, 'n': 5}, 'A2-A1': {'mean': 4.124945975107125, 'ci95': [1.6231889501753862, 6.279519563398543], 'two_se': 2.6281160382708246, 'n': 5}, 'A8-A3': {'mean': 0.3453631141594796, 'ci95': [-0.2680054797737984, 1.3382169717972445], 'two_se': 0.9876695343356416, 'n': 5}, 'A6-A4': {'mean': -6.711235147228566, 'ci95': [-10.42919141743073, -2.6160537299175615], 'two_se': 4.463345595524765, 'n': 5}, 'A5-A4': {'mean': 0.07908314765135423, 'ci95': [-1.9277323070455967, 1.8427990861223518], 'two_se': 2.116612566425125, 'n': 5}, 'A7-A4': {'mean': -4.397669662686613, 'ci95': [-8.18662570014023, -0.9010652449167494], 'two_se': 4.389471080734821, 'n': 5}}, 'recovery': {'denominator': {'mean': 7.2720221840841175, 'ci95': [3.4092565238836556, 11.13478784428458], 'two_se': 4.434302078845173, 'n': 5}, 'gain': {'mean': 2.7340198231414945, 'ci95': [0.8228314351471511, 4.963242512421691], 'two_se': 2.487375135205012, 'n': 5}, 'R': 0.3759641752916123, 'ci95': [0.1926504365628401, 0.6955162269172882]}, 'information_recovery': {'denominator': {'mean': 11.742331273350723, 'ci95': [5.314928931517841, 18.155540865458054], 'two_se': 7.409453652188795, 'n': 5}, 'gain': {'mean': 11.396968159191243, 'ci95': [5.226948609149199, 17.414307407683122], 'two_se': 7.020014248858795, 'n': 5}, 'R': 0.9705881987043506, 'ci95': [0.9018856030038142, 1.0231538079104077]}}
+PHASE figures

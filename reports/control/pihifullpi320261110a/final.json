@@ -1,0 +1,15 @@
+{
+  "backup": {
+    "all_members_verified": true,
+    "archive_sha256": "edc4f24cef5342b4227d8af515b615a0a7f6bfa54b0be6232506b7c3d2d60eab",
+    "job_quiescent": true,
+    "local_archive": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/pihifullpi320261110a/session-20261110T193302696018Z.tar.gz",
+    "member_count": 74,
+    "pod_id": "4nxu8680ho6djb",
+    "session_id": "pihifullpi320261110a"
+  },
+  "compute_stopped": true,
+  "pod_id": "4nxu8680ho6djb",
+  "reason": "work_complete",
+  "terminated": true
+}

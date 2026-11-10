@@ -75,9 +75,11 @@ def audit(session, destination, study="quick", model="pi3"):
     summary["evaluations_rescored"] = evaluations
     summary["latency_ratio_A4_A3"] = summary["arms"]["A4"]["latency_s"] / summary["arms"]["A3"]["latency_s"]
     summary["limitations"] = ["Five-scene exploratory seed 42 only; not frozen paper evidence",
-                               "A2-A1 position-only sanity gain is not established",
                                "No reconstruction, extra seeds or other models evaluated"]
-    if summary["latency_ratio_A4_A3"] >= 1:
+    alignment_gain = snapshot.get("paired", {}).get("A2-A1", {}).get("ci95")
+    if alignment_gain is None or alignment_gain[0] <= 0:
+        summary["limitations"].append("A2-A1 position-only sanity gain is not established")
+    if summary["latency_ratio_A4_A3"] >= 0.95:
         summary["limitations"].append("No demonstrated runtime speedup of A4 over A3 in this session")
     else:
         summary["limitations"].append("Measured runtime improvement is specific to this GPU and input size")

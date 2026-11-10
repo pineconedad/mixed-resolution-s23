@@ -1,0 +1,13 @@
+{
+  "api_key_authenticated": true,
+  "independent_mcp_authenticated": true,
+  "live_balance_usd": 13.8291713412,
+  "observed_utc": "2026-11-10T20:10:54.144810+00:00",
+  "pods": [
+    {
+      "id": "u64lksix8j610q",
+      "status": "EXITED"
+    }
+  ],
+  "watchdog_live_tested": null
+}

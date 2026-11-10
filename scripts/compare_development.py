@@ -1,5 +1,6 @@
 """Cross-model pose summary, keeping execution/timing provenance separate."""
 import csv
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -16,15 +17,19 @@ SESSIONS = {
 }
 
 
-def compare():
+def compare(protocol="global"):
+    sessions = SESSIONS if protocol == "global" else {
+        "Pi3": "reports/sessions/20261110T193302696018Z",
+        "VGGT": "reports/sessions/20261110T195438248290Z"}
+    study = "diagnostic" if protocol == "global" else "alignment"
     summaries = {}
     view_hash = None
     rows = []
-    for name, path in SESSIONS.items():
+    for name, path in sessions.items():
         root = Path(path)
-        snapshot = read_json(root / "runs/diagnostic/summary/snapshot.json")
+        snapshot = read_json(root / f"runs/{study}/summary/snapshot.json")
         model = name.lower()
-        result = read_json(root / f"runs/diagnostic/{model}/7scenes/4096/A1/seed42/result.json")
+        result = read_json(root / f"runs/{study}/{model}/7scenes/4096/A1/seed42/result.json")
         provenance = result["provenance"]
         if view_hash is not None and provenance["views_hash"] != view_hash:
             raise ValueError("Models did not use identical committed views")
@@ -35,9 +40,9 @@ def compare():
                            "limitations": "Exploratory seed 42; hardware/timing provenance is not pooled"}
         rows.extend({"model": name, "arm": arm, "auc3": value, "gpu": provenance["gpu_name"],
                      "git_commit": provenance["git_commit"]} for arm, value in snapshot["means_auc3"].items())
-    destination = Path("reports/development")
+    destination = Path("reports/development") / ("fullscope" if protocol == "all" else "")
     atomic_json(destination / "comparison.json", {"views_hash": view_hash, "models": summaries,
-                "alignment_protocol": "global_only_effective_grid_ratio"})
+                "alignment_protocol": "global_only_effective_grid_ratio" if protocol == "global" else "all_applicable_positions_nominal_rho"})
     with (destination / "comparison.csv").open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=["model", "arm", "auc3", "gpu", "git_commit"])
         writer.writeheader()
@@ -55,11 +60,14 @@ def compare():
         ax.set_axisbelow(True)
         ax.grid(axis="y", alpha=0.18)
     axes[0].set_ylabel("Mean pose AUC@3 [%]")
-    fig.suptitle("Global-only alignment control: 7-Scenes, five scenes, seed 42", fontsize=11)
+    title = "Global-only alignment control" if protocol == "global" else "Full-scope position alignment"
+    fig.suptitle(title + ": 7-Scenes, five scenes, seed 42", fontsize=11)
     fig.tight_layout()
     fig.savefig(destination / "architecture-controls.png", dpi=200)
     print("Published development comparison; no GPU timings pooled")
 
 
 if __name__ == "__main__":
-    compare()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--protocol", choices=["global", "all"], default="global")
+    compare(parser.parse_args().protocol)

@@ -1,0 +1,15 @@
+{
+  "credential_scan_passed": true,
+  "files": {
+    "done.json": "c8e32422d1aeceabc003b3b7f5107d34f42af160827a68ff6638692ee445fe8d",
+    "heartbeat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ready.json": "c7794179d5b05fd5d9e1bbce49a9c0972ebbb41c387764ba5404b9f4fc801939",
+    "receipt.json": "b174dc9a75e6f149eee479d656699eaa3b04f7a34687e4ba2cdd55c874ae4e6a",
+    "session-20261110T095759646941Z.tar.gz": "65c7cc8119741cd71efdbe348469a326b8e3caf72e4d018fb87e462ce7a7ee29",
+    "session-20261110T095845631169Z.tar.gz": "f24f85de4a35ed75b80f1f1fc72b5df94a8ceb9ac8074e8f1e32d591582dee0e",
+    "session-20261110T095928653848Z.tar.gz": "c4396b63b88c8f314a81923624194aad44e5d8904b7a6935eff06882bc291114",
+    "ssh-console.log": "c96bb0fe1d8eb06602fb3778301962656ca064e85bba300343d12dde41cd6c75",
+    "watchdog-console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "watchdog.jsonl": "054af869cdf0f1d60d5c8c37e39c55f9c08e3cd7282df5d511d2da0ddb6782c8"
+  }
+}

@@ -1,0 +1,55 @@
+PHASE venv
+PHASE dependencies
+PHASE install
+PHASE dependency_check
+No broken requirements found.
+PHASE checkpoint
+Verified checkpoint: checkpoints/vggt/model.safetensors
+PHASE environment
+PHASE identity
+vggt checkpoint-backed fp32 identity gate passed on two scenes
+PHASE experiments
+chess A1: completed AUC@3=0.0
+chess A2: completed AUC@3=6.511224730093784
+chess A3: completed AUC@3=6.589347625324252
+chess A8: completed AUC@3=9.518453793903142
+chess A4: completed AUC@3=1.4905805036398223
+chess A5: completed AUC@3=3.118784027059864
+chess A6: completed AUC@3=0.0
+chess A7: completed AUC@3=0.7837162915552254
+fire A1: completed AUC@3=1.0812586287388328
+fire A2: completed AUC@3=5.279524365534267
+fire A3: completed AUC@3=6.377915051351097
+fire A8: completed AUC@3=12.11711376622609
+fire A4: completed AUC@3=1.5738828213098954
+fire A5: completed AUC@3=2.764992909924068
+fire A6: completed AUC@3=1.5039528767534338
+fire A7: completed AUC@3=1.1814049505083004
+heads A1: completed AUC@3=0.0
+heads A2: completed AUC@3=0.8127521246241594
+heads A3: completed AUC@3=3.779975542361013
+heads A8: completed AUC@3=8.10220397156409
+heads A4: completed AUC@3=1.373923998585938
+heads A5: completed AUC@3=1.7284466925219386
+heads A6: completed AUC@3=1.5866837782091625
+heads A7: completed AUC@3=0.8993000935895975
+office A1: completed AUC@3=0.9642028680267544
+office A2: completed AUC@3=2.1979980371021184
+office A3: completed AUC@3=0.7677963966923977
+office A8: completed AUC@3=0.8320804365197746
+office A4: completed AUC@3=1.1551696662053952
+office A5: completed AUC@3=1.1746487998234232
+office A6: completed AUC@3=1.326156732733394
+office A7: completed AUC@3=1.0782478508796147
+pumpkin A1: completed AUC@3=0.9539566689396021
+pumpkin A2: completed AUC@3=0.9501340997537155
+pumpkin A3: completed AUC@3=4.72208669789905
+pumpkin A8: completed AUC@3=8.73383618283478
+pumpkin A4: completed AUC@3=0.9782636161923924
+pumpkin A5: completed AUC@3=1.4054697087203138
+pumpkin A6: completed AUC@3=0.9070376533845683
+pumpkin A7: completed AUC@3=1.5471708948540144
+PHASE aggregate
+Paired scenes: 5/5; arms: 8/8
+{'exploratory': True, 'scenes_expected': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'scenes_paired': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'arms_expected': ['A1', 'A2', 'A3', 'A8', 'A4', 'A5', 'A6', 'A7'], 'arms_found': ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'], 'missing_or_failed': {'A1': [], 'A2': [], 'A3': [], 'A8': [], 'A4': [], 'A5': [], 'A6': [], 'A7': []}, 'means_auc3': {'A1': 0.5998836331410379, 'A2': 3.1503266714216087, 'A3': 4.447424262725562, 'A8': 7.8607376302095755, 'A4': 1.3143641211866888, 'A5': 2.0384684276099216, 'A6': 1.0647662082161118, 'A7': 1.0979680162773504}, 'paired': {'A4-A2': {'mean': -1.8359625502349204, 'ci95': [-3.7478889414295162, 0.027154881980837552], 'two_se': 2.167397122197475, 'n': 5}, 'A3-A2': {'mean': 1.297097591303953, 'ci95': [-0.38977079269870973, 2.9153485435162407], 'two_se': 1.8909136640400976, 'n': 5}, 'A2-A1': {'mean': 2.5504430382805707, 'ci95': [0.5703308559903821, 4.74562347157818], 'two_se': 2.4364119262684705, 'n': 5}, 'A8-A3': {'mean': 3.413313367484014, 'ci95': [1.6394093960102742, 4.889016543471844], 'two_se': 1.8997078235494171, 'n': 5}, 'A6-A4': {'mean': -0.2495979129705769, 'ci95': [-0.8741368777895859, 0.1476080885179697], 'two_se': 0.6316330077986033, 'n': 5}, 'A5-A4': {'mean': 0.7241043064232329, 'ci95': [0.23504194952719573, 1.2785287755753463], 'two_se': 0.5927437130206726, 'n': 5}, 'A7-A4': {'mean': -0.21639610490933822, 'ci95': [-0.5510908209926939, 0.1845871617148977], 'two_se': 0.4414521108515455, 'n': 5}}, 'recovery': {'denominator': {'mean': 1.297097591303953, 'ci95': [-0.38977079269870973, 2.9153485435162407], 'two_se': 1.8909136640400976, 'n': 5}, 'gain': {'mean': -1.8359625502349204, 'ci95': [-3.7478889414295162, 0.027154881980837552], 'two_se': 2.167397122197475, 'n': 5}, 'R': None, 'ci95': None, 'reason': 'Upsampling gain is not significantly positive; report raw differences'}, 'information_recovery': {'denominator': {'mean': 7.260853997068537, 'ci95': [3.380393202655476, 9.862394671117992], 'two_se': 3.8724862347852005, 'n': 5}, 'gain': {'mean': 3.8475406295845245, 'ci95': [1.6951134075137286, 5.5103967276468095], 'two_se': 2.279553527470812, 'n': 5}, 'R': None, 'ci95': None, 'reason': 'Bootstrap denominator crosses zero; ratio interval is unstable'}}
+PHASE figures

@@ -1,0 +1,108 @@
+{
+  "arms": {
+    "A1": {
+      "auc3": 0.5998836331410379,
+      "auc30": 30.38293602965283,
+      "auc5": 1.6991534797393704,
+      "latency_s": 0.6578925640089437,
+      "peak_mem_gb_max": 8.632558822631836,
+      "scenes": 5
+    },
+    "A2": {
+      "auc3": 3.1503266714216087,
+      "auc30": 65.99764198733351,
+      "auc5": 9.47486122921318,
+      "latency_s": 0.6595334589947015,
+      "peak_mem_gb_max": 8.639028072357178,
+      "scenes": 5
+    },
+    "A3": {
+      "auc3": 4.447424262725562,
+      "auc30": 68.45037426589556,
+      "auc5": 15.4628852611469,
+      "latency_s": 1.1548168684006668,
+      "peak_mem_gb_max": 10.85072660446167,
+      "scenes": 5
+    },
+    "A4": {
+      "auc3": 1.3143641211866885,
+      "auc30": 50.762115479492664,
+      "auc5": 4.584167830022962,
+      "latency_s": 0.8742763530113734,
+      "peak_mem_gb_max": 8.776752948760986,
+      "scenes": 5
+    },
+    "A5": {
+      "auc3": 2.0384684276099216,
+      "auc30": 62.343656976839945,
+      "auc5": 7.925425514341961,
+      "latency_s": 0.8367793436045758,
+      "peak_mem_gb_max": 8.729456901550293,
+      "scenes": 5
+    },
+    "A6": {
+      "auc3": 1.0647662082161118,
+      "auc30": 20.906985666403283,
+      "auc5": 2.4380674273024474,
+      "latency_s": 0.982809656811878,
+      "peak_mem_gb_max": 8.76659631729126,
+      "scenes": 5
+    },
+    "A7": {
+      "auc3": 1.0979680162773504,
+      "auc30": 45.37004113947736,
+      "auc5": 3.7218467988396777,
+      "latency_s": 0.8738599358010106,
+      "peak_mem_gb_max": 8.739006519317627,
+      "scenes": 5
+    },
+    "A8": {
+      "auc3": 7.8607376302095755,
+      "auc30": 77.9078442024822,
+      "auc5": 21.637618186476345,
+      "latency_s": 1.155867499008309,
+      "peak_mem_gb_max": 10.888496398925781,
+      "scenes": 5
+    }
+  },
+  "checksummed_members": 74,
+  "evaluations_rescored": 40,
+  "exploratory": true,
+  "fp32_T1": {
+    "chess": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "depth": 0.0,
+      "depth_conf": 0.0,
+      "points": 0.0,
+      "pose_encoding": 0.0
+    },
+    "fire": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "depth": 0.0,
+      "depth_conf": 0.0,
+      "points": 0.0,
+      "pose_encoding": 0.0
+    }
+  },
+  "git_commit": "c641e12dcff0cf2e1f3727a5afdc797e218af5ec",
+  "latency_ratio_A4_A3": 0.7570692608795881,
+  "limitations": [
+    "Five-scene exploratory seed 42 only; not frozen paper evidence",
+    "No reconstruction, extra seeds or other models evaluated",
+    "Measured runtime improvement is specific to this GPU and input size"
+  ],
+  "scene_warnings": [
+    {
+      "auc30_gain_A4_A2": -7.775741904563077,
+      "auc3_gain_A4_A2": 0.5611718739617786,
+      "scene": "heads"
+    },
+    {
+      "auc30_gain_A4_A2": -14.204737160023285,
+      "auc3_gain_A4_A2": 0.028129516438676894,
+      "scene": "pumpkin"
+    }
+  ]
+}

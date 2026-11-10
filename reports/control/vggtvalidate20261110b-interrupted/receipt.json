@@ -1,0 +1,20 @@
+{
+  "balance_at_create": 14.6307920971,
+  "created_at": "2026-11-10T09:53:59.604Z",
+  "created_by_workflow": "mixres-s23",
+  "done_marker": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/vggtvalidate20261110b/done.json",
+  "heartbeat": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/vggtvalidate20261110b/heartbeat",
+  "hourly_total": 0.2741095890410959,
+  "max_seconds": 3600,
+  "model": "vggt",
+  "pod_id": "j69xtrn2j0guk6",
+  "remote_root": "/workspace/s23",
+  "reserve_usd": 3,
+  "results_mount": "/workspace",
+  "session_cap_usd": 1,
+  "session_id": "vggtvalidate20261110b",
+  "ssh_host": "63.141.33.155",
+  "ssh_key": "/Users/pineconedad/.ssh/id_ed25519",
+  "ssh_port": 22154,
+  "validation_only": true
+}

@@ -1,0 +1,346 @@
+{
+  "T9": "unavailable: no historical results supplied",
+  "comparisons": [
+    {
+      "global_trace": [
+        {
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 17,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 19,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 21,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 23,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 25,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 27,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 29,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 31,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 33,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 35,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 37,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 39,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 41,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 43,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 45,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 47,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "depth": 0.0,
+        "depth_conf": 0.0,
+        "points": 0.0,
+        "pose_encoding": 0.0
+      },
+      "scene": "chess"
+    },
+    {
+      "global_trace": [
+        {
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 17,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 19,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 21,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 23,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 25,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 27,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 29,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 31,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 33,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 35,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 37,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 39,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 41,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 43,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 45,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        },
+        {
+          "layer": 47,
+          "patch_tokens": 8280,
+          "special_tokens": 60,
+          "total_tokens": 8340
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "depth": 0.0,
+        "depth_conf": 0.0,
+        "points": 0.0,
+        "pose_encoding": 0.0
+      },
+      "scene": "fire"
+    }
+  ],
+  "provenance": {
+    "checkpoint": "facebook/VGGT-1B",
+    "checkpoint_revision": "860abec7937da0a4c03c41d3c269c366e82abdf9",
+    "checkpoint_sha256": "f164acf60724910d8fe1578bb499d800850c7bb0948db7555c413f9fbe60467e",
+    "config_hash": "87d3d414497c870fceb5b0195f80912eb5d4ffde7ba627b85f9e46cd41d0c6e1",
+    "cpu_threads": 4,
+    "cuda_version": "12.1",
+    "dirty_tree": false,
+    "driver_version": "595.91.07",
+    "git_commit": "c641e12dcff0cf2e1f3727a5afdc797e218af5ec",
+    "gpu_name": "NVIDIA RTX A5000",
+    "model_config_hash": "c4a1380edefb9b069f6e97efea43bfc26f9d889b7d964c790e84e78966a7d920",
+    "precision": "bf16",
+    "upstream_commit": "a288dd0f14786c93483e45524328726ab7b1b4ce",
+    "versions": {
+      "Pillow": "11.1.0",
+      "huggingface-hub": "0.28.1",
+      "numpy": "1.26.1",
+      "safetensors": "0.5.3",
+      "torch": "2.3.1",
+      "torchvision": "0.18.1"
+    },
+    "views_hash": "30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09"
+  },
+  "scope": "alignment-vggt-fp32-T1",
+  "status": "passed",
+  "test_precision": "fp32"
+}

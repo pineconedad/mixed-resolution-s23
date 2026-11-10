@@ -1,5 +1,15 @@
 # Preserved research outputs
 
+## Latest: full-scope position control
+
+The latest interpretation scales all applicable reused patch coordinates by nominal rho. Both models completed all forty evaluations, with exact native fp32 identity and no failed scenes. These runs are distinct from the preserved global-only protocol.
+
+- [Latest two-model table, figure and limitations](development/fullscope/README.md).
+- [Pi3 full-scope raw session](sessions/20261110T193302696018Z/), [audit](audits/20261110T193302696018Z.md), [all snapshots and monitor logs](control/pihifullpi320261110a/).
+- [VGGT full-scope raw session](sessions/20261110T195438248290Z/), [audit](audits/20261110T195438248290Z.md), [all snapshots and monitor logs](control/pihifullvggt20261110a/).
+
+Both temporary pods are confirmed deleted. The user-supplied L40S remains stopped, not deleted. Its workspace and the unattached network volume still incur storage fees. See operations.json for the distinction.
+
 ## VGGT development matrix
 
 All forty VGGT scene/arm evaluations completed on the user-supplied L40S. The full-checkpoint fp32 identity check matched native pose encoding, camera poses, world points, point confidence, depth and depth confidence with exactly zero maximum error on both checked scenes. Previously completed unit suites were skipped at the user's request.

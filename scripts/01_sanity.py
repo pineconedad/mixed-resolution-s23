@@ -13,7 +13,7 @@ from mixres.adapters.pi3 import load_pi3
 from mixres.data.resize import load_view
 from mixres.io import atomic_json, digest, read_json
 from mixres.rmfa.engine import run_engine
-from mixres.runtime import provenance, seed_everything
+from mixres.runtime import provenance, seed_everything, validate_views, sanity_path
 
 
 def sanity(config, checkpoint):
@@ -22,8 +22,7 @@ def sanity(config, checkpoint):
     seed_everything(config["seed"])
     meta = provenance(config, config["views"], checkpoint)
     manifest = read_json(config["views"])
-    if manifest["config_hash"] != digest(config):
-        raise RuntimeError("Saved view manifest belongs to a different configuration")
+    validate_views(config, manifest)
     adapter = load_pi3(checkpoint, "cuda")
     comparisons = []
     with torch.inference_mode():
@@ -44,7 +43,7 @@ def sanity(config, checkpoint):
                     raise AssertionError(f"T1 failed: {scene['scene']} {key} error={error}")
             comparisons.append({"scene": scene["scene"], "max_abs_error": differences, "global_trace": trace})
             del native, actual, images
-    atomic_json("runs/sanity/pi3-quick.json", {"status": "passed", "scope": "quick-pi3-fp32-T1", "provenance": meta,
+    atomic_json(sanity_path(config), {"status": "passed", "scope": f"{config['study']}-pi3-fp32-T1", "test_precision": "fp32", "provenance": meta,
                 "comparisons": comparisons, "T9": "unavailable: no historical results supplied"})
     print("Pi3 checkpoint-backed fp32 identity gate passed on two scenes")
 

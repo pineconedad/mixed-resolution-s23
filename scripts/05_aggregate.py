@@ -35,13 +35,16 @@ def aggregate(config):
                "arms_expected": config["arms"], "arms_found": sorted(results),
                "missing_or_failed": {arm: sorted(set(expected_scenes) - set(results.get(arm, {}))) for arm in config["arms"]},
                "means_auc3": {arm: float(np.mean([results[arm][s]["auc3"] for s in common])) for arm in results} if common else {},
-               "paired": {}, "recovery": None}
+               "paired": {}, "recovery": None, "information_recovery": None}
     if len(common) >= 2:
-        for left, right in (("A4", "A2"), ("A3", "A2"), ("A2", "A1")):
+        for left, right in (("A4", "A2"), ("A3", "A2"), ("A2", "A1"), ("A8", "A3"),
+                            ("A6", "A4"), ("A5", "A4"), ("A7", "A4")):
             if left in results and right in results:
                 summary["paired"][f"{left}-{right}"] = paired_bootstrap([results[left][s]["auc3"] - results[right][s]["auc3"] for s in common], config["bootstrap_resamples"])
         if all(arm in results for arm in ("A2", "A3", "A4")):
             summary["recovery"] = recovery(*[[results[a][s]["auc3"] for s in common] for a in ("A2", "A3", "A4")], resamples=config["bootstrap_resamples"])
+        if all(arm in results for arm in ("A1", "A8", "A3")):
+            summary["information_recovery"] = recovery(*[[results[a][s]["auc3"] for s in common] for a in ("A1", "A8", "A3")], resamples=config["bootstrap_resamples"])
     destination = Path("runs") / config["study"] / "summary"
     atomic_json(destination / "snapshot.json", summary)
     with (destination / "cells.csv").open("w", newline="") as stream:

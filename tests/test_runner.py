@@ -40,7 +40,8 @@ def runner(tmp_path, monkeypatch):
             views.append({"image": path.name, "image_sha256": file_hash(path), "c2w": pose.tolist(),
                           "hw": [28, 28], "hi_hw": [28, 28], "sharp": True, "crop": [0, 0, 1, 1]})
         scenes.append({"scene": name, "views": views})
-    atomic_json("views.json", {"scenes": scenes, "config_hash": digest(config)})
+    atomic_json("views.json", {"scenes": scenes, "config_hash": digest(config),
+                              **{k: config[k] for k in ("seed", "dataset", "budget_tokens")}})
     atomic_json("runs/sanity/pi3-quick.json", {"status": "passed", "scope": "quick-pi3-fp32-T1", "provenance": meta})
     monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
     monkeypatch.setattr(torch.Tensor, "cuda", lambda x: x)
@@ -156,6 +157,14 @@ def test_missing_gate_blocks_every_arm(runner):
 def test_session_limit_stops_between_evaluations(runner):
     module, config, meta, calls = runner
     module.run(config, "unused-test-checkpoint", max_seconds=0)
+    assert not calls
+
+
+def test_stop_request_preserves_completed_outputs_without_new_evaluation(runner, tmp_path):
+    module, config, meta, calls = runner
+    stop = tmp_path / "stop"
+    stop.touch()
+    module.run(config, "unused-test-checkpoint", stop_file=stop)
     assert not calls
 
 

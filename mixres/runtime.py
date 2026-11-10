@@ -21,6 +21,24 @@ def seed_everything(seed):
     torch.backends.cudnn.allow_tf32 = False
 
 
+def validate_views(config, manifest):
+    expected = config.get("source_views_config_hash", digest(config))
+    if manifest["config_hash"] != expected:
+        raise RuntimeError("Saved view manifest belongs to a different configuration")
+    if "source_views_config_hash" in config:
+        if config.get("views_sha256") != file_hash(config["views"]):
+            raise RuntimeError("Explicitly reused view manifest checksum mismatch")
+    for key in ("seed", "dataset", "budget_tokens"):
+        if manifest[key] != config[key]:
+            raise RuntimeError(f"View/config mismatch: {key}")
+    if sorted(s["scene"] for s in manifest["scenes"]) != sorted(config["scenes"]):
+        raise RuntimeError("View/config scene set mismatch")
+
+
+def sanity_path(config):
+    return Path("runs/sanity") / f"pi3-{config['study']}.json"
+
+
 def provenance(config, views_path, checkpoint):
     root = Path(__file__).resolve().parents[1]
     revision = subprocess.check_output(["git", "-C", str(root / "third_party/Pi3"), "rev-parse", "HEAD"], text=True).strip()
@@ -42,6 +60,7 @@ def provenance(config, views_path, checkpoint):
             "model_config_hash": file_hash(model_config), "upstream_commit": revision,
             "checkpoint": config["checkpoint"], "checkpoint_revision": config["checkpoint_revision"],
             "checkpoint_sha256": weights_hash, "precision": config["precision"],
+            "cpu_threads": torch.get_num_threads(),
             "gpu_name": torch.cuda.get_device_name(), "cuda_version": torch.version.cuda,
             "driver_version": subprocess.check_output(["nvidia-smi", "--query-gpu=driver_version", "--format=csv,noheader"], text=True).strip(),
             "versions": {name: importlib.metadata.version(name) for name in

@@ -19,11 +19,11 @@ from mixres.io import atomic_json, digest, file_hash, read_json
 from mixres.probes.cost import timed_inference
 from mixres.rmfa.arms import ARMS
 from mixres.rmfa.engine import run_engine
-from mixres.runtime import provenance, seed_everything
+from mixres.runtime import provenance, seed_everything, validate_views, sanity_path
 
 
-def run(config, checkpoint, max_seconds=None):
-    if config["study"] != "quick" or config["seed"] != 42 or config["model"] != "pi3":
+def run(config, checkpoint, max_seconds=None, stop_file=None):
+    if config["study"] not in {"quick", "diagnostic"} or config["seed"] != 42 or config["model"] != "pi3":
         raise RuntimeError("Only the independent Pi3 quick test is enabled; full-study prerequisites are not satisfied")
     if not torch.cuda.is_available():
         raise RuntimeError("Run on a CUDA GPU; no CPU or MPS substitution for research runs")
@@ -32,10 +32,9 @@ def run(config, checkpoint, max_seconds=None):
     seed_everything(config["seed"])
     meta = provenance(config, config["views"], checkpoint)
     manifest = read_json(config["views"])
-    if manifest["config_hash"] != digest(config):
-        raise RuntimeError("View/config hash mismatch")
-    sanity = read_json("runs/sanity/pi3-quick.json")
-    if sanity["status"] != "passed" or sanity["scope"] != "quick-pi3-fp32-T1" or sanity["provenance"] != meta:
+    validate_views(config, manifest)
+    sanity = read_json(sanity_path(config))
+    if sanity["status"] != "passed" or sanity["scope"] != f"{config['study']}-pi3-fp32-T1" or sanity["provenance"] != meta:
         raise RuntimeError("Run 01_sanity.py with this exact code/config/checkpoint/GPU first")
     adapter = load_pi3(checkpoint, "cuda")
     started = time.monotonic()
@@ -60,6 +59,9 @@ def run(config, checkpoint, max_seconds=None):
     # Scene-major order preserves complete paired snapshots if a session ends early.
     for scene in manifest["scenes"]:
         for arm_name in config["arms"]:
+            if stop_file is not None and Path(stop_file).exists():
+                print("Stop requested between evaluations; completed scenes are durable", flush=True)
+                return
             out = Path("runs") / config["study"] / "pi3" / config["dataset"] / str(config["budget_tokens"]) / arm_name / f"seed{config['seed']}"
             scene_path = out / "scenes" / f"{scene['scene']}.json"
             identity = digest({"provenance": meta, "scene": scene["scene"], "arm": arm_name, "metric": PROTOCOL})
@@ -111,5 +113,6 @@ if __name__ == "__main__":
     parser.add_argument("--config", default="configs/quick.yaml")
     parser.add_argument("--checkpoint", default="checkpoints/pi3/model.safetensors")
     parser.add_argument("--max-seconds", type=float)
+    parser.add_argument("--stop-file")
     args = parser.parse_args()
-    run(yaml.safe_load(Path(args.config).read_text()), args.checkpoint, args.max_seconds)
+    run(yaml.safe_load(Path(args.config).read_text()), args.checkpoint, args.max_seconds, args.stop_file)

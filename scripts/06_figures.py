@@ -9,7 +9,12 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--summary", default="runs/quick/summary/cells.csv")
+    parser.add_argument("--config")
     args = parser.parse_args()
+    if args.config:
+        import yaml
+        config = yaml.safe_load(Path(args.config).read_text())
+        args.summary = f"runs/{config['study']}/summary/cells.csv"
     rows = list(csv.DictReader(Path(args.summary).open()))
     arms = sorted(set(r["arm"] for r in rows))
     groups = {a: {r["scene"]: float(r["auc3"]) for r in rows if r["arm"] == a and r["status"] == "completed"} for a in arms}

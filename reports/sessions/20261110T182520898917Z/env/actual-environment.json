@@ -1,0 +1,12 @@
+{
+  "cuda": "12.1",
+  "gpu": "NVIDIA L40S",
+  "platform": "Linux-6.8.0-147-generic-x86_64-with-glibc2.39",
+  "python": "3.10.22 (main, Oct  9 2026, 15:21:30) [Clang 22.1.3 ]",
+  "submodules": [
+    " 3d835ec1a5802d64a8b8b15f817a1ab54809bfe4 third_party/Depth-Anything-3 (heads/main)",
+    " 9fa3ddb3f8d53041f8b2738df404f62223bbaa7b third_party/Pi3 (heads/main)",
+    " a288dd0f14786c93483e45524328726ab7b1b4ce third_party/vggt (heads/main)"
+  ],
+  "torch": "2.3.1+cu121"
+}

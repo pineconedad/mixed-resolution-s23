@@ -83,7 +83,9 @@ class VGGTAdapter:
                  "depth": native["depth"][0, i], "depth_conf": native["depth_conf"][0, i, ..., None]}
                 for i in range(len(images))]
 
-    def run_heads(self, cache, grids):
+    def run_heads(self, cache, grids, head_positions=None):
+        # VGGT's camera head has no RoPE and its DPT head already uses normalized
+        # image UV coordinates. Only its aggregator receives pi_hr coordinates.
         from vggt.utils.pose_enc import pose_encoding_to_extri_intri
 
         model = self.model

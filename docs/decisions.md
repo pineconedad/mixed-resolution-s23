@@ -92,3 +92,13 @@ The full 24-configuration development sweep follows the model's sanity gates, no
 4. Quote and add a 20 GB host-local persistent workspace for safe interrupted-download recovery, about $0.003/hour while running. A fresh SSH df confirms /workspace is backed by a 20 GB device, not the 50 GB container overlay. The update restarts the container and reassigns SSH from port 19033 to 11476; reread and use the fresh mapping.
 5. Use uv to prepare the already specified Python 3.10 environment. Keep VGGT's pinned torch 2.3.1, rather than silently adopting the image's torch 2.8. Do not rerun unit suites at the user's request. The mandatory full-checkpoint fp32 identity gate remains before the eight-arm development matrix.
 6. Run configs/diagnostic-vggt.yaml on exactly the original five development scenes and view manifest, defaults unchanged. All outputs are exploratory seed 42, not the frozen main-paper matrix. Stop the user-named pod after a locally verified final backup; do not infer permission to delete it or the independent volume.
+
+## Positional-scope clarification before broader runs
+
+The original setup says to scale each small view's patch coordinates by rho. The first implementation restricted this to global attention and used effective grid ratios after rounding. That restriction was an implementation decision, not a recovered historical S5 implementation. It leaves the prescribed position-only sanity improvement unestablished.
+
+The inspected native Pi3 decode computes one position tensor, reuses it in frame/global blocks, and returns it to all three head decoders. Before any frozen result, explicitly run the full-scope interpretation: nominal rho scaling in every applicable positional operation. VGGT has RoPE in its aggregator but not in its camera/DPT heads, so its normalized dense-head UV embedding is unchanged.
+
+Configs/alignment-{pi3,vggt}.yaml fix this interpretation before seeing its outcomes. They use the identical original development views and default RMFA parameters. The existing global-only/effective-ratio results remain unchanged and must be labelled as that protocol, not silently substituted as S5 reproduction. No variant is chosen merely because it wins. All new comparisons are exploratory seed 42.
+
+The user allowed continued autonomous work. Download only ETH3D and 7-Scenes development archives from the pinned official DA3-BENCH release on the local PC, not a paid GPU. Do not download or inspect held-out data yet. ScanNet++ original license/registration requirements remain a separate permission gate even though a public processed mirror exists.

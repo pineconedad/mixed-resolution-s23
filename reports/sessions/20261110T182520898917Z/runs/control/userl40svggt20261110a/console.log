@@ -1,0 +1,64 @@
+PHASE dependencies
+PHASE install
+  /tmp/pip-build-env-lkm7i30a/overlay/lib/python3.10/site-packages/setuptools/command/editable_wheel.py:354: BuildBackendWarning: Editable installation.
+  !!
+  
+          ********************************************************************************
+          Please be careful with folders in your working directory with the same
+          name as your package as they may take precedence during imports.
+          ********************************************************************************
+  
+  !!
+    with strategy, WheelFile(wheel_path, "w") as wheel_obj:
+PHASE dependency_check
+No broken requirements found.
+PHASE checkpoint
+Verified checkpoint: checkpoints/vggt/model.safetensors
+PHASE environment
+PHASE identity
+vggt checkpoint-backed fp32 identity gate passed on two scenes
+PHASE experiments
+chess A1: completed AUC@3=0.0
+chess A2: completed AUC@3=0.812674844584913
+chess A3: completed AUC@3=6.589293925663115
+chess A8: completed AUC@3=9.51845944459221
+chess A4: completed AUC@3=1.4003549180087969
+chess A5: completed AUC@3=3.335687484518561
+chess A6: completed AUC@3=0.0
+chess A7: completed AUC@3=0.7837028569032403
+fire A1: completed AUC@3=1.0826457604335948
+fire A2: completed AUC@3=0.9920468596475067
+fire A3: completed AUC@3=6.3781285660496945
+fire A8: completed AUC@3=12.116913252430333
+fire A4: completed AUC@3=1.5683001030695118
+fire A5: completed AUC@3=2.633081753619668
+fire A6: completed AUC@3=1.5002628061968526
+fire A7: completed AUC@3=1.1813754568982133
+heads A1: completed AUC@3=0.0
+heads A2: completed AUC@3=0.0
+heads A3: completed AUC@3=3.77989958927887
+heads A8: completed AUC@3=8.10210298208509
+heads A4: completed AUC@3=1.3316637652710186
+heads A5: completed AUC@3=1.750750755219171
+heads A6: completed AUC@3=1.6075174118826319
+heads A7: completed AUC@3=0.8992414629674348
+office A1: completed AUC@3=0.9535234975852137
+office A2: completed AUC@3=1.0880737818044615
+office A3: completed AUC@3=0.7677965456210945
+office A8: completed AUC@3=0.8320791556203371
+office A4: completed AUC@3=1.1547260282199787
+office A5: completed AUC@3=1.1679736620864074
+office A6: completed AUC@3=1.3233974899227876
+office A7: completed AUC@3=1.0782399658563036
+pumpkin A1: completed AUC@3=0.9952827559096924
+pumpkin A2: completed AUC@3=1.327279892298966
+pumpkin A3: completed AUC@3=4.721989154901577
+pumpkin A8: completed AUC@3=8.73388212981894
+pumpkin A4: completed AUC@3=0.998581467137622
+pumpkin A5: completed AUC@3=1.2715120205522477
+pumpkin A6: completed AUC@3=0.8365270207992924
+pumpkin A7: completed AUC@3=1.547174632068512
+PHASE aggregate
+Paired scenes: 5/5; arms: 8/8
+{'exploratory': True, 'scenes_expected': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'scenes_paired': ['chess', 'fire', 'heads', 'office', 'pumpkin'], 'arms_expected': ['A1', 'A2', 'A3', 'A8', 'A4', 'A5', 'A6', 'A7'], 'arms_found': ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'], 'missing_or_failed': {'A1': [], 'A2': [], 'A3': [], 'A8': [], 'A4': [], 'A5': [], 'A6': [], 'A7': []}, 'means_auc3': {'A1': 0.6062904027857001, 'A2': 0.8440150756671695, 'A3': 4.447421556302871, 'A8': 7.860687392909382, 'A4': 1.2907252563413856, 'A5': 2.0318011351992107, 'A6': 1.0535409457603129, 'A7': 1.0979468749387409}, 'paired': {'A4-A2': {'mean': 0.44671018067421614, 'ci95': [-0.012417887899854985, 0.9275793571301157], 'two_se': 0.5595532686090747, 'n': 5}, 'A3-A2': {'mean': 3.6034064806357007, 'ci95': [1.5639918520909393, 5.22106023284793], 'two_se': 2.161979751206196, 'n': 5}, 'A2-A1': {'mean': 0.23772467288146926, 'ci95': [-0.009329503470585698, 0.5414250204386468], 'two_se': 0.3207520353531402, 'n': 5}, 'A8-A3': {'mean': 3.4132658366065116, 'ci95': [1.6394646707759977, 4.888835910235987], 'two_se': 1.8996105717814653, 'n': 5}, 'A6-A4': {'mean': -0.2371843105810727, 'ci95': [-0.8200861178392482, 0.16683559103986384], 'two_se': 0.6025193646926177, 'n': 5}, 'A5-A4': {'mean': 0.7410758788578254, 'ci95': [0.19828867290205224, 1.3768053967891754], 'two_se': 0.6904498978421488, 'n': 5}, 'A7-A4': {'mean': -0.1927783814026448, 'ci95': [-0.49701467459791593, 0.19052827426468769], 'two_se': 0.4093767336998331, 'n': 5}}, 'recovery': {'denominator': {'mean': 3.6034064806357007, 'ci95': [1.5639918520909393, 5.22106023284793], 'two_se': 2.161979751206196, 'n': 5}, 'gain': {'mean': 0.44671018067421614, 'ci95': [-0.012417887899854985, 0.9275793571301157], 'two_se': 0.5595532686090747, 'n': 5}, 'R': None, 'ci95': None, 'reason': 'Bootstrap denominator crosses zero; ratio interval is unstable'}, 'information_recovery': {'denominator': {'mean': 7.254396990123681, 'ci95': [3.3785451585213657, 9.861401688032078], 'two_se': 3.8670270896925696, 'n': 5}, 'gain': {'mean': 3.84113115351717, 'ci95': [1.6930016697431252, 5.50989061036746], 'two_se': 2.2759598362343465, 'n': 5}, 'R': None, 'ci95': None, 'reason': 'Bootstrap denominator crosses zero; ratio interval is unstable'}}
+PHASE figures

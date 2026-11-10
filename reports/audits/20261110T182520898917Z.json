@@ -1,0 +1,98 @@
+{
+  "arms": {
+    "A1": {
+      "auc3": 0.6062904027857002,
+      "auc30": 30.416276979418594,
+      "auc5": 1.6734649864254834,
+      "latency_s": 0.3400986888445914,
+      "peak_mem_gb_max": 8.636735439300537,
+      "scenes": 5
+    },
+    "A2": {
+      "auc3": 0.8440150756671694,
+      "auc30": 35.4570166517014,
+      "auc5": 1.9248204349257858,
+      "latency_s": 0.3475053492002189,
+      "peak_mem_gb_max": 8.63696002960205,
+      "scenes": 5
+    },
+    "A3": {
+      "auc3": 4.44742155630287,
+      "auc30": 68.45037978656688,
+      "auc5": 15.462901438683534,
+      "latency_s": 0.5834904691204429,
+      "peak_mem_gb_max": 10.849910259246826,
+      "scenes": 5
+    },
+    "A4": {
+      "auc3": 1.2907252563413856,
+      "auc30": 50.75223268039715,
+      "auc5": 4.610410991324537,
+      "latency_s": 0.46056209318339825,
+      "peak_mem_gb_max": 8.776565074920654,
+      "scenes": 5
+    },
+    "A5": {
+      "auc3": 2.031801135199211,
+      "auc30": 62.30001564779151,
+      "auc5": 7.837880875010097,
+      "latency_s": 0.445889408653602,
+      "peak_mem_gb_max": 8.733546257019043,
+      "scenes": 5
+    },
+    "A6": {
+      "auc3": 1.0535409457603129,
+      "auc30": 20.91298016556717,
+      "auc5": 2.4393061372158376,
+      "latency_s": 0.5127113420050591,
+      "peak_mem_gb_max": 8.767674446105957,
+      "scenes": 5
+    },
+    "A7": {
+      "auc3": 1.0979468749387409,
+      "auc30": 45.37003167222274,
+      "auc5": 3.7218131936643504,
+      "latency_s": 0.44603179283440114,
+      "peak_mem_gb_max": 8.737140655517578,
+      "scenes": 5
+    },
+    "A8": {
+      "auc3": 7.860687392909382,
+      "auc30": 77.90784517900552,
+      "auc5": 21.63761571067745,
+      "latency_s": 0.5835261513944715,
+      "peak_mem_gb_max": 10.888236999511719,
+      "scenes": 5
+    }
+  },
+  "checksummed_members": 74,
+  "evaluations_rescored": 40,
+  "exploratory": true,
+  "fp32_T1": {
+    "chess": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "depth": 0.0,
+      "depth_conf": 0.0,
+      "points": 0.0,
+      "pose_encoding": 0.0
+    },
+    "fire": {
+      "camera_poses": 0.0,
+      "conf": 0.0,
+      "depth": 0.0,
+      "depth_conf": 0.0,
+      "points": 0.0,
+      "pose_encoding": 0.0
+    }
+  },
+  "git_commit": "9f65f181afdac32f83144b0947c2e540e48052b1",
+  "latency_ratio_A4_A3": 0.7893223926650462,
+  "limitations": [
+    "Five-scene exploratory seed 42 only; not frozen paper evidence",
+    "A2-A1 position-only sanity gain is not established",
+    "No reconstruction, extra seeds or other models evaluated",
+    "Measured runtime improvement is specific to this GPU and input size"
+  ],
+  "scene_warnings": []
+}

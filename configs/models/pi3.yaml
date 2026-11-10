@@ -16,5 +16,5 @@ decoder_register_tokens_per_view: 5
 camera_token: false
 positions: rotary_yx_patch_indices_plus_one_special_tokens_zero
 pi_hr: scale_zero_based_patch_coordinates_by_effective_hi_lo_grid_ratio_then_add_one
-head_positions: native_on_head_grid
+head_positions: native_by_default_or_pi_hr_when_alignment_scope_all
 output_pose_convention: camera_to_world

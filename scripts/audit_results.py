@@ -14,7 +14,7 @@ from mixres.eval.pose import score_poses
 from mixres.io import atomic_json, file_hash, read_json
 
 
-def audit(session, destination, study="quick"):
+def audit(session, destination, study="quick", model="pi3"):
     session, destination = Path(session), Path(destination)
     receipt = read_json(session / "session-manifest.json")
     for name, expected in receipt["files"].items():
@@ -30,7 +30,7 @@ def audit(session, destination, study="quick"):
     provenance = None
     evaluations = 0
     for arm in arms:
-        result = read_json(session / f"runs/{study}/pi3/7scenes/4096/{arm}/seed42/result.json")
+        result = read_json(session / f"runs/{study}/{model}/7scenes/4096/{arm}/seed42/result.json")
         if result["status"] != "completed" or {s["scene"] for s in result["per_scene"]} != expected_scenes:
             raise ValueError(f"Incomplete paired scene set for {arm}")
         if provenance is not None and result["provenance"] != provenance:
@@ -45,7 +45,7 @@ def audit(session, destination, study="quick"):
                 if not math.isclose(recomputed[key], scene[key], rel_tol=0, abs_tol=1e-9):
                     raise ValueError(f"Pose rescore mismatch: {scene['scene']} {arm} {key}")
             traces = scene["global_trace"]
-            if len(traces) != 18:
+            if len(traces) != {"pi3": 18, "vggt": 24}[model]:
                 raise ValueError("Missing global-layer traces")
             expected_patches = 8280 if arm in {"A3", "A6", "A8"} else 4200
             if any(t["patch_tokens"] != expected_patches or t["special_tokens"] != 60
@@ -70,7 +70,7 @@ def audit(session, destination, study="quick"):
         if primary_gain > 0 and secondary_gain < 0:
             summary["scene_warnings"].append({"scene": scene, "auc3_gain_A4_A2": primary_gain,
                                               "auc30_gain_A4_A2": secondary_gain})
-    identity = read_json(session / f"runs/sanity/pi3-{study}.json")
+    identity = read_json(session / f"runs/sanity/{model}-{study}.json")
     summary["fp32_T1"] = {s["scene"]: s["max_abs_error"] for s in identity["comparisons"]}
     summary["evaluations_rescored"] = evaluations
     summary["latency_ratio_A4_A3"] = summary["arms"]["A4"]["latency_s"] / summary["arms"]["A3"]["latency_s"]
@@ -103,6 +103,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--session", default="reports/sessions/20261109T223406Z")
     parser.add_argument("--output", default="reports/audits/20261109T223406Z")
-    parser.add_argument("--study", choices=["quick", "diagnostic"], default="quick")
+    parser.add_argument("--study", choices=["quick", "diagnostic", "alignment"], default="quick")
+    parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
     args = parser.parse_args()
-    audit(args.session, args.output, args.study)
+    audit(args.session, args.output, args.study, args.model)

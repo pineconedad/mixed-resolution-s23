@@ -39,7 +39,7 @@ class Pi3Adapter:
         return [{key: native[key][0, i] for key in ("camera_poses", "points", "local_points", "conf")}
                 for i in range(len(images))]
 
-    def run_heads(self, cache, grids):
+    def run_heads(self, cache, grids, head_positions=None):
         model = self.model
         result = [None] * len(grids)
         groups = defaultdict(list)
@@ -48,7 +48,8 @@ class Pi3Adapter:
         for grid, indices in groups.items():
             hidden = torch.cat([torch.cat([cache[layer][i] for layer in self.head_layers], -1)
                                 for i in indices], 0)
-            pos = positions(grid, grid, self.special_count, "native", hidden.device).expand(len(indices), -1, -1)
+            pos = (positions(grid, grid, self.special_count, "native", hidden.device).expand(len(indices), -1, -1)
+                   if head_positions is None else torch.cat([head_positions[i] for i in indices], dim=0))
             point_hidden = model.point_decoder(hidden, xpos=pos)
             conf_hidden = model.conf_decoder(hidden, xpos=pos)
             camera_hidden = model.camera_decoder(hidden, xpos=pos)

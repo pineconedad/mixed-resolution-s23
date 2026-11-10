@@ -82,7 +82,7 @@ async def watch(receipt_path, destination, interval=60):
     if receipt.get("created_by_workflow") != "mixres-s23":
         raise ValueError("Receipt is not from this workflow")
     key = runpod_key()
-    created = datetime.fromisoformat(receipt["created_at"].replace("Z", "+00:00")).timestamp()
+    created = receipt.get("budget_start_epoch", datetime.fromisoformat(receipt["created_at"].replace("Z", "+00:00")).timestamp())
     initial_balance = await account_balance(key)
     # Balance is current; add elapsed charges back only for the conservative clock
     # accounting. Both the live balance and the original create-time cap still apply.

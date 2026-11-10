@@ -2,12 +2,16 @@ import torch
 from torch import nn
 
 
-def positions(grid, hi_grid, special_count, kind, device):
+def positions(grid, hi_grid, special_count, kind, device, scale=None):
     y, x = torch.meshgrid(torch.arange(grid[0], device=device),
                           torch.arange(grid[1], device=device), indexing="ij")
     patches = torch.stack([y.flatten(), x.flatten()], dim=-1)
     if kind == "pi_hr" and grid != hi_grid:
-        patches = patches.float() * torch.tensor([hi_grid[0] / grid[0], hi_grid[1] / grid[1]], device=device)
+        factors = [hi_grid[0] / grid[0], hi_grid[1] / grid[1]] if scale is None else [scale, scale]
+        if scale is not None and float(scale).is_integer():
+            patches = patches * int(scale)
+        else:
+            patches = patches.float() * torch.tensor(factors, device=device)
     elif kind != "native" and kind != "pi_hr":
         raise ValueError(kind)
     patches = patches + 1

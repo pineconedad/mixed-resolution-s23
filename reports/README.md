@@ -1,5 +1,17 @@
 # Preserved research outputs
 
+## VGGT development matrix
+
+All forty VGGT scene/arm evaluations completed on the user-supplied L40S. The full-checkpoint fp32 identity check matched native pose encoding, camera poses, world points, point confidence, depth and depth confidence with exactly zero maximum error on both checked scenes. Previously completed unit suites were skipped at the user's request.
+
+- [Complete restored session](sessions/20261110T182520898917Z/).
+- [VGGT summary](sessions/20261110T182520898917Z/runs/diagnostic/summary/snapshot.json).
+- [Independent audit](audits/20261110T182520898917Z.md).
+- [All monitor logs and periodic/final archives](control/userl40svggt20261110a/).
+- [Two-model development comparison and limitations](development/README.md).
+
+The final 74-member archive passed outer and member checksum verification before the GPU was stopped. The pod is user-owned and was not deleted without explicit authorization. Its workspace and the user's unattached network volume are recorded in operations.json, including their standing storage charges.
+
 ## Guarded diagnostic session
 
 The complete eight-arm Pi3 run is under [sessions/20261110T090917939514Z](sessions/20261110T090917939514Z/). All forty evaluations completed on the original seed-42 views. The full native fp32 identity test passed on an RTX A4000. The session is exploratory, not frozen evidence.

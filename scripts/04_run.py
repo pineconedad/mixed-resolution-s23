@@ -24,7 +24,7 @@ from mixres.runtime import provenance, seed_everything, validate_views, sanity_p
 
 
 def run(config, checkpoint, max_seconds=None, stop_file=None):
-    if config["study"] not in {"quick", "diagnostic"} or config["seed"] != 42 or config["model"] not in {"pi3", "vggt"}:
+    if config["study"] not in {"quick", "diagnostic", "alignment"} or config["seed"] != 42 or config["model"] not in {"pi3", "vggt"}:
         raise RuntimeError("Only exploratory development is enabled; full-study prerequisites are not satisfied")
     if not torch.cuda.is_available():
         raise RuntimeError("Run on a CUDA GPU; no CPU or MPS substitution for research runs")
@@ -53,6 +53,10 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
         atomic_json(out / "result.json", {"study": config["study"], "exploratory": True, "model": config["model"], "dataset": config["dataset"],
                     "budget": config["budget_tokens"], "arm": arm_name, "seed": config["seed"],
                     "metric_protocol": PROTOCOL, "auc_units": "percent", "provenance": meta,
+                    "method_parameters": {k: config.get(k, default) for k, default in
+                                          (("alignment_scope", "global"), ("position_scale", "actual"),
+                                           ("pool_op", "area"), ("lift_op", "bilinear"),
+                                           ("head_grid", "lo"), ("rmfa_layers", "all"))},
                     "scenes_expected": [s["scene"] for s in manifest["scenes"]],
                     "status": "completed" if len(records) == len(manifest["scenes"]) and all(r["status"] == "completed" for r in records) else "partial_or_failed",
                     "per_scene": records})
@@ -89,6 +93,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
                     autocast = torch.autocast("cuda", dtype=torch.bfloat16) if config["precision"] == "bf16" else nullcontext()
                     with torch.inference_mode(), autocast:
                         return run_engine(adapter, images, scene["views"], arm_name,
+                                          **{k: config[k] for k in ("alignment_scope", "position_scale") if k in config},
                                           **{k: config[k] for k in ("pool_op", "lift_op", "token_interp", "head_grid", "rmfa_layers")})
                 (predictions, trace), costs = timed_inference(forward, config["warmup"], config["timed_passes"])
                 for prediction in predictions:

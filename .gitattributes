@@ -1,2 +1,4 @@
 # Preserve exported CSV bytes, including their standard CRLF record separators.
 *.csv -text whitespace=cr-at-eol
+# Immutable captured console logs must retain their exact checksum bytes.
+*.log -text -whitespace

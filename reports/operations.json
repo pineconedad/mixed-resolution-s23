@@ -1,14 +1,28 @@
 {
   "initial_credit_usd_reported_by_user": 15,
-  "live_prepaid_balance_usd": 14.6942937462,
+  "live_prepaid_balance_usd": 14.1638793367,
   "live_balance_verified": true,
-  "live_balance_observed_utc": "2026-11-10T09:10:10.088906+00:00",
+  "live_balance_observed_utc": "2026-11-10T18:26:05.378161+00:00",
   "balance_source": "official runpodctl v3.1.0 user.clientBalance",
   "standalone_watchdog_authenticated": true,
   "standalone_watchdog_live_tested": true,
   "runpod_api_key_present": true,
   "unattended_paid_deployment_allowed": true,
   "unattended_blockers": [],
+  "user_resources": {
+    "pod_id": "u64lksix8j610q",
+    "pod_resource_origin": "user_named",
+    "last_verified_state": "EXITED",
+    "gpu_compute_usd_per_hour_when_running": 1.09,
+    "persistent_workspace_gb": 20,
+    "persistent_stopped_usd_per_month": 4.0,
+    "network_volume_id": "oq84uxp88q",
+    "network_volume_gb": 10,
+    "network_volume_attached": false,
+    "network_volume_usd_per_month": 0.70,
+    "network_volume_note": "EU-SE-1; attachment refused because pod data-center ID is empty",
+    "deletion_authorized": false
+  },
   "planning_only_not_verified_balance": {
     "first_session_cost_reserve_usd": 1,
     "minimum_credit_reserve_usd": 3,
@@ -16,6 +30,23 @@
     "requires_live_balance_and_independent_cleanup_before_deploy": true
   },
   "guarded_sessions": [
+    {
+      "session_id": "userl40svggt20261110a",
+      "pod_id": "u64lksix8j610q",
+      "resource_origin": "user_named",
+      "gpu": "NVIDIA L40S",
+      "purpose": "forty exploratory VGGT diagnostic evaluations",
+      "compute_usd_per_hour": 1.09,
+      "full_fp32_identity": "passed exactly on both development scenes",
+      "unit_suites_skipped_by_user_request": true,
+      "final_backup_sha256": "451926bf154205badf9f1e367456bd8a18544f60114d7ba5ec5b03da0b50c0f0",
+      "verified_members": 74,
+      "compute_stopped_by_watchdog": true,
+      "terminated_by_watchdog": false,
+      "post_run_state": "EXITED",
+      "artifacts": "reports/control/userl40svggt20261110a",
+      "restored_outputs": "reports/sessions/20261110T182520898917Z"
+    },
     {
       "session_id": "guardsmoke20261110a",
       "pod_id": "la8oe50jah4x29",

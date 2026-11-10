@@ -32,7 +32,8 @@ def sanity(config, checkpoint):
             views = [{**v, "hw": v["hi_hw"], "rho": 1.0, "sharp": True} for v in scene["views"]]
             images = [load_view(Path(config["data_root"]) / v["image"], v, "real").cuda() for v in views]
             native = adapter.reference(images)
-            actual, trace = run_engine(adapter, images, views, "A4")
+            actual, trace = run_engine(adapter, images, views, "A4",
+                                      **{k: config[k] for k in ("alignment_scope", "position_scale") if k in config})
             differences = {}
             for key in native[0]:
                 reference = torch.stack([view[key] for view in native])

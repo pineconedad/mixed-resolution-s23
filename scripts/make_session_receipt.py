@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -31,11 +32,13 @@ async def make(args):
                "resource_origin": "user_named" if args.user_named else "conversation_created",
                "cleanup_action": "stop" if args.user_named else "terminate",
                "created_at": args.created_at, "session_id": args.session_id,
+               "budget_start_epoch": time.time(),
                "ssh_host": direct["host"], "ssh_port": direct["port"],
                "ssh_key": str(Path.home() / ".ssh/id_ed25519"), "remote_root": "/workspace/s23",
                "results_mount": "/workspace", "balance_at_create": balance,
                "model": args.model, "validation_only": args.validation_only,
                "worker_python": args.worker_python, "skip_unit_tests": args.skip_unit_tests,
+               "config": args.config, "env_path": args.env_path,
                "hourly_total": pod["cost"] + (pod["disk"] + persistent["size"]) * 0.10 / 730,
                "reserve_usd": 3, "session_cap_usd": 1, "max_seconds": 3600,
                "heartbeat": str(destination / "heartbeat"), "done_marker": str(destination / "done.json")}
@@ -60,6 +63,8 @@ if __name__ == "__main__":
     parser.add_argument("--user-named", action="store_true")
     parser.add_argument("--skip-unit-tests", action="store_true")
     parser.add_argument("--worker-python", default="python")
+    parser.add_argument("--config")
+    parser.add_argument("--env-path", default=".venv")
     args = parser.parse_args()
     try:
         asyncio.run(make(args))

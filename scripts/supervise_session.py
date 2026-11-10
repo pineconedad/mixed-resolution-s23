@@ -44,12 +44,14 @@ if __name__ == "__main__":
     if model not in {"pi3", "vggt"}:
         raise SystemExit("Unknown model in ownership receipt")
     config = ("configs/vggt-validation.yaml" if receipt.get("validation_only") else "configs/diagnostic-vggt.yaml") if model == "vggt" else "configs/diagnostic.yaml"
+    config = receipt.get("config") or config
     remote = ("env -C " + shlex.quote(receipt["remote_root"])
               + " " + shlex.quote(receipt.get("worker_python", "python"))
               + " scripts/run_session.py --session-id " + shlex.quote(receipt["session_id"])
-              + (" --smoke-only" if args.smoke_only else " --config " + config + " --model " + model)
+              + (" --smoke-only" if args.smoke_only else " --config " + shlex.quote(config) + " --model " + model)
               + (" --validation-only" if receipt.get("validation_only") else "")
-              + (" --skip-unit-tests" if receipt.get("skip_unit_tests") else ""))
+              + (" --skip-unit-tests" if receipt.get("skip_unit_tests") else "")
+              + " --env-path " + shlex.quote(receipt.get("env_path", ".venv")))
     with (destination / "ssh-console.log").open("w") as output:
         process = subprocess.Popen(ssh_base(receipt) + [remote], stdin=subprocess.DEVNULL,
                                    stdout=output, stderr=subprocess.STDOUT)

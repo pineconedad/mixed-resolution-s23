@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mixres.io import atomic_json
 
 
-def session(session_id, config, smoke_only=False, model="pi3", validation_only=False, skip_unit_tests=False):
+def session(session_id, config, smoke_only=False, model="pi3", validation_only=False, skip_unit_tests=False, env_path=".venv"):
     if not session_id.isalnum():
         raise ValueError("Invalid session id")
     root = Path(__file__).resolve().parents[1]
@@ -23,7 +23,8 @@ def session(session_id, config, smoke_only=False, model="pi3", validation_only=F
     atomic_json(state_path, state)
     child = None
     exit_code = 1
-    python = str(root / ".venv/bin/python")
+    environment = Path(env_path) if Path(env_path).is_absolute() else root / env_path
+    python = str(environment / "bin/python")
     env = dict(os.environ, CUBLAS_WORKSPACE_CONFIG=":4096:8", PYTHONHASHSEED="0",
                XFORMERS_DISABLED="1", OMP_NUM_THREADS="4", HF_HOME=str(root / "cache/huggingface"),
                PYTHONPATH=os.pathsep.join(str(root / p) for p in ("third_party/Pi3", "third_party/vggt", ".")))
@@ -34,7 +35,7 @@ def session(session_id, config, smoke_only=False, model="pi3", validation_only=F
 
     previous_sigterm = signal.signal(signal.SIGTERM, interrupted)
     steps = [] if smoke_only else [
-        ("venv", [sys.executable, "-m", "venv", ".venv"]),
+        ("venv", [sys.executable, "-m", "venv", str(environment)]),
         ("dependencies", [python, "-m", "pip", "install", "--no-cache-dir", "-q", "-r", requirements]),
         ("install", [python, "-m", "pip", "install", "-q", "-e", ".", "--no-deps"]),
         ("dependency_check", [python, "-m", "pip", "check"]),
@@ -43,7 +44,7 @@ def session(session_id, config, smoke_only=False, model="pi3", validation_only=F
         ("environment", [python, "scripts/record_environment.py"]),
         ("identity", [python, "scripts/01_sanity.py", "--config", config]),
     ]
-    if (root / ".venv/pyvenv.cfg").is_file():
+    if (environment / "pyvenv.cfg").is_file():
         steps = [(phase, command) for phase, command in steps if phase != "venv"]
     if skip_unit_tests:
         steps = [(phase, command) for phase, command in steps if phase != "tests"]
@@ -95,5 +96,6 @@ if __name__ == "__main__":
     parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
     parser.add_argument("--validation-only", action="store_true")
     parser.add_argument("--skip-unit-tests", action="store_true")
+    parser.add_argument("--env-path", default=".venv")
     args = parser.parse_args()
-    raise SystemExit(session(args.session_id, args.config, args.smoke_only, args.model, args.validation_only, args.skip_unit_tests))
+    raise SystemExit(session(args.session_id, args.config, args.smoke_only, args.model, args.validation_only, args.skip_unit_tests, args.env_path))

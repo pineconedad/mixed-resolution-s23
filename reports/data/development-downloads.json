@@ -1,0 +1,11 @@
+{
+  "datasets": {
+    "eth3d": {
+      "expected_bytes": 15101568883,
+      "expected_sha256": "2a12b961e72566e194d707db02f2be65686ff12ad5f4347cb16b4c266b2d6917",
+      "status": "downloading"
+    }
+  },
+  "repo": "depth-anything/DA3-BENCH",
+  "revision": "cb98821d5d4f721704f11bafde0403826b82b638"
+}

@@ -63,3 +63,5 @@ if __name__ == "__main__":
     print(json.dumps(final, indent=2))
     if not final.get("terminated"):
         raise SystemExit("Compute stopped but persistent data remains until backup is recovered")
+    if process.returncode != 0:
+        raise SystemExit("Worker failed; outputs were preserved and the pod was terminated")

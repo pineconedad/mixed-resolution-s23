@@ -1,21 +1,50 @@
 {
   "initial_credit_usd_reported_by_user": 15,
-  "live_prepaid_balance_usd": null,
-  "live_balance_verified": false,
-  "standalone_watchdog_authenticated": false,
-  "runpod_api_key_present": false,
-  "unattended_paid_deployment_allowed": false,
-  "unattended_blockers": [
-    "Interactive MCP OAuth is not an independent watchdog credential",
-    "Connected MCP/REST v2 billing reads do not expose live prepaid balance",
-    "No RUNPOD_API_KEY is present; do not extract stored OAuth credentials"
-  ],
+  "live_prepaid_balance_usd": 14.6942937462,
+  "live_balance_verified": true,
+  "live_balance_observed_utc": "2026-11-10T09:10:10.088906+00:00",
+  "balance_source": "official runpodctl v3.1.0 user.clientBalance",
+  "standalone_watchdog_authenticated": true,
+  "standalone_watchdog_live_tested": true,
+  "runpod_api_key_present": true,
+  "unattended_paid_deployment_allowed": true,
+  "unattended_blockers": [],
   "planning_only_not_verified_balance": {
     "first_session_cost_reserve_usd": 1,
     "minimum_credit_reserve_usd": 3,
     "maximum_future_session_spend_usd": 1,
     "requires_live_balance_and_independent_cleanup_before_deploy": true
   },
+  "guarded_sessions": [
+    {
+      "session_id": "guardsmoke20261110a",
+      "pod_id": "la8oe50jah4x29",
+      "purpose": "no-inference backup stop and deletion smoke test",
+      "compute_usd_per_hour": 0.25,
+      "container_disk_gb": 10,
+      "persistent_workspace_gb": 20,
+      "final_backup_sha256": "502c6a9908233b5b10ce5b36ce763dfc0d333db4cecebdc1d13cdd2a7eb89800",
+      "verified_members": 11,
+      "terminated_by_watchdog": true,
+      "post_termination_get_status": 404,
+      "artifacts": "reports/control/guardsmoke20261110a"
+    },
+    {
+      "session_id": "pi3diag20261110a",
+      "pod_id": "8l7h3gvjlk4npx",
+      "gpu": "NVIDIA RTX A4000",
+      "purpose": "forty exploratory Pi3 diagnostic evaluations",
+      "compute_usd_per_hour": 0.25,
+      "container_disk_gb": 10,
+      "persistent_workspace_gb": 20,
+      "final_backup_sha256": "99330fa57bc1535a76e94ad1d80d02e315e306fd7b50067a3dd46f17482689db",
+      "verified_members": 73,
+      "terminated_by_watchdog": true,
+      "post_termination_get_status": 404,
+      "artifacts": "reports/control/pi3diag20261110a",
+      "restored_outputs": "reports/sessions/20261110T090917939514Z"
+    }
+  ],
   "first_session": {
     "pod_id": "y9fmrpnrpscv0b",
     "gpu": "NVIDIA A40",

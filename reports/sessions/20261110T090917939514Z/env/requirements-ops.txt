@@ -1,0 +1,2 @@
+# Separate from the inference environment.
+mcp==1.28.0

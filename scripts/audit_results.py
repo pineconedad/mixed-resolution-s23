@@ -14,7 +14,7 @@ from mixres.eval.pose import score_poses
 from mixres.io import atomic_json, file_hash, read_json
 
 
-def audit(session, destination):
+def audit(session, destination, study="quick"):
     session, destination = Path(session), Path(destination)
     receipt = read_json(session / "session-manifest.json")
     for name, expected in receipt["files"].items():
@@ -23,12 +23,14 @@ def audit(session, destination):
     manifest = read_json(session / "runs/views/7scenes/seed42.json")
     ground_truth = {s["scene"]: s for s in manifest["scenes"]}
     expected_scenes = set(ground_truth)
+    snapshot = read_json(session / f"runs/{study}/summary/snapshot.json")
+    arms = snapshot["arms_expected"]
     summary = {"git_commit": receipt["git_commit"], "exploratory": True,
                "checksummed_members": len(receipt["files"]), "arms": {}, "scene_warnings": []}
     provenance = None
     evaluations = 0
-    for arm in ("A1", "A2", "A3", "A4"):
-        result = read_json(session / f"runs/quick/pi3/7scenes/4096/{arm}/seed42/result.json")
+    for arm in arms:
+        result = read_json(session / f"runs/{study}/pi3/7scenes/4096/{arm}/seed42/result.json")
         if result["status"] != "completed" or {s["scene"] for s in result["per_scene"]} != expected_scenes:
             raise ValueError(f"Incomplete paired scene set for {arm}")
         if provenance is not None and result["provenance"] != provenance:
@@ -45,7 +47,7 @@ def audit(session, destination):
             traces = scene["global_trace"]
             if len(traces) != 18:
                 raise ValueError("Missing global-layer traces")
-            expected_patches = 8280 if arm == "A3" else 4200
+            expected_patches = 8280 if arm in {"A3", "A6", "A8"} else 4200
             if any(t["patch_tokens"] != expected_patches or t["special_tokens"] != 60
                    or t["total_tokens"] != expected_patches + 60 for t in traces):
                 raise ValueError("Global-token fairness failure")
@@ -56,7 +58,7 @@ def audit(session, destination):
         summary["arms"][arm] = {
             **{key: statistics.mean(s[key] for s in rows) for key in ("auc3", "auc5", "auc30", "latency_s")},
             "peak_mem_gb_max": max(s["peak_mem_gb"] for s in rows), "scenes": len(rows)}
-    csv_path = session / "runs/quick/summary/cells.csv"
+    csv_path = session / f"runs/{study}/summary/cells.csv"
     with csv_path.open() as stream:
         records = list(csv.DictReader(stream))
     by_scene = {}
@@ -68,14 +70,19 @@ def audit(session, destination):
         if primary_gain > 0 and secondary_gain < 0:
             summary["scene_warnings"].append({"scene": scene, "auc3_gain_A4_A2": primary_gain,
                                               "auc30_gain_A4_A2": secondary_gain})
-    identity = read_json(session / "runs/sanity/pi3-quick.json")
+    identity = read_json(session / f"runs/sanity/pi3-{study}.json")
     summary["fp32_T1"] = {s["scene"]: s["max_abs_error"] for s in identity["comparisons"]}
     summary["evaluations_rescored"] = evaluations
     summary["latency_ratio_A4_A3"] = summary["arms"]["A4"]["latency_s"] / summary["arms"]["A3"]["latency_s"]
     summary["limitations"] = ["Five-scene exploratory seed 42 only; not frozen paper evidence",
                                "A2-A1 position-only sanity gain is not established",
-                               "No demonstrated runtime speedup of A4 over A3 in this session",
-                               "No reconstruction, A8 information ceiling, extra seeds or other models evaluated"]
+                               "No reconstruction, extra seeds or other models evaluated"]
+    if summary["latency_ratio_A4_A3"] >= 1:
+        summary["limitations"].append("No demonstrated runtime speedup of A4 over A3 in this session")
+    else:
+        summary["limitations"].append("Measured runtime improvement is specific to this GPU and input size")
+    if "A8" not in arms:
+        summary["limitations"].append("A8 information ceiling was not evaluated")
     atomic_json(destination.with_suffix(".json"), summary)
     lines = ["# Preserved result audit", "", f"Execution commit: `{receipt['git_commit']}`.", "",
              f"Verified {len(receipt['files'])} member checksums and rescored all {evaluations} evaluations from saved camera poses.", "",
@@ -96,5 +103,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--session", default="reports/sessions/20261109T223406Z")
     parser.add_argument("--output", default="reports/audits/20261109T223406Z")
+    parser.add_argument("--study", choices=["quick", "diagnostic"], default="quick")
     args = parser.parse_args()
-    audit(args.session, args.output)
+    audit(args.session, args.output, args.study)

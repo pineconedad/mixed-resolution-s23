@@ -22,10 +22,10 @@ async def check(output):
                   "observed_utc": datetime.now(timezone.utc).isoformat(),
                   "independent_mcp_authenticated": True,
                   "pods": [{"id": p["id"], "status": p["status"]} for p in pods.get("pods", [])],
-                  "watchdog_live_tested": False}
+                  "watchdog_live_tested": None}
     atomic_json(output, result)
     print(f"Live balance: ${balance:.4f}; independent MCP access verified")
-    print("No resource was created. Watchdog execution still requires its separate live test.")
+    print("No resource was created. This read-only check does not assess watchdog execution.")
 
 
 if __name__ == "__main__":

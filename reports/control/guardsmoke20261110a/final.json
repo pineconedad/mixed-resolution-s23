@@ -1,0 +1,15 @@
+{
+  "backup": {
+    "all_members_verified": true,
+    "archive_sha256": "502c6a9908233b5b10ce5b36ce763dfc0d333db4cecebdc1d13cdd2a7eb89800",
+    "job_quiescent": true,
+    "local_archive": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/guardsmoke20261110a/session-20261110T084849508705Z.tar.gz",
+    "member_count": 11,
+    "pod_id": "la8oe50jah4x29",
+    "session_id": "guardsmoke20261110a"
+  },
+  "compute_stopped": true,
+  "pod_id": "la8oe50jah4x29",
+  "reason": "work_complete",
+  "terminated": true
+}

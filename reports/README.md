@@ -1,5 +1,18 @@
 # Preserved research outputs
 
+## Guarded diagnostic session
+
+The complete eight-arm Pi3 run is under [sessions/20261110T090917939514Z](sessions/20261110T090917939514Z/). All forty evaluations completed on the original seed-42 views. The full native fp32 identity test passed on an RTX A4000. The session is exploratory, not frozen evidence.
+
+- [Diagnostic summary](sessions/20261110T090917939514Z/runs/diagnostic/summary/snapshot.json).
+- [Forty-scene/arm CSV](sessions/20261110T090917939514Z/runs/diagnostic/summary/cells.csv).
+- [Independent metric audit](audits/20261110T090917939514Z.md).
+- [Persistent worker/setup log](sessions/20261110T090917939514Z/runs/control/pi3diag20261110a/console.log).
+- [Every diagnostic monitor snapshot and local control log](control/pi3diag20261110a/).
+- [Live shutdown smoke-test artifacts](control/guardsmoke20261110a/).
+
+Both pods were independently backed up, stopped and deleted. Their final archives and every periodic archive are preserved in the control directories, with outer and member checksum verification. There is no active pod or retained cloud workspace from these sessions.
+
 ## Session 20261109T223406Z
 
 - Complete downloaded archive: [session-20261109T223406Z.tar.gz](../artifacts/session-20261109T223406Z.tar.gz).

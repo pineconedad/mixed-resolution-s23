@@ -4,7 +4,7 @@
 
 | Check | Observed result |
 | --- | --- |
-| `.venv/bin/python -m pytest -q` | 68 passed after packaging and archive-verification fixes |
+| `.venv/bin/python -m pytest -q` | 86 passed after safety and diagnostic additions |
 | `.venv/bin/python -m pip check` | No broken requirements found |
 | `bash -n launch.sh scripts/bootstrap_gpu.sh` | Exit 0 |
 | `git diff --check` | Exit 0 |
@@ -19,5 +19,7 @@ The tests cover scaled-down upstream Pi3.forward/decode identity for A1-A8 at rh
 Synthetic test inputs/results live only in pytest temporary directories. They are never research observations.
 
 The clean GPU checkout passed 63 tests before collecting metrics. Five archive-restoration tests were added locally afterward, for 68 total local tests. The earlier local test run did not detect the ignored source package; docs/decisions.md records the clean-checkout failure and corrective commit.
+
+The guarded diagnostic checkout later passed 86 tests on the RTX A4000 pod. Its setup log and complete outputs are archived under reports/sessions/20261110T090917939514Z/. The independent watchdog was exercised on a separate no-inference pod and then used successfully for the forty-evaluation session.
 
 Full-checkpoint CUDA T1 and the first quick-test metrics/timing/memory are now recorded under reports/sessions/20261109T223406Z/. Paper-number reproduction, T9, other model adapters and full-study evaluation remain pending. Local success is not reported as a pass for these gates.

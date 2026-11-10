@@ -1,0 +1,18 @@
+{
+  "balance_at_create": 14.7679846259,
+  "created_at": "2026-11-10T08:52:11.169Z",
+  "created_by_workflow": "mixres-s23",
+  "done_marker": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/pi3diag20261110a/done.json",
+  "heartbeat": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/pi3diag20261110a/heartbeat",
+  "hourly_total": 0.2541095890410959,
+  "max_seconds": 3600,
+  "pod_id": "8l7h3gvjlk4npx",
+  "remote_root": "/workspace/s23",
+  "reserve_usd": 3,
+  "results_mount": "/workspace",
+  "session_cap_usd": 1,
+  "session_id": "pi3diag20261110a",
+  "ssh_host": "157.157.221.29",
+  "ssh_key": "/Users/pineconedad/.ssh/id_ed25519",
+  "ssh_port": 34220
+}

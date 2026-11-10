@@ -36,6 +36,8 @@ The time limit is checked between arm evaluations. It is not a hard billing cap 
 
 All paid inference requires CUDA. CPU unit tests are separate. The first GPU session is now complete: full-checkpoint fp32 T1 passed on two scenes and all 20 A1-A4 evaluations completed. The pod was terminated after verified download. See reports/README.md for every exported artifact and docs/decisions.md for the complete decision trail.
 
+The subsequent guarded session completed all forty A1-A8 evaluations on the same five development scenes, excluding only historical A0. Native fp32 identity also passed on the cheaper 16 GB RTX A4000. All outputs and monitor snapshots are published under reports/, and the independent watchdog terminated both its smoke-test pod and the diagnostic pod. See docs/safety.md for key handling, the reserve/deadline policy and failure behavior.
+
 ## Resume and preserve results
 
 The runner writes each scene immediately and atomically, then refreshes arm result.json. It skips only successful scenes with identical code, config, data, weights, GPU and metric provenance. Partial and failed outputs remain visible. Changed provenance requires archiving the old run first, never overwriting it. The aggregation script uses a common set of successful paired scenes across every requested arm and reports missing/failed cells.

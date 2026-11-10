@@ -75,3 +75,11 @@ The full 24-configuration development sweep follows the model's sanity gates, no
 9. Recompute all forty pose metrics from saved poses locally. The diagnostic recovery ratio is 0.537690, interval [0.499718, 0.675294]. Upsampling recovers 0.970382 of the A1-to-A8 gap, interval [0.901119, 1.023339]. These are exploratory, not a pass for frozen H1/H4.
 10. A6 global-only upsampling scores 1.633443 mean AUC@3 versus A4's 7.674891. A7 without pi_hr scores 3.937313. A5 token entry scores 6.278705, with A5-A4 interval including zero; do not claim equivalence or choose a winner from this small sample. A2's isolated gain remains unestablished.
 11. A4 mean latency on this A4000 is 0.734694 seconds versus A3's 0.810284, about 9.3% lower. Keep this separate from the earlier A40 timings, where A4 did not show a speedup. The office scene still hurts AUC@30 despite improving AUC@3; preserve and report it.
+
+## Next model preparation
+
+1. Implement VGGT next, as the day-2 adapter order requires, while no pod is running. Its camera head jointly attends across views and cannot be invoked separately for each image-size group. Keep that computation joint and group only its dense point/depth heads.
+2. Preserve first-reference camera/register tokens by original view index. Do not accidentally assign a first-reference token to the first view in every resolution group.
+3. Use a separate environment with the pinned VGGT repository's torch 2.3.1 and numpy 1.26.1 instead of forcing it into Pi3's torch-2.5.1 environment. All 19 CPU tests pass against the actual upstream forward and scaled-down native components. The 86 existing Pi3/safety tests still pass separately.
+4. Pin and download the explicitly requested facebook/VGGT-1B weights locally. Record the public revision, non-commercial license and file checksum in model_checks.md. Never substitute a newer model or infer the unspecified old DA3 checkpoint.
+5. Prepare a validation-only worker: download/verify weights, run model-specific tests and compare full-checkpoint native poses/points/confidence/depth in fp32 on the same two development scenes. No VGGT task metrics, frozen seeds or held-out data are implied by this gate.

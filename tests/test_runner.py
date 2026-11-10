@@ -47,7 +47,7 @@ def runner(tmp_path, monkeypatch):
     monkeypatch.setattr(torch.Tensor, "cuda", lambda x: x)
     monkeypatch.setattr(module, "seed_everything", lambda _: None)
     monkeypatch.setattr(module, "provenance", lambda *args: meta)
-    monkeypatch.setattr(module, "load_pi3", lambda *args: object())
+    monkeypatch.setattr(module, "load_adapter", lambda *args: object())
     calls = []
 
     def fake_engine(adapter, images, views, arm, **kwargs):

@@ -32,6 +32,7 @@ async def make(args):
                "ssh_host": direct["host"], "ssh_port": direct["port"],
                "ssh_key": str(Path.home() / ".ssh/id_ed25519"), "remote_root": "/workspace/s23",
                "results_mount": "/workspace", "balance_at_create": balance,
+               "model": args.model, "validation_only": args.validation_only,
                "hourly_total": pod["cost"] + (pod["disk"] + persistent["size"]) * 0.10 / 730,
                "reserve_usd": 3, "session_cap_usd": 1, "max_seconds": 3600,
                "heartbeat": str(destination / "heartbeat"), "done_marker": str(destination / "done.json")}
@@ -45,6 +46,8 @@ if __name__ == "__main__":
     parser.add_argument("--created-at", required=True)
     parser.add_argument("--session-id", required=True)
     parser.add_argument("--destination", required=True)
+    parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
+    parser.add_argument("--validation-only", action="store_true")
     args = parser.parse_args()
     try:
         asyncio.run(make(args))

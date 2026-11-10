@@ -34,6 +34,11 @@ class Pi3Adapter:
                 output[i] = x
         return output
 
+    def reference(self, images):
+        native = self.model(torch.stack(images)[None])
+        return [{key: native[key][0, i] for key in ("camera_poses", "points", "local_points", "conf")}
+                for i in range(len(images))]
+
     def run_heads(self, cache, grids):
         model = self.model
         result = [None] * len(grids)

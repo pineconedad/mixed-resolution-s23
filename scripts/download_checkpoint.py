@@ -12,11 +12,15 @@ from mixres.io import atomic_json, file_hash
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/quick.yaml")
+    parser.add_argument("--model", choices=["pi3", "vggt"])
     args = parser.parse_args()
-    config = yaml.safe_load(Path(args.config).read_text())
-    path = hf_hub_download(config["checkpoint"], "model.safetensors",
-                           revision=config["checkpoint_revision"], local_dir="checkpoints/pi3")
-    atomic_json("checkpoints/pi3/receipt.json", {
+    config_path = Path(f"configs/models/{args.model}.yaml") if args.model else Path(args.config)
+    config = yaml.safe_load(config_path.read_text())
+    model = args.model or config["model"]
+    directory = Path("checkpoints") / model
+    path = hf_hub_download(config["checkpoint"], config.get("checkpoint_file", "model.safetensors"),
+                           revision=config["checkpoint_revision"], local_dir=directory)
+    atomic_json(directory / "receipt.json", {
         "checkpoint": config["checkpoint"], "revision": config["checkpoint_revision"],
         "sha256": file_hash(path), "bytes": Path(path).stat().st_size})
     print(f"Verified checkpoint: {path}")

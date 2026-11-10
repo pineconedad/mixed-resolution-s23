@@ -18,15 +18,16 @@ def positions(grid, hi_grid, special_count, kind, device):
 class ContinuousRoPE(nn.Module):
     """Retain upstream integer RoPE exactly; support fractional pi_hr coordinates."""
 
-    def __init__(self, original):
+    def __init__(self, original, base=None):
         super().__init__()
         self.original = original
+        self.base = original.base if base is None else base
 
     def forward(self, tokens, pos):
         if not pos.is_floating_point():
             return self.original(tokens, pos)
         half = tokens.shape[-1] // 2
-        frequency = 1 / (self.original.base ** (torch.arange(0, half, 2, device=tokens.device).float() / half))
+        frequency = 1 / (self.base ** (torch.arange(0, half, 2, device=tokens.device).float() / half))
         result = []
         for axis, component in enumerate(tokens.chunk(2, dim=-1)):
             angles = pos[..., axis, None].float() * frequency

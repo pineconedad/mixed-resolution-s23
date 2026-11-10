@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mixres.io import atomic_json
 
 
-def session(session_id, config, smoke_only=False):
+def session(session_id, config, smoke_only=False, model="pi3", validation_only=False):
     if not session_id.isalnum():
         raise ValueError("Invalid session id")
     root = Path(__file__).resolve().parents[1]
@@ -26,7 +26,8 @@ def session(session_id, config, smoke_only=False):
     python = str(root / ".venv/bin/python")
     env = dict(os.environ, CUBLAS_WORKSPACE_CONFIG=":4096:8", PYTHONHASHSEED="0",
                XFORMERS_DISABLED="1", OMP_NUM_THREADS="4", HF_HOME=str(root / "cache/huggingface"),
-               PYTHONPATH=str(root / "third_party/Pi3") + os.pathsep + str(root))
+               PYTHONPATH=os.pathsep.join(str(root / p) for p in ("third_party/Pi3", "third_party/vggt", ".")))
+    requirements = {"pi3": "env/requirements.txt", "vggt": "env/requirements-vggt.txt"}[model]
 
     def interrupted(signum, frame):
         raise KeyboardInterrupt("Session interrupted")
@@ -34,18 +35,21 @@ def session(session_id, config, smoke_only=False):
     previous_sigterm = signal.signal(signal.SIGTERM, interrupted)
     steps = [] if smoke_only else [
         ("venv", [sys.executable, "-m", "venv", ".venv"]),
-        ("dependencies", [python, "-m", "pip", "install", "--no-cache-dir", "-q", "-r", "env/requirements.txt"]),
+        ("dependencies", [python, "-m", "pip", "install", "--no-cache-dir", "-q", "-r", requirements]),
         ("install", [python, "-m", "pip", "install", "-q", "-e", ".", "--no-deps"]),
         ("dependency_check", [python, "-m", "pip", "check"]),
         ("checkpoint", [python, "scripts/download_checkpoint.py", "--config", config]),
-        ("tests", [python, "-m", "pytest", "-q"]),
+        ("tests", [python, "-m", "pytest", "-q", *(["tests_vggt"] if model == "vggt" else [])]),
         ("environment", [python, "scripts/record_environment.py"]),
         ("identity", [python, "scripts/01_sanity.py", "--config", config]),
+    ]
+    if not smoke_only and not validation_only:
+        steps.extend([
         ("experiments", [python, "scripts/04_run.py", "--config", config,
                           "--stop-file", str(control / "stop"), "--max-seconds", "2400"]),
         ("aggregate", [python, "scripts/05_aggregate.py", "--config", config]),
         ("figures", [python, "scripts/06_figures.py", "--config", config]),
-    ]
+        ])
     try:
         with (control / "console.log").open("w") as log:
             for phase, command in steps:
@@ -83,5 +87,7 @@ if __name__ == "__main__":
     parser.add_argument("--session-id", required=True)
     parser.add_argument("--config", default="configs/diagnostic.yaml")
     parser.add_argument("--smoke-only", action="store_true")
+    parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
+    parser.add_argument("--validation-only", action="store_true")
     args = parser.parse_args()
-    raise SystemExit(session(args.session_id, args.config, args.smoke_only))
+    raise SystemExit(session(args.session_id, args.config, args.smoke_only, args.model, args.validation_only))

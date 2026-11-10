@@ -7,12 +7,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "third_party/Pi3"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "third_party/vggt"))
 
 import numpy as np
 import torch
 import yaml
 
-from mixres.adapters.pi3 import load_pi3
+from mixres.adapters import load_adapter
 from mixres.data.resize import load_view
 from mixres.eval.pose import PROTOCOL, score_poses
 from mixres.io import atomic_json, digest, file_hash, read_json
@@ -23,8 +24,8 @@ from mixres.runtime import provenance, seed_everything, validate_views, sanity_p
 
 
 def run(config, checkpoint, max_seconds=None, stop_file=None):
-    if config["study"] not in {"quick", "diagnostic"} or config["seed"] != 42 or config["model"] != "pi3":
-        raise RuntimeError("Only the independent Pi3 quick test is enabled; full-study prerequisites are not satisfied")
+    if config["study"] not in {"quick", "diagnostic"} or config["seed"] != 42 or config["model"] not in {"pi3", "vggt"}:
+        raise RuntimeError("Only exploratory development is enabled; full-study prerequisites are not satisfied")
     if not torch.cuda.is_available():
         raise RuntimeError("Run on a CUDA GPU; no CPU or MPS substitution for research runs")
     if config["precision"] == "bf16" and not torch.cuda.is_bf16_supported():
@@ -34,9 +35,9 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
     manifest = read_json(config["views"])
     validate_views(config, manifest)
     sanity = read_json(sanity_path(config))
-    if sanity["status"] != "passed" or sanity["scope"] != f"{config['study']}-pi3-fp32-T1" or sanity["provenance"] != meta:
+    if sanity["status"] != "passed" or sanity["scope"] != f"{config['study']}-{config['model']}-fp32-T1" or sanity["provenance"] != meta:
         raise RuntimeError("Run 01_sanity.py with this exact code/config/checkpoint/GPU first")
-    adapter = load_pi3(checkpoint, "cuda")
+    adapter = load_adapter(config["model"], checkpoint, "cuda")
     started = time.monotonic()
 
     def publish_result(out, arm_name):
@@ -49,7 +50,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
                 if record["identity"] != expected:
                     raise RuntimeError(f"Existing result has different provenance: {path}; archive it before rerunning")
                 records.append(record)
-        atomic_json(out / "result.json", {"study": config["study"], "exploratory": True, "model": "pi3", "dataset": config["dataset"],
+        atomic_json(out / "result.json", {"study": config["study"], "exploratory": True, "model": config["model"], "dataset": config["dataset"],
                     "budget": config["budget_tokens"], "arm": arm_name, "seed": config["seed"],
                     "metric_protocol": PROTOCOL, "auc_units": "percent", "provenance": meta,
                     "scenes_expected": [s["scene"] for s in manifest["scenes"]],
@@ -62,7 +63,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
             if stop_file is not None and Path(stop_file).exists():
                 print("Stop requested between evaluations; completed scenes are durable", flush=True)
                 return
-            out = Path("runs") / config["study"] / "pi3" / config["dataset"] / str(config["budget_tokens"]) / arm_name / f"seed{config['seed']}"
+            out = Path("runs") / config["study"] / config["model"] / config["dataset"] / str(config["budget_tokens"]) / arm_name / f"seed{config['seed']}"
             scene_path = out / "scenes" / f"{scene['scene']}.json"
             identity = digest({"provenance": meta, "scene": scene["scene"], "arm": arm_name, "metric": PROTOCOL})
             if scene_path.exists():
@@ -111,8 +112,9 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/quick.yaml")
-    parser.add_argument("--checkpoint", default="checkpoints/pi3/model.safetensors")
+    parser.add_argument("--checkpoint")
     parser.add_argument("--max-seconds", type=float)
     parser.add_argument("--stop-file")
     args = parser.parse_args()
-    run(yaml.safe_load(Path(args.config).read_text()), args.checkpoint, args.max_seconds, args.stop_file)
+    config = yaml.safe_load(Path(args.config).read_text())
+    run(config, args.checkpoint or f"checkpoints/{config['model']}/model.safetensors", args.max_seconds, args.stop_file)

@@ -36,20 +36,22 @@ def validate_views(config, manifest):
 
 
 def sanity_path(config):
-    return Path("runs/sanity") / f"pi3-{config['study']}.json"
+    return Path("runs/sanity") / f"{config['model']}-{config['study']}.json"
 
 
 def provenance(config, views_path, checkpoint):
     root = Path(__file__).resolve().parents[1]
-    revision = subprocess.check_output(["git", "-C", str(root / "third_party/Pi3"), "rev-parse", "HEAD"], text=True).strip()
-    model_config = root / "configs/models/pi3.yaml"
+    repositories = {"pi3": "Pi3", "vggt": "vggt"}
+    repository = root / "third_party" / repositories[config["model"]]
+    revision = subprocess.check_output(["git", "-C", str(repository), "rev-parse", "HEAD"], text=True).strip()
+    model_config = root / f"configs/models/{config['model']}.yaml"
     import yaml
     pinned = yaml.safe_load(model_config.read_text())
     if revision != pinned["code_commit"]:
-        raise RuntimeError("Pi3 upstream commit differs from inspected adapter")
-    dirty_upstream = subprocess.check_output(["git", "-C", str(root / "third_party/Pi3"), "status", "--porcelain"], text=True).strip()
+        raise RuntimeError("Upstream commit differs from inspected adapter")
+    dirty_upstream = subprocess.check_output(["git", "-C", str(repository), "status", "--porcelain"], text=True).strip()
     if dirty_upstream:
-        raise RuntimeError("Refusing modified Pi3 source")
+        raise RuntimeError("Refusing modified model source")
     receipt = read_json(Path(checkpoint).with_name("receipt.json"))
     if receipt["checkpoint"] != config["checkpoint"] or receipt["revision"] != config["checkpoint_revision"]:
         raise RuntimeError("Checkpoint revision mismatch")

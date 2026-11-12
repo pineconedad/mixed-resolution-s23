@@ -9,7 +9,12 @@ Read this file first after interruption. Update it before provisioning, after a 
 - New options default to off. They are wired into the exploratory seed-42 runner only. They are NOT in StudyRunner METHOD_DEFAULTS, the 24-config sweep, freeze, or the 270/150 matrix; add them there only after a gate passes.
 - Adding A9 and calibration.py changes `sanity_source_hash`, so every S23 identity gate must be rerun before any S23 cell.
 - Pass rule is pre-stated in scripts/salvation_report.py (+2 AUC@3 and 4 of 5 scene wins against A2 for track A, against A0 for track B). Do not edit it after results exist.
-- NEXT COMMAND (user, local GPU): `bash scripts/salvation.sh a pi3`. Run `bash scripts/salvation.sh b pi3` only if Gate A fails. Then return runs/salvation_*/pi3/summary/report.txt.
+- RESULT (commit 5bf1164, RTX 5090, torch 2.8.0+cu128, clean tree 1518afa, Pi3, 7-Scenes 5 scenes, seed 42, exploratory): BOTH GATES FAILED. Reports: runs/salvation_{a,b}/pi3/summary/report.txt. Archived A1/A2/A4/A3/A8 means reproduced.
+  - Gate A FAIL: best zero-cost variant A2_bias_both +1.20 AUC@3 over A2 (4/5 scenes), below the +2 rule and below A0. Moment calibration hurts (-2.1); measured group shift is only about 0.2 SD.
+  - Gate B FAIL: A9 8.69 vs A0 7.47 AUC@3 (+1.21, 2/5 scenes) at about twice the frame tokens (8340 vs 4092). A9 is about equal to A4; head_grid=hi changes nothing. Every pooled-global arm collapses on office (AUC@30 about 17 vs 71 for A0).
+  - A0 first measurement: 7.47 AUC@3, 80.0 AUC@30. A9 vs A8 (13.17) isolates pooled global attention as costing about 4.5 AUC@3, so "damage is not in global attention" is not supported.
+  - Per the pre-stated rule: no RMFA method paper from this repo this cycle. VGGT salvation configs were not run. Do not promote the new options into StudyRunner.
+- SUPERSEDED: NEXT COMMAND (user, local GPU): `bash scripts/salvation.sh a pi3`. Run `bash scripts/salvation.sh b pi3` only if Gate A fails. Then return runs/salvation_*/pi3/summary/report.txt.
 - Known limits: logit bias supports Pi3 and VGGT blocks only and raises on DA3; VGGT corrections pass tiny-model CPU tests only (tests_vggt has one pre-existing A0 failure); track B cost is not matched to A0 (the report prints the latency ratio).
 - The entries below predate this branch and describe the cloud sessions.
 

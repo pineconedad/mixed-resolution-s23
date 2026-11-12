@@ -21,6 +21,9 @@ ARMS = {
     "A8": Arm("real", "hi", "hi", "native"),
     # Salvation track B: real pixels for every view, sharp frame attention, pooled global attention.
     "A9": Arm("real", "hi", "lo", "pi_hr"),
+    # Salvation track C: encode each view at its own size, lift tokens to the sharp grid,
+    # then run the whole decoder on the sharp grid. No pixel upsampling.
+    "A10": Arm("token", "hi", "hi", "native"),
 }
 
 RMFA_ARMS = frozenset({"A4", "A5", "A7", "A9"})

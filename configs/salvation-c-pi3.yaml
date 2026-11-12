@@ -1,0 +1,45 @@
+study: salvation_c
+model: pi3
+dataset: 7scenes
+seed: 42
+budget_tokens: 4096
+n_views: 12
+n_sharp: 4
+rho: 2.0
+scenes: [chess, fire, heads, office, pumpkin]
+arms:
+  # References.
+  - A1
+  - A2
+  - A4
+  - A3
+  - A8
+  # Uniform resize at rising token budgets: the cost-accuracy curve to beat.
+  - A0
+  - {name: A0_5k, arm: A0, uniform_budget: 5120}
+  - {name: A0_6k, arm: A0, uniform_budget: 6144}
+  - {name: A0_7k, arm: A0, uniform_budget: 7168}
+  # Track C: encode small, lift tokens, decode sharp; then dense queries with pooled keys.
+  - A10
+  - {name: A11, arm: A10, kv_pool: mix, logit_bias: global}
+  - {name: A11_nobias, arm: A10, kv_pool: mix}
+  # Same key pooling on real pixels and on upsampled pixels (isolates the lifting step).
+  - {name: A8_kv, arm: A8, kv_pool: mix, logit_bias: global}
+  - {name: A3_kv, arm: A3, kv_pool: mix, logit_bias: global}
+precision: bf16
+pool_op: area
+lift_op: bilinear
+token_interp: bilinear
+rmfa_layers: all
+head_grid: lo
+alignment_scope: all
+position_scale: nominal
+warmup: 1
+timed_passes: 3
+checkpoint: yyfz233/Pi3
+checkpoint_revision: ae722e7039287d0c8fde9f11f197f804f44b510c
+views: runs/views/7scenes/seed42.json
+source_views_config_hash: 5286fcf252572a8d71b7337dc6e8dffb63801ff036bdf734d3f6c6d72db4c941
+views_sha256: 30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09
+data_root: data/7scenes
+bootstrap_resamples: 10000

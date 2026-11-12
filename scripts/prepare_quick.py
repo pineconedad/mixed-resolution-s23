@@ -23,8 +23,15 @@ BASE = "https://download.microsoft.com/download/2/8/5/28564B23-0828-408F-8631-23
 
 
 def prepare(config):
-    if config["seed"] != 42 or config["study"] != "quick":
-        raise ValueError("This downloader is only for the independent seed-42 quick test")
+    draws = config["study"] == "salvation_draw"
+    if not (draws and 42 < config["seed"] < 1000) and (config["seed"] != 42 or config["study"] != "quick"):
+        raise ValueError("Only the seed-42 quick test or salvation development draws (seeds 43-999)")
+    # Development draws never reuse a frame already bound to another manifest (frozen seeds, seed 42).
+    excluded = {}
+    for path in config.get("exclude_manifests", []):
+        for bound in read_json(path)["scenes"]:
+            excluded.setdefault(bound["scene"], set()).update(
+                view["frame"].removeprefix("frame-") for view in bound["views"])
     destination = Path(config["views"])
     root = Path(config["data_root"])
     all_scenes = []
@@ -49,7 +56,7 @@ def prepare(config):
                 nested_file = StoredMemberReader(remote, nested)
             else:
                 # Some official archives recompress seq ZIPs. Fetch just that sequence.
-                nested_file = root / "_archives" / f"{scene}-{sequence}.zip"
+                nested_file = Path(config.get("archive_root", root / "_archives")) / f"{scene}-{sequence}.zip"
                 if not nested_file.exists():
                     nested_file.parent.mkdir(parents=True, exist_ok=True)
                     temporary = nested_file.with_suffix(".zip.tmp")
@@ -61,7 +68,11 @@ def prepare(config):
                 names = {Path(info.filename).name: info.filename for info in inner.infolist()}
                 ids = sorted(name.removeprefix("frame-").removesuffix(".color.png")
                              for name in names if name.endswith(".color.png"))
-                draw = np.random.default_rng(config["seed"] + scene_index).choice(len(ids), config["n_views"], replace=False)
+                skip = excluded.get(scene, set())
+                # Must mirror sample_scene's draw exactly so the downloaded frames are the sampled ones.
+                draw = np.random.default_rng(config["seed"] + scene_index).choice(
+                    [i for i, frame in enumerate(ids) if frame not in skip] if skip else len(ids),
+                    config["n_views"], replace=False)
                 poses = np.repeat(np.eye(4)[None], len(ids), axis=0)
                 files = {}
                 for index in draw:
@@ -84,7 +95,9 @@ def prepare(config):
                 validate_poses(poses[draw])
                 views = sample_scene(ids, poses, seed=config["seed"], scene_index=scene_index,
                                      n_views=config["n_views"], n_sharp=config["n_sharp"],
-                                     rho=config["rho"], budget=config["budget_tokens"])
+                                     rho=config["rho"], budget=config["budget_tokens"], excluded=skip)
+                if sorted(ids.index(view["frame"]) for view in views) != sorted(int(i) for i in draw):
+                    raise RuntimeError("Sampled views differ from downloaded frames")
                 for view in views:
                     index = ids.index(view["frame"])
                     view["image"] = f"{scene}/{sequence}/frame-{view['frame']}.color.png"

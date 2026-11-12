@@ -25,7 +25,8 @@ from mixres.runtime import provenance, seed_everything, validate_views, sanity_p
 
 
 METHOD_KEYS = ("pool_op", "lift_op", "token_interp", "head_grid", "rmfa_layers")
-OPTIONAL_KEYS = ("alignment_scope", "position_scale", "calibrate", "logit_bias")
+OPTIONAL_KEYS = ("alignment_scope", "position_scale", "calibrate", "logit_bias", "kv_pool")
+RUNNER_KEYS = ("uniform_budget",)  # A0 only: uniform size at another token budget
 
 
 def parse_variant(entry):
@@ -34,16 +35,18 @@ def parse_variant(entry):
         return entry, entry, {}
     overrides = dict(entry)
     name, arm = overrides.pop("name"), overrides.pop("arm")
-    if set(overrides) - set(METHOD_KEYS) - set(OPTIONAL_KEYS) or arm not in ARMS or name in ARMS:
+    allowed = set(METHOD_KEYS) | set(OPTIONAL_KEYS) | (set(RUNNER_KEYS) if arm == "A0" else set())
+    if set(overrides) - allowed or arm not in ARMS or name in ARMS:
         raise ValueError(f"Invalid variant: {entry}")
     return name, arm, overrides
 
 
-def scene_views(views, arm, config):
-    """A0 resizes every view to one size at the mix's nominal token budget."""
+def scene_views(views, arm, config, uniform_budget=None):
+    """A0 resizes every view to one size at the mix's nominal token budget (or uniform_budget)."""
     if arm != "A0":
         return views
-    uniform = budget_sizes(config["budget_tokens"], len(views), 0, 1.0, config.get("aspect", 4 / 3))[0]
+    uniform = budget_sizes(uniform_budget or config["budget_tokens"], len(views), 0, 1.0,
+                           config.get("aspect", 4 / 3))[0]
     return [{**view, "hw": list(uniform), "hi_hw": list(uniform), "sharp": True, "rho": 1.0}
             for view in views]
 
@@ -52,7 +55,10 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
     variants = [parse_variant(entry) for entry in config["arms"]]
     if len({name for name, _, _ in variants}) != len(variants):
         raise ValueError("Duplicate arm/variant names")
-    if config["study"] not in {"quick", "diagnostic", "alignment", "salvation_a", "salvation_b"} or config["seed"] != 42 or config["model"] not in {"pi3", "vggt"}:
+    salvation = config["study"].startswith("salvation_")
+    # Salvation studies may use extra development draws; seeds from 1000 up belong to frozen runs.
+    seed_allowed = 42 <= config["seed"] < 1000 if salvation else config["seed"] == 42
+    if (not salvation and config["study"] not in {"quick", "diagnostic", "alignment"}) or not seed_allowed or config["model"] not in {"pi3", "vggt"}:
         raise RuntimeError("Only exploratory development is enabled; full-study prerequisites are not satisfied")
     if not torch.cuda.is_available():
         raise RuntimeError("Run on a CUDA GPU; no CPU or MPS substitution for research runs")
@@ -77,7 +83,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
     def method_of(overrides):
         method = {k: config[k] for k in METHOD_KEYS}
         method.update({k: config[k] for k in OPTIONAL_KEYS if k in config})
-        return {**method, **overrides}
+        return {**method, **{k: v for k, v in overrides.items() if k not in RUNNER_KEYS}}
 
     def publish_result(out, name, arm_name, overrides):
         records = []
@@ -93,8 +99,8 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
                     "budget": config["budget_tokens"], "arm": arm_name, "variant": name, "seed": config["seed"],
                     "metric_protocol": PROTOCOL, "auc_units": "percent", "provenance": meta,
                     "method_parameters": {**{"alignment_scope": "global", "position_scale": "actual",
-                                             "calibrate": "none", "logit_bias": "none"},
-                                          **method_of(overrides)},
+                                             "calibrate": "none", "logit_bias": "none", "kv_pool": "none"},
+                                          **method_of(overrides), **{k: overrides[k] for k in RUNNER_KEYS if k in overrides}},
                     "scenes_expected": [s["scene"] for s in manifest["scenes"]],
                     "status": "completed" if len(records) == len(manifest["scenes"]) and all(r["status"] == "completed" for r in records) else "partial_or_failed",
                     "per_scene": records})
@@ -122,7 +128,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
             record = {"scene": scene["scene"], "arm": arm_name, "variant": name, "identity": identity, "status": "failed"}
             try:
                 images = []
-                views = scene_views(scene["views"], arm_name, config)
+                views = scene_views(scene["views"], arm_name, config, overrides.get("uniform_budget"))
                 for view in views:
                     path = Path(config["data_root"]) / view["image"]
                     if file_hash(path) != view["image_sha256"]:

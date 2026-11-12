@@ -36,10 +36,10 @@ def test_mixed_grid_vggt_keeps_camera_joint_and_dense_shapes(tiny_vggt, arm):
     handle.remove()
     assert observed == [torch.Size([1, 3, 1, 64])]
     assert results[0]["points"].shape == (56, 56, 3)
-    side = 56 if arm in {"A3", "A8"} else 28
+    side = 56 if arm in {"A3", "A8", "A10"} else 28
     assert results[1]["points"].shape == (side, side, 3)
     assert all(t["special_tokens"] == 15 for t in trace)
-    assert all(t["patch_tokens"] == (48 if arm in {"A3", "A6", "A8"} else 36) for t in trace)
+    assert all(t["patch_tokens"] == (48 if arm in {"A3", "A6", "A8", "A10"} else 36) for t in trace)
 
 
 def test_first_view_identity_is_not_reset_for_each_resolution_group(tiny_vggt):
@@ -90,3 +90,23 @@ def test_salvation_corrections_run_through_vggt_blocks(tiny_vggt, arm, options):
     pose = torch.stack([r["pose_encoding"] for r in corrected])
     assert torch.isfinite(pose).all() and not torch.equal(pose, plain_pose)
     assert [t["total_tokens"] for t in trace] == [t["total_tokens"] for t in plain_trace]
+
+
+def test_asymmetric_block_matches_vggt_block_and_kv_pool_runs(tiny_vggt):
+    from mixres.rmfa.calibration import asymmetric_block
+    from mixres.rmfa.positions import positions
+    adapter = VGGTAdapter(tiny_vggt)
+    special = adapter.special_count
+    dim = adapter.global_blocks[0].attn.qkv.in_features
+    torch.manual_seed(2)
+    x = torch.randn(1, 2 * (special + 16), dim)
+    pos = torch.cat([positions((4, 4), (4, 4), special, "native", "cpu")] * 2, 1)
+    views = [{"hw": [56, 56], "hi_hw": [56, 56]}, {"hw": [28, 28], "hi_hw": [56, 56]},
+             {"hw": [56, 56], "hi_hw": [56, 56]}]
+    images = [torch.rand(3, 56, 56), torch.rand(3, 28, 28), torch.rand(3, 56, 56)]
+    with torch.inference_mode():
+        block = adapter.global_blocks[0]
+        assert torch.allclose(asymmetric_block(block, x, pos, x, pos), block(x, xpos=pos), atol=1e-5)
+        result, trace = run_engine(adapter, images, views, "A10", kv_pool="mix", logit_bias="global")
+    assert all(t["patch_tokens"] == 48 and t["global_kv_tokens"] == 36 + 3 * special for t in trace)
+    assert all(torch.isfinite(r["pose_encoding"]).all() for r in result)

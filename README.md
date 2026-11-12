@@ -1,6 +1,53 @@
 # Mixed-resolution S23
 
-## Start here: the `salvation` kill tests
+## Start here: the unattended overnight run (track C)
+
+Tracks A and B both failed on Pi3 (reports under `runs/salvation_a`, `runs/salvation_b`). Track C tests the restructured method: encode each view at its own size, lift the small views' tokens to the sharp grid, run the decoder on the sharp grid (arm `A10`), and let global attention read small views through pooled keys while every token keeps its own query (`A11`).
+
+One command runs everything and needs no attention for up to 6 hours. Setup is the same as section 1 below; if you already ran tracks A and B on this machine, nothing new needs installing.
+
+**Windows (PowerShell):**
+
+```powershell
+cd mixed-resolution-s23
+git pull
+.venv\Scripts\Activate.ps1
+python -m pytest -q tests/test_salvation.py
+python scripts/salvation_night.py --push
+```
+
+**Linux:**
+
+```bash
+cd mixed-resolution-s23 && git pull
+source .venv/bin/activate
+python -m pytest -q tests/test_salvation.py
+python scripts/salvation_night.py --push
+```
+
+What it does, in order. A failed step is logged and the rest continue.
+
+| Stage | Work | Rough time |
+| --- | --- | --- |
+| 1 | Pi3 track C on the five seed-42 scenes | 10 min |
+| 2 | Download VGGT weights (5 GB), VGGT track C on the same scenes | 20 min plus download |
+| 3 | Ten fresh draws (seeds 43-52) of all seven 7-Scenes scenes: download the frames, run Pi3 and VGGT on each | most of the night; depends on download speed |
+| 4 | VGGT tracks A and B on the seed-42 scenes | 20 min |
+
+Leave the machine alone while it runs: do not commit, pull, or edit files in the repo. The runner refuses results whose code state differs from what the identity gate saw.
+
+**When you come back**
+
+- Read `runs/salvation_night/reports/night-pi3.txt` first, then `night-vggt.txt` and `night-summary.txt` (which step succeeded or failed). With `--push` the same files are committed to `reports/salvation/` and pushed.
+- The verdict line is `Gate C on fresh draws: PASS / PARTIAL / FAIL`. PASS means `A11` stays within 1 AUC@3 of pixel upsampling, beats a uniform resize given at least as much compute (bootstrap interval above zero), and does not lose coarse accuracy. PARTIAL means only `A10` does. The rule is in `scripts/salvation_night_report.py` and was fixed before any run.
+- The full console log is `runs/salvation_night/log.txt`.
+- If it was interrupted (power, sleep, crash), run the same command again; finished scenes are skipped. This works only until the final push, which creates a commit.
+
+Options: `--hours 5` changes the time limit, `--skip-vggt` runs Pi3 only, and leaving out `--push` keeps everything local.
+
+Extra variants in track C: `A0_5k`, `A0_6k`, `A0_7k` are uniform resizes at larger token budgets (the cost-accuracy curve to beat); `A11_nobias` drops the logit bias; `A8_kv` and `A3_kv` apply the same key pooling to real and to upsampled pixels.
+
+## The earlier `salvation` kill tests (tracks A and B)
 
 Two short GPU experiments decide which paper we write. Run track A first. Run track B only if A fails.
 

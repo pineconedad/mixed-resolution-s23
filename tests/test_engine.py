@@ -28,7 +28,7 @@ def test_t3_mixed_shapes_and_global_budget(tiny_pi3, arm):
     images = [torch.rand(3, 56, 56), torch.rand(3, image_size, image_size)]
     with torch.inference_mode():
         result, trace = run_engine(Pi3Adapter(tiny_pi3), images, views, arm)
-    expected = 32 if arm in {"A0", "A3", "A6", "A8"} else 20
+    expected = 32 if arm in {"A0", "A3", "A6", "A8", "A10"} else 20
     assert all(layer["patch_tokens"] == expected for layer in trace)
     assert all(layer["total_tokens"] == expected + 10 for layer in trace)
     assert all(torch.isfinite(r["camera_poses"]).all() for r in result)

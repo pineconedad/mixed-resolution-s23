@@ -2,8 +2,8 @@ import torch
 import torch.nn.functional as F
 
 from mixres.rmfa.arms import ARMS, RMFA_ARMS
-from mixres.rmfa.calibration import (CALIBRATIONS, LOGIT_BIASES, attention_bias,
-                                     calibrate_groups, key_bias)
+from mixres.rmfa.calibration import (CALIBRATIONS, KV_POOLS, LOGIT_BIASES, asymmetric_block,
+                                     attention_bias, calibrate_groups, key_bias)
 from mixres.rmfa.grid import patch_grid, resize_tokens
 from mixres.rmfa.positions import positions
 
@@ -35,11 +35,13 @@ def frame_forward(block, tokens, grids, special, *, observer=None, layer=0, view
 def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bilinear",
                token_interp="bilinear", head_grid="lo", rmfa_layers="all", observer=None,
                alignment_scope="global", position_scale="actual", calibrate="none",
-               logit_bias="none"):
+               logit_bias="none", kv_pool="none"):
     if arm_name not in ARMS or head_grid not in {"lo", "hi"}:
         raise ValueError("Unsupported arm/head grid")
     if calibrate not in CALIBRATIONS or logit_bias not in LOGIT_BIASES:
         raise ValueError("Unknown calibration/logit-bias option")
+    if kv_pool not in KV_POOLS or (kv_pool != "none" and ARMS[arm_name].global_grid != "hi"):
+        raise ValueError("kv_pool needs an arm whose global attention runs on the sharp grid")
     arm = ARMS[arm_name]
     if alignment_scope not in {"global", "all"} or position_scale not in {"actual", "nominal"}:
         raise ValueError("Unknown position-alignment protocol")
@@ -47,6 +49,8 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
     lo = [patch_grid(v["hw"], adapter.patch_size) for v in views]
     embedded = adapter.embed(images)
     source = [patch_grid(image.shape[-2:], adapter.patch_size) for image in images]
+    encoder_tokens = sum(g[0] * g[1] for g in source)
+    encoder_quadratic = sum((g[0] * g[1]) ** 2 for g in source)
     special = adapter.special_count
     state_grids = hi if arm.frame == "hi" else lo
     state = [resize_tokens(x, s, t, special, token_interp if arm.entry == "token" else pool_op)
@@ -97,8 +101,27 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
             if any(part is not None for part in parts):
                 global_bias = torch.cat([torch.zeros(n, device=sequence.device) if part is None else part
                                          for part, n in zip(parts, lengths)])
-        with attention_bias(global_block, global_bias):
-            after = list(global_block(sequence, xpos=torch.cat(pos, 1)).split(lengths, dim=1))
+        kv_length = sequence.shape[1]
+        if kv_pool == "mix" and any(g != low for g, low in zip(global_grids, lo)):
+            # Dense queries, pooled keys/values: small views keep one update per sharp-grid
+            # token but are read by every view through their pooled tokens only.
+            keys = [resize_tokens(x, g, low, special, pool_op) for x, g, low in zip(before, global_grids, lo)]
+            key_pos = [positions(low, h, special, "pi_hr", x.device,
+                                 v["rho"] if position_scale == "nominal" else None)
+                       for x, low, h, v in zip(keys, lo, hi, views)]
+            key_bias_parts = None
+            if logit_bias in {"global", "both"}:
+                key_bias_parts = torch.cat([
+                    torch.zeros(x.shape[1], device=x.device) if part is None else part
+                    for x, part in zip(keys, (key_bias(low, h, special, sequence.device)
+                                              for low, h in zip(lo, hi)))])
+            kv_sequence = torch.cat(keys, 1)
+            kv_length = kv_sequence.shape[1]
+            after = list(asymmetric_block(global_block, sequence, torch.cat(pos, 1), kv_sequence,
+                                          torch.cat(key_pos, 1), key_bias_parts).split(lengths, dim=1))
+        else:
+            with attention_bias(global_block, global_bias):
+                after = list(global_block(sequence, xpos=torch.cat(pos, 1)).split(lengths, dim=1))
         updated = []
         for x, low_in, low_out, s, t in zip(state, before, after, target_state, global_grids):
             if s == t and calibrate == "moment_transient" and low_in is not x:
@@ -128,7 +151,9 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                       "group_shift": shift,
                       "frame_total_tokens": sum(x.shape[1] for x in state),
                       "frame_attention_quadratic": sum(x.shape[1] ** 2 for x in state),
-                      "global_attention_quadratic": sequence.shape[1] ** 2})
+                      "global_attention_quadratic": sequence.shape[1] * kv_length,
+                      "global_kv_tokens": kv_length, "encoder_patch_tokens": encoder_tokens,
+                      "encoder_attention_quadratic": encoder_quadratic})
     if alignment_scope == "all":
         head_pos = [positions(g, h, special, arm.positions, x.device,
                               v["rho"] if position_scale == "nominal" else None)

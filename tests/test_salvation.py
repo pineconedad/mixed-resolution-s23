@@ -135,7 +135,8 @@ def load_runner():
     return module
 
 
-@pytest.mark.parametrize("name", ["salvation-a-pi3", "salvation-b-pi3", "salvation-a-vggt", "salvation-b-vggt"])
+@pytest.mark.parametrize("name", ["salvation-a-pi3", "salvation-b-pi3", "salvation-a-vggt", "salvation-b-vggt",
+                                  "salvation-c-pi3", "salvation-c-vggt"])
 def test_salvation_configs_parse_and_accept_only_engine_options(name):
     runner = load_runner()
     config = yaml.safe_load((ROOT / f"configs/{name}.yaml").read_text())
@@ -160,3 +161,48 @@ def test_a0_resizes_every_view_to_the_equal_budget_uniform_size():
     mixed_tokens = sum((v["hw"][0] // 14) * (v["hw"][1] // 14) for v in views)
     uniform_tokens = sum((v["hw"][0] // 14) * (v["hw"][1] // 14) for v in uniform)
     assert (mixed_tokens, uniform_tokens) == (4200, 4032)
+
+
+def test_asymmetric_block_equals_the_block_when_keys_are_the_queries(tiny_pi3):
+    from mixres.rmfa.calibration import asymmetric_block
+    from mixres.rmfa.positions import positions
+    adapter = Pi3Adapter(tiny_pi3)
+    torch.manual_seed(1)
+    x = torch.randn(1, 2 * (5 + 16), 32)
+    pos = torch.cat([positions((4, 4), (4, 4), 5, "native", "cpu")] * 2, 1)
+    with torch.inference_mode():
+        for block in adapter.global_blocks:
+            assert torch.allclose(asymmetric_block(block, x, pos, x, pos), block(x, xpos=pos), atol=1e-5)
+
+
+def test_kv_pool_keeps_dense_queries_and_reads_pooled_keys(tiny_pi3):
+    adapter = Pi3Adapter(tiny_pi3)
+    images = mixed_images("A10")
+    with torch.inference_mode():
+        lifted, lifted_trace = run_engine(adapter, images, MIXED, "A10")
+        pooled, trace = run_engine(adapter, images, MIXED, "A10", kv_pool="mix", logit_bias="global")
+        uniform_views = [{"hw": [56, 56], "hi_hw": [56, 56]}] * 3
+        uniform_images = [torch.rand(3, 56, 56) for _ in range(3)]
+        plain, _ = run_engine(adapter, uniform_images, uniform_views, "A10")
+        same, _ = run_engine(adapter, uniform_images, uniform_views, "A10", kv_pool="mix", logit_bias="global")
+    assert all(layer["patch_tokens"] == 4 * 16 and layer["global_kv_tokens"] == 4 * 16 + 20
+               for layer in lifted_trace)
+    assert all(layer["patch_tokens"] == 4 * 16 and layer["global_kv_tokens"] == 2 * 16 + 2 * 4 + 20
+               for layer in trace)
+    assert all(layer["encoder_patch_tokens"] == 2 * 16 + 2 * 4 for layer in trace)
+    assert torch.isfinite(poses(pooled)).all() and not torch.equal(poses(pooled), poses(lifted))
+    assert torch.equal(poses(plain), poses(same))
+    assert all(view["points"].shape[:2] == (56, 56) for view in pooled)
+    with pytest.raises(ValueError, match="kv_pool"):
+        run_engine(adapter, mixed_images("A2"), MIXED, "A2", kv_pool="mix")
+
+
+def test_uniform_budget_is_an_a0_only_runner_option():
+    runner = load_runner()
+    views = [{"hw": [322, 420], "hi_hw": [322, 420], "sharp": True, "rho": 1.0}] * 12
+    sizes = {budget: runner.scene_views(views, "A0", {"budget_tokens": 4096}, budget)[0]["hw"]
+             for budget in (5120, 6144, 7168)}
+    assert sizes == {5120: [252, 336], 6144: [280, 364], 7168: [294, 392]}
+    assert runner.parse_variant({"name": "A0_6k", "arm": "A0", "uniform_budget": 6144})[2] == {"uniform_budget": 6144}
+    with pytest.raises(ValueError):
+        runner.parse_variant({"name": "bad", "arm": "A2", "uniform_budget": 6144})

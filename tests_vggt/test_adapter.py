@@ -71,3 +71,22 @@ def test_vggt_validation_reuses_the_committed_development_views():
     config = yaml.safe_load((root / "configs/vggt-validation.yaml").read_text())
     config["views"] = str(root / config["views"])
     validate_views(config, json.loads(Path(config["views"]).read_text()))
+
+
+@pytest.mark.parametrize("options", [{"calibrate": "moment"}, {"logit_bias": "both"},
+                                     {"calibrate": "moment", "logit_bias": "both", "head_grid": "hi"}])
+@pytest.mark.parametrize("arm", ["A2", "A9"])
+def test_salvation_corrections_run_through_vggt_blocks(tiny_vggt, arm, options):
+    views = [{"hw": [56, 56], "hi_hw": [56, 56]}, {"hw": [28, 28], "hi_hw": [56, 56]},
+             {"hw": [56, 56], "hi_hw": [56, 56]}]
+    sizes = [56, 28 if ARMS[arm].entry in {"small", "token"} else 56, 56]
+    torch.manual_seed(5)
+    images = [torch.rand(3, size, size) for size in sizes]
+    adapter = VGGTAdapter(tiny_vggt)
+    with torch.inference_mode():
+        plain, plain_trace = run_engine(adapter, images, views, arm)
+        corrected, trace = run_engine(adapter, images, views, arm, **options)
+    plain_pose = torch.stack([r["pose_encoding"] for r in plain])
+    pose = torch.stack([r["pose_encoding"] for r in corrected])
+    assert torch.isfinite(pose).all() and not torch.equal(pose, plain_pose)
+    assert [t["total_tokens"] for t in trace] == [t["total_tokens"] for t in plain_trace]

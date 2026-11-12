@@ -1,12 +1,15 @@
 import torch
 import torch.nn.functional as F
 
-from mixres.rmfa.arms import ARMS
+from mixres.rmfa.arms import ARMS, RMFA_ARMS
+from mixres.rmfa.calibration import (CALIBRATIONS, LOGIT_BIASES, attention_bias,
+                                     calibrate_groups, key_bias)
 from mixres.rmfa.grid import patch_grid, resize_tokens
 from mixres.rmfa.positions import positions
 
 
-def frame_forward(block, tokens, grids, special, *, observer=None, layer=0, view_positions=None):
+def frame_forward(block, tokens, grids, special, *, observer=None, layer=0, view_positions=None,
+                  bias_hi=None):
     output = [None] * len(tokens)
     groups = {}
     for i, grid in enumerate(grids):
@@ -17,7 +20,13 @@ def frame_forward(block, tokens, grids, special, *, observer=None, layer=0, view
                if view_positions is None else torch.cat([view_positions[i] for i in indices], dim=0))
         if observer:
             observer.frame(layer, block, x, pos, indices, grid)
-        y = block(x, xpos=pos)
+        bias = None
+        if bias_hi is not None:
+            if len({bias_hi[i] for i in indices}) != 1:
+                raise ValueError("Views sharing a frame grid must share a sharp grid for logit bias")
+            bias = key_bias(grid, bias_hi[indices[0]], special, x.device)
+        with attention_bias(block, bias):
+            y = block(x, xpos=pos)
         for i, view_output in zip(indices, y.split(1)):
             output[i] = view_output
     return output
@@ -25,9 +34,12 @@ def frame_forward(block, tokens, grids, special, *, observer=None, layer=0, view
 
 def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bilinear",
                token_interp="bilinear", head_grid="lo", rmfa_layers="all", observer=None,
-               alignment_scope="global", position_scale="actual"):
+               alignment_scope="global", position_scale="actual", calibrate="none",
+               logit_bias="none"):
     if arm_name not in ARMS or head_grid not in {"lo", "hi"}:
         raise ValueError("Unsupported arm/head grid")
+    if calibrate not in CALIBRATIONS or logit_bias not in LOGIT_BIASES:
+        raise ValueError("Unknown calibration/logit-bias option")
     arm = ARMS[arm_name]
     if alignment_scope not in {"global", "all"} or position_scale not in {"actual", "nominal"}:
         raise ValueError("Unknown position-alignment protocol")
@@ -49,7 +61,7 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
     cache = {}
     trace = []
     for pair, (frame, global_block) in enumerate(zip(adapter.frame_blocks, adapter.global_blocks)):
-        use_rmfa = pair < active_count or arm_name not in {"A4", "A5", "A7"}
+        use_rmfa = pair < active_count or arm_name not in RMFA_ARMS
         target_state = state_grids if use_rmfa else lo
         if not use_rmfa:
             state = [resize_tokens(x, g, t, special, pool_op) for x, g, t in zip(state, state_grids, lo)]
@@ -59,14 +71,16 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                                v["rho"] if position_scale == "nominal" else None)
                      for x, g, h, v in zip(state, target_state, hi, views)]
         state = frame_forward(frame, state, target_state, special, observer=observer,
-                              layer=2 * pair, view_positions=frame_pos)
-        selected_head_grids = (hi if head_grid == "hi" else lo) if arm_name in {"A4", "A5", "A6", "A7"} else target_state
+                              layer=2 * pair, view_positions=frame_pos,
+                              bias_hi=hi if logit_bias in {"frame", "both"} else None)
+        selected_head_grids = (hi if head_grid == "hi" else lo) if arm_name in RMFA_ARMS | {"A6"} else target_state
         if 2 * pair in adapter.head_layers:
             cache[2 * pair] = [resize_tokens(x, g, t, special, pool_op if t[0] <= g[0] else lift_op)
                               for x, g, t in zip(state, target_state, selected_head_grids)]
         global_grids = hi if arm.global_grid == "hi" else lo
         before = [resize_tokens(x, s, t, special, pool_op if t[0] <= s[0] else lift_op)
                   for x, s, t in zip(state, target_state, global_grids)]
+        before, shift = calibrate_groups(before, global_grids, hi, special, calibrate)
         pos = [positions(g, h, special, arm.positions, x.device,
                          v["rho"] if position_scale == "nominal" else None)
                for x, g, h, v in zip(before, global_grids, hi, views)]
@@ -77,10 +91,21 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
             raise AssertionError("Global token count mismatch")
         if observer:
             observer.global_input(2 * pair + 1, before, global_grids)
-        after = list(global_block(sequence, xpos=torch.cat(pos, 1)).split(lengths, dim=1))
+        global_bias = None
+        if logit_bias in {"global", "both"}:
+            parts = [key_bias(g, h, special, sequence.device) for g, h in zip(global_grids, hi)]
+            if any(part is not None for part in parts):
+                global_bias = torch.cat([torch.zeros(n, device=sequence.device) if part is None else part
+                                         for part, n in zip(parts, lengths)])
+        with attention_bias(global_block, global_bias):
+            after = list(global_block(sequence, xpos=torch.cat(pos, 1)).split(lengths, dim=1))
         updated = []
         for x, low_in, low_out, s, t in zip(state, before, after, target_state, global_grids):
-            if s == t:
+            if s == t and calibrate == "moment_transient" and low_in is not x:
+                # Calibration only shapes what global attention reads; keep the native state.
+                updated.append(torch.cat([low_out[:, :special],
+                                          x[:, special:] + (low_out - low_in)[:, special:]], dim=1))
+            elif s == t:
                 updated.append(low_out)  # Avoid x + (out - x) rounding drift in T1.
             else:
                 delta = resize_tokens(low_out - low_in, t, s, special,
@@ -89,7 +114,7 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                 updated.append(torch.cat([low_out[:, :special], patches], dim=1))
         state = updated
         if 2 * pair + 1 in adapter.head_layers:
-            persistent_heads = head_grid == "hi" and arm_name in {"A4", "A5", "A7"}
+            persistent_heads = head_grid == "hi" and arm_name in RMFA_ARMS
             head_state = state if persistent_heads else after
             head_source = target_state if persistent_heads else global_grids
             cache[2 * pair + 1] = [resize_tokens(x, g, t, special, pool_op if t[0] <= g[0] else lift_op)
@@ -100,6 +125,7 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                       "frame_block_count": (int(pair not in getattr(adapter, "identity_frame_pairs", ()))
                                             + (getattr(adapter, "prefix_frame_blocks", 0) if pair == 0 else 0)),
                       "special_tokens": len(views) * special, "total_tokens": sequence.shape[1],
+                      "group_shift": shift,
                       "frame_total_tokens": sum(x.shape[1] for x in state),
                       "frame_attention_quadratic": sum(x.shape[1] ** 2 for x in state),
                       "global_attention_quadratic": sequence.shape[1] ** 2})
@@ -110,7 +136,7 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
         predictions = adapter.run_heads(cache, selected_head_grids, head_positions=head_pos)
     else:
         predictions = adapter.run_heads(cache, selected_head_grids)
-    if head_grid == "hi" and arm_name in {"A4", "A5", "A6", "A7"}:
+    if head_grid == "hi" and arm_name in RMFA_ARMS | {"A6"}:
         for prediction, source_grid, target_grid in zip(predictions, selected_head_grids, lo):
             if source_grid != target_grid:
                 size = tuple(side * adapter.patch_size for side in target_grid)

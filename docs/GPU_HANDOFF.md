@@ -1,5 +1,7 @@
 # GPU handoff
 
+**Salvation kill tests (local GPU, current priority):** follow "Start here" at the top of `README.md`. The command is `bash scripts/salvation.sh a pi3`; it runs the fp32 identity gate first. The cloud procedure below is unchanged and is not needed for these tests.
+
 The assistant is build-only. You create, connect to, stop and delete GPU resources. None of the commands below provisions infrastructure or starts a cloud watchdog.
 
 ## Current evidence

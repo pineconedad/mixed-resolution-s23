@@ -4,6 +4,16 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- SALVATION BRANCH (`salvation`, from e1876b0). The paper direction is being re-decided by two exploratory kill tests on a user-operated local GPU. Run instructions are at the top of README.md. No cloud action is involved or authorized.
+- Built, not yet run on any GPU: track A zero-cost corrections (`calibrate`, `logit_bias` in `run_engine`, code in mixres/rmfa/calibration.py), track B arm A9 (real pixels, sharp frame attention, pooled global attention), A0 and named variants in scripts/04_run.py, configs/salvation-{a,b}-{pi3,vggt}.yaml, scripts/salvation.sh, scripts/salvation_report.py, tests/test_salvation.py.
+- New options default to off. They are wired into the exploratory seed-42 runner only. They are NOT in StudyRunner METHOD_DEFAULTS, the 24-config sweep, freeze, or the 270/150 matrix; add them there only after a gate passes.
+- Adding A9 and calibration.py changes `sanity_source_hash`, so every S23 identity gate must be rerun before any S23 cell.
+- Pass rule is pre-stated in scripts/salvation_report.py (+2 AUC@3 and 4 of 5 scene wins against A2 for track A, against A0 for track B). Do not edit it after results exist.
+- NEXT COMMAND (user, local GPU): `bash scripts/salvation.sh a pi3`. Run `bash scripts/salvation.sh b pi3` only if Gate A fails. Then return runs/salvation_*/pi3/summary/report.txt.
+- Known limits: logit bias supports Pi3 and VGGT blocks only and raises on DA3; VGGT corrections pass tiny-model CPU tests only (tests_vggt has one pre-existing A0 failure); track B cost is not matched to A0 (the report prints the latency ratio).
+- The entries below predate this branch and describe the cloud sessions.
+
+
 - ACTIVE NEW POD hassuectufut86, created 2026-11-11T18:42:45.022Z, US-MO-1 H100 SXM $3.99/hour, 30 GB container + 40 GB workspace. Marker devfull20261111a. $2 session cap/$3 reserve. Launch independent watchdog before setup. Source pack artifacts/development-pack-next/source.tar.gz, metadata.pack. NEW PACK includes all three development manifests and local approval receipt. Retained old yvcfcbk52vr2x1 remains stopped separately; do not confuse IDs.
 - UPDATE: verified guard handoff to artifacts/control/devfull20261111a-extended/receipt.json. Session ceiling extended to $4 at unchanged rate, reserve $3. Original supervisor exits after handoff but remote worker continues; replacement watcher detects remote quiescent archives and automatically stops/deletes after backup. Follow the EXTENDED final.json, not the original supervisor exit.
 - Active worker passed dependency checks, verified DA3 weights and is staging selected inputs. Range staging avoids full 30 GB ZIP downloads; all selected image hashes are checked. An actual selected 7-Scenes member was verified over HTTP ranges. CPU input cache added before any sweep output to avoid repeated JPEG decode. Runtime overlays: mixres/data/remote_zip.py, scripts/stage_development.py, mixres/study_runner.py uploaded before gates/inference.

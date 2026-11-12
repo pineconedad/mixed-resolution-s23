@@ -1,0 +1,39 @@
+study: salvation_b
+model: vggt
+dataset: 7scenes
+seed: 42
+budget_tokens: 4096
+n_views: 12
+n_sharp: 4
+rho: 2.0
+scenes: [chess, fire, heads, office, pumpkin]
+arms:
+  # References, rerun here so every comparison is paired on the same machine.
+  - A0
+  - A2
+  - A4
+  - A3
+  - A8
+  # Track B: sharp frame attention, pooled global attention.
+  - {name: A4_headhi, arm: A4, head_grid: hi}
+  - {name: A5_headhi, arm: A5, head_grid: hi}
+  - A9
+  - {name: A9_headhi, arm: A9, head_grid: hi}
+  - {name: A9_headhi_bias, arm: A9, head_grid: hi, logit_bias: global}
+precision: bf16
+pool_op: area
+lift_op: bilinear
+token_interp: bilinear
+rmfa_layers: all
+head_grid: lo
+alignment_scope: all
+position_scale: nominal
+warmup: 1
+timed_passes: 3
+checkpoint: facebook/VGGT-1B
+checkpoint_revision: 860abec7937da0a4c03c41d3c269c366e82abdf9
+views: runs/views/7scenes/seed42.json
+source_views_config_hash: 5286fcf252572a8d71b7337dc6e8dffb63801ff036bdf734d3f6c6d72db4c941
+views_sha256: 30b7cb32a0c7996d49d6ea36b021505cde3a3abec3d17baf5bdce92828873d09
+data_root: data/7scenes
+bootstrap_resamples: 10000

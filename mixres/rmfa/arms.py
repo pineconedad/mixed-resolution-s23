@@ -19,4 +19,8 @@ ARMS = {
     "A6": Arm("pixel", "lo", "hi", "native"),
     "A7": Arm("pixel", "hi", "lo", "native"),
     "A8": Arm("real", "hi", "hi", "native"),
+    # Salvation track B: real pixels for every view, sharp frame attention, pooled global attention.
+    "A9": Arm("real", "hi", "lo", "pi_hr"),
 }
+
+RMFA_ARMS = frozenset({"A4", "A5", "A7", "A9"})

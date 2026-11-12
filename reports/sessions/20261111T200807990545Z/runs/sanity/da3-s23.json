@@ -1,0 +1,212 @@
+{
+  "T9": "unavailable: historical inputs were not supplied",
+  "comparisons": [
+    {
+      "global_trace": [
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "depth": 0.0,
+        "depth_conf": 0.0,
+        "intrinsics": 0.0,
+        "local_points": 0.0,
+        "points": 0.0
+      },
+      "scene": "chess"
+    },
+    {
+      "global_trace": [
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 1,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 3,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 5,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 7,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 9,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 11,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 13,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        },
+        {
+          "frame_attention_quadratic": 5729772,
+          "frame_total_tokens": 8292,
+          "global_attention_quadratic": 68757264,
+          "layer": 15,
+          "patch_tokens": 8280,
+          "special_tokens": 12,
+          "total_tokens": 8292
+        }
+      ],
+      "max_abs_error": {
+        "camera_poses": 0.0,
+        "conf": 0.0,
+        "depth": 0.0,
+        "depth_conf": 0.0,
+        "intrinsics": 0.0,
+        "local_points": 0.0,
+        "points": 0.0
+      },
+      "scene": "fire"
+    }
+  ],
+  "model_identity": {
+    "checkpoint": "depth-anything/DA3-LARGE-1.1",
+    "checkpoint_revision": "0e109ae307c5982f319a67cf6f9f99ccdc0ec97c",
+    "checkpoint_sha256": "739905c423cf0d6ccaf9e61a8401d82ba1ac32d7f4d3ee6dca8f92b377633f64",
+    "model_config_hash": "46de9adc2d6ceccfbfd24fd45dbb180a43b9539c62d0492f0ca10b8aef98e8a3",
+    "sanity_source_hash": "42d69e4908bf751182f3ff8acabd1ebd93bff9d027d1c7838535655a33a506ac",
+    "upstream_commit": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4"
+  },
+  "provenance": {
+    "checkpoint": "depth-anything/DA3-LARGE-1.1",
+    "checkpoint_revision": "0e109ae307c5982f319a67cf6f9f99ccdc0ec97c",
+    "checkpoint_sha256": "739905c423cf0d6ccaf9e61a8401d82ba1ac32d7f4d3ee6dca8f92b377633f64",
+    "config_hash": "4b42bcc63287a6f3c7309cc4eea3f2c5efea716564164e9580d42b32e583634c",
+    "cpu_threads": 4,
+    "cuda_version": "12.4",
+    "dirty_tree": true,
+    "driver_version": "595.91.07",
+    "git_commit": "85680d56907c6df362f27ce83e874968ab690b5b",
+    "gpu_name": "NVIDIA H100 80GB HBM3",
+    "model_config_hash": "46de9adc2d6ceccfbfd24fd45dbb180a43b9539c62d0492f0ca10b8aef98e8a3",
+    "precision": "fp32",
+    "upstream_commit": "3d835ec1a5802d64a8b8b15f817a1ab54809bfe4",
+    "versions": {
+      "Pillow": "11.1.0",
+      "huggingface-hub": "0.28.1",
+      "numpy": "1.26.4",
+      "safetensors": "0.5.2",
+      "torch": "2.5.1",
+      "torchvision": "0.20.1"
+    },
+    "views_hash": "a93c88fe21ba78d54e5fa6e26964670372d21abbc4e9364a8589bf5076c5d712"
+  },
+  "scope": "s23-da3-fp32-T1",
+  "status": "passed",
+  "test_precision": "fp32"
+}

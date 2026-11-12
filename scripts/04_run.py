@@ -120,6 +120,36 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint")
     parser.add_argument("--max-seconds", type=float)
     parser.add_argument("--stop-file")
+    parser.add_argument("--model", choices=["pi3", "vggt", "da3"])
+    parser.add_argument("--dataset", choices=["eth3d", "scannetpp", "7scenes", "dtu", "hiroom"])
+    parser.add_argument("--budget", type=int, choices=[4096, 8192])
+    parser.add_argument("--arm", choices=list(ARMS))
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--frozen")
+    parser.add_argument("--phase", default="main")
+    parser.add_argument("--probes", choices=["on", "off"], default="off")
+    parser.add_argument("--save-preds", action="store_true")
     args = parser.parse_args()
-    config = yaml.safe_load(Path(args.config).read_text())
-    run(config, args.checkpoint or f"checkpoints/{config['model']}/model.safetensors", args.max_seconds, args.stop_file)
+    if args.probes == "on" and (not args.model or args.seed != 1000):
+        parser.error("--probes on requires an S23 model and seed 1000")
+    if args.model:
+        if None in (args.dataset, args.budget, args.arm, args.seed):
+            parser.error("S23 runs require --model, --dataset, --budget, --arm and --seed")
+        from mixres.study_runner import StudyRunner
+        frozen = yaml.safe_load(Path(args.frozen).read_text()) if args.frozen else {}
+        if args.seed >= 1000 or args.phase != "dev":
+            if not args.frozen:
+                parser.error("Frozen execution requires --frozen")
+        method = {key: frozen.get(key, default) for key, default in
+                  (("pool_op", "area"), ("lift_op", "bilinear"), ("token_interp", "bilinear"),
+                   ("rmfa_layers", "all"), ("head_grid", "lo"),
+                   ("alignment_scope", "global"), ("position_scale", "actual"))}
+        runner = StudyRunner(args.model, args.checkpoint or f"checkpoints/{args.model}",
+                             precision=frozen.get("precision", "bf16"))
+        runner.run_cell(args.dataset, args.budget, args.arm, args.seed, method,
+                        phase=args.phase, save_preds=args.save_preds,
+                        max_seconds=args.max_seconds, stop_file=args.stop_file,
+                         frozen_path=args.frozen, probes=args.probes == "on")
+    else:
+        config = yaml.safe_load(Path(args.config).read_text())
+        run(config, args.checkpoint or f"checkpoints/{config['model']}/model.safetensors", args.max_seconds, args.stop_file)

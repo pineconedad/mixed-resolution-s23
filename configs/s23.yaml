@@ -15,4 +15,17 @@ rmfa_layers: [all, first_half, first_quarter]
 head_grid: [lo, hi]
 legacy_s7_configs: null
 legacy_s1_s5_results: null
-da3_checkpoint: null
+baseline_protocol: fresh_v1
+mix:
+  n_views: 12
+  n_sharp: 4
+  rho: 2.0
+uniform:
+  n_views: 12
+  selection: equal_budget_all_views
+alignment_scope: global
+position_scale: actual
+da3_checkpoint: depth-anything/DA3-LARGE-1.1
+da3_checkpoint_policy: corrected_current_release_for_fresh_baseline
+historical_t9_status: unavailable_missing_inputs
+scannetpp_status: user_confirmed_permission_archive_verified_and_extracted

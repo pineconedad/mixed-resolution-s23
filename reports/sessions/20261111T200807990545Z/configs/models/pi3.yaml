@@ -1,0 +1,20 @@
+checkpoint: yyfz233/Pi3
+checkpoint_revision: ae722e7039287d0c8fde9f11f197f804f44b510c
+code_commit: 9fa3ddb3f8d53041f8b2738df404f62223bbaa7b
+patch_size: 14
+image_multiple: 14
+normalization_mean: [0.485, 0.456, 0.406]
+normalization_std: [0.229, 0.224, 0.225]
+maximum_input_side: null  # No hard cap in the inspected original implementation.
+encoder: dinov2_vitl14_reg
+decoder_layers: 36
+frame_layers: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34]
+global_layers: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
+head_layers: [34, 35]
+head_type: three_per_view_transformer_decoders_then_linear_points_confidence_and_camera
+decoder_register_tokens_per_view: 5
+camera_token: false
+positions: rotary_yx_patch_indices_plus_one_special_tokens_zero
+pi_hr: scale_zero_based_patch_coordinates_by_effective_hi_lo_grid_ratio_then_add_one
+head_positions: native_by_default_or_pi_hr_when_alignment_scope_all
+output_pose_convention: camera_to_world

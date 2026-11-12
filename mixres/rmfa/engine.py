@@ -27,7 +27,7 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                token_interp="bilinear", head_grid="lo", rmfa_layers="all", observer=None,
                alignment_scope="global", position_scale="actual"):
     if arm_name not in ARMS or head_grid not in {"lo", "hi"}:
-        raise ValueError("Unsupported arm/head grid; A0 requires unavailable S7 settings")
+        raise ValueError("Unsupported arm/head grid")
     arm = ARMS[arm_name]
     if alignment_scope not in {"global", "all"} or position_scale not in {"actual", "nominal"}:
         raise ValueError("Unknown position-alignment protocol")
@@ -39,6 +39,8 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
     state_grids = hi if arm.frame == "hi" else lo
     state = [resize_tokens(x, s, t, special, token_interp if arm.entry == "token" else pool_op)
              for x, s, t in zip(embedded, source, state_grids)]
+    if hasattr(adapter, "preprocess"):
+        state = adapter.preprocess(state, state_grids, views, observer=observer)
     layers = len(adapter.frame_blocks)
     active_count = {"all": layers, "first_half": layers // 2,
                     "first_quarter": layers // 4}.get(rmfa_layers)
@@ -87,12 +89,20 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
                 updated.append(torch.cat([low_out[:, :special], patches], dim=1))
         state = updated
         if 2 * pair + 1 in adapter.head_layers:
+            persistent_heads = head_grid == "hi" and arm_name in {"A4", "A5", "A7"}
+            head_state = state if persistent_heads else after
+            head_source = target_state if persistent_heads else global_grids
             cache[2 * pair + 1] = [resize_tokens(x, g, t, special, pool_op if t[0] <= g[0] else lift_op)
-                                  for x, g, t in zip(after, global_grids, selected_head_grids)]
+                                  for x, g, t in zip(head_state, head_source, selected_head_grids)]
         if observer:
             observer.tokens(2 * pair + 1, after, global_grids, lo, special)
         trace.append({"layer": 2 * pair + 1, "patch_tokens": expected_patches,
-                      "special_tokens": len(views) * special, "total_tokens": sequence.shape[1]})
+                      "frame_block_count": (int(pair not in getattr(adapter, "identity_frame_pairs", ()))
+                                            + (getattr(adapter, "prefix_frame_blocks", 0) if pair == 0 else 0)),
+                      "special_tokens": len(views) * special, "total_tokens": sequence.shape[1],
+                      "frame_total_tokens": sum(x.shape[1] for x in state),
+                      "frame_attention_quadratic": sum(x.shape[1] ** 2 for x in state),
+                      "global_attention_quadratic": sequence.shape[1] ** 2})
     if alignment_scope == "all":
         head_pos = [positions(g, h, special, arm.positions, x.device,
                               v["rho"] if position_scale == "nominal" else None)
@@ -103,8 +113,18 @@ def run_engine(adapter, images, views, arm_name, *, pool_op="area", lift_op="bil
     if head_grid == "hi" and arm_name in {"A4", "A5", "A6", "A7"}:
         for prediction, source_grid, target_grid in zip(predictions, selected_head_grids, lo):
             if source_grid != target_grid:
-                for key in ("points", "local_points", "conf"):
-                    field = prediction[key].permute(2, 0, 1)[None]
-                    size = tuple(side * adapter.patch_size for side in target_grid)
-                    prediction[key] = F.interpolate(field, size=size, mode="bilinear", align_corners=False)[0].permute(1, 2, 0)
+                size = tuple(side * adapter.patch_size for side in target_grid)
+                for key in ("points", "local_points", "conf", "depth", "depth_conf"):
+                    if key not in prediction:
+                        continue
+                    field = prediction[key]
+                    scalar = field.ndim == 2
+                    field = (field[None] if scalar else field.permute(2, 0, 1))[None]
+                    resized = F.interpolate(field, size=size, mode="bilinear", align_corners=False)[0]
+                    prediction[key] = resized[0] if scalar else resized.permute(1, 2, 0)
+                if "intrinsics" in prediction:
+                    intrinsics = prediction["intrinsics"].clone()
+                    intrinsics[0] *= target_grid[1] / source_grid[1]
+                    intrinsics[1] *= target_grid[0] / source_grid[0]
+                    prediction["intrinsics"] = intrinsics
     return predictions, trace

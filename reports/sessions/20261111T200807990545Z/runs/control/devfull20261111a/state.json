@@ -1,0 +1,9 @@
+{
+  "error": "KeyboardInterrupt: Session interrupted",
+  "exit_code": 1,
+  "phase": "finished",
+  "pid": 649,
+  "quiescent": true,
+  "session_id": "devfull20261111a",
+  "unit_tests_skipped_by_user_request": true
+}

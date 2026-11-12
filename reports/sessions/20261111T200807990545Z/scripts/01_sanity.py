@@ -1,0 +1,114 @@
+"""GPU gate for the independent Pi3 quick test. Never marks T9 as passed."""
+import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "third_party/Pi3"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "third_party/vggt"))
+
+import torch
+import yaml
+
+from mixres.adapters import load_adapter
+from mixres.data.resize import load_view
+from mixres.io import atomic_json, digest, read_json
+from mixres.rmfa.engine import run_engine
+from mixres.runtime import provenance, seed_everything, validate_views, sanity_path
+from mixres.study_runner import materialize_views, model_identity
+
+
+def sanity(config, checkpoint):
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA GPU required for checkpoint-backed T1; local tests are separate")
+    seed_everything(config["seed"])
+    meta = provenance(config, config["views"], checkpoint)
+    manifest = read_json(config["views"])
+    validate_views(config, manifest)
+    adapter = load_adapter(config["model"], checkpoint, "cuda")
+    comparisons = []
+    with torch.inference_mode():
+        for scene in manifest["scenes"][:2]:
+            # Use the planned sharp size and all 12 views for the uniform identity gate.
+            views = [{**v, "hw": v["hi_hw"], "rho": 1.0, "sharp": True} for v in scene["views"]]
+            images = [load_view(Path(config["data_root"]) / v["image"], v, "real").cuda() for v in views]
+            native = adapter.reference(images)
+            actual, trace = run_engine(adapter, images, views, "A4",
+                                      **{k: config[k] for k in ("alignment_scope", "position_scale") if k in config})
+            differences = {}
+            for key in native[0]:
+                reference = torch.stack([view[key] for view in native])
+                candidate = torch.stack([v[key] for v in actual])
+                error = (reference - candidate).abs().max().item()
+                differences[key] = error
+                if not torch.isfinite(reference).all() or not torch.isfinite(candidate).all() or error >= 1e-4:
+                    atomic_json(sanity_path(config).with_name(sanity_path(config).stem + "-failed.json"),
+                                {"scene": scene["scene"], "errors": differences, "provenance": meta})
+                    raise AssertionError(f"T1 failed: {scene['scene']} {key} error={error}")
+            comparisons.append({"scene": scene["scene"], "max_abs_error": differences, "global_trace": trace})
+            del native, actual, images
+    atomic_json(sanity_path(config), {"status": "passed", "scope": f"{config['study']}-{config['model']}-fp32-T1", "test_precision": "fp32", "provenance": meta,
+                "comparisons": comparisons, "T9": "unavailable: no historical results supplied"})
+    print(f"{config['model']} checkpoint-backed fp32 identity gate passed on two scenes")
+
+
+def sanity_s23(model, checkpoint, dataset="7scenes", budget=4096):
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA GPU required for checkpoint-backed T1")
+    seed_everything(42)
+    checkpoint = Path(checkpoint)
+    weights = checkpoint / "model.safetensors" if checkpoint.is_dir() else checkpoint
+    model_checkpoint = checkpoint if model == "da3" and checkpoint.is_dir() else weights
+    model_config = yaml.safe_load(Path(f"configs/models/{model}.yaml").read_text())
+    synthetic = {"model": model, "checkpoint": model_config["checkpoint"],
+                 "checkpoint_revision": model_config["checkpoint_revision"], "precision": "fp32"}
+    meta = provenance(synthetic, "configs/s23.yaml", weights)
+    manifest = read_json(Path("runs/views/s23") / dataset / "seed42.json")
+    adapter = load_adapter(model, model_checkpoint, "cuda")
+    comparisons = []
+    with torch.inference_mode():
+        for scene in manifest["scenes"][:2]:
+            planned = materialize_views(scene, budget, "A3")
+            views = [{**view, "hw": view["hi_hw"], "sharp": True, "rho": 1.0}
+                     for view in planned]
+            images = [load_view(view["image"], view, "real").cuda() for view in views]
+            native = adapter.reference(images)
+            actual, trace = run_engine(adapter, images, views, "A4")
+            differences = {}
+            keys = sorted(set(native[0]) & set(actual[0]))
+            for key in keys:
+                if not torch.is_tensor(native[0][key]):
+                    continue
+                reference = torch.stack([item[key] for item in native])
+                candidate = torch.stack([item[key] for item in actual])
+                if reference.shape != candidate.shape:
+                    raise AssertionError(f"T1 shape mismatch: {key} {reference.shape} != {candidate.shape}")
+                error = (reference - candidate).abs().max().item()
+                differences[key] = error
+                if not torch.isfinite(reference).all() or not torch.isfinite(candidate).all() or error >= 1e-4:
+                    raise AssertionError(f"T1 failed: {scene['scene']} {key} error={error}")
+            comparisons.append({"scene": scene["scene"], "max_abs_error": differences,
+                                "global_trace": trace})
+            del native, actual, images
+    identity = model_identity(model, meta)
+    destination = Path("runs/sanity") / f"{model}-s23.json"
+    atomic_json(destination, {"status": "passed", "scope": f"s23-{model}-fp32-T1",
+                              "test_precision": "fp32", "model_identity": identity,
+                              "provenance": meta, "comparisons": comparisons,
+                              "T9": "unavailable: historical inputs were not supplied"})
+    print(f"{model} S23 checkpoint-backed fp32 identity passed on two {dataset} scenes")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="configs/quick.yaml")
+    parser.add_argument("--checkpoint")
+    parser.add_argument("--model", choices=["pi3", "vggt", "da3"])
+    parser.add_argument("--dataset", choices=["eth3d", "7scenes"], default="7scenes")
+    parser.add_argument("--budget", type=int, default=4096)
+    args = parser.parse_args()
+    if args.model:
+        sanity_s23(args.model, args.checkpoint or f"checkpoints/{args.model}", args.dataset, args.budget)
+    else:
+        config = yaml.safe_load(Path(args.config).read_text())
+        sanity(config, args.checkpoint or f"checkpoints/{config['model']}/model.safetensors")

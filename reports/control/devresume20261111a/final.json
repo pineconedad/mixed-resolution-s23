@@ -1,0 +1,7 @@
+{
+  "compute_stopped": true,
+  "persistent_data_retained": true,
+  "pod_id": "v3ff0vv5jb5lm2",
+  "reason": "watchdog_exception",
+  "terminated": false
+}

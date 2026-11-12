@@ -2,6 +2,8 @@
 import argparse
 import sys
 import time
+import os
+import signal
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -23,6 +25,16 @@ if __name__ == "__main__":
         if state.get("session_id") == args.session_id and state.get("quiescent") is True:
             print("Worker quiescent")
             break
+        if time.monotonic() >= deadline - 30 and state.get("session_id") == args.session_id:
+            pid = state.get("pid")
+            if isinstance(pid, int) and pid > 1:
+                try:
+                    argv = Path(f"/proc/{pid}/cmdline").read_bytes().split(b"\0")
+                    if (args.session_id.encode() in argv
+                            and any(arg.endswith(b"run_session.py") for arg in argv)):
+                        os.kill(pid, signal.SIGTERM)
+                except (ProcessLookupError, FileNotFoundError):
+                    pass
         time.sleep(2)
     else:
         raise SystemExit("Worker is not confirmed quiescent; retain persistent data")

@@ -7,6 +7,8 @@ from mixres.rmfa.positions import ContinuousRoPE, positions
 
 class Pi3Adapter:
     patch_size = 14
+    embed_dim = 1024
+    mlp_ratio = 4
 
     def __init__(self, model):
         self.model = model.eval()

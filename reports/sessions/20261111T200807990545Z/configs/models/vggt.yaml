@@ -1,0 +1,25 @@
+checkpoint: facebook/VGGT-1B
+checkpoint_revision: 860abec7937da0a4c03c41d3c269c366e82abdf9
+checkpoint_file: model.safetensors
+code_commit: a288dd0f14786c93483e45524328726ab7b1b4ce
+patch_size: 14
+image_multiple: 14
+normalization_mean: [0.485, 0.456, 0.406]
+normalization_std: [0.229, 0.224, 0.225]
+maximum_input_side: null
+encoder: dinov2_vitl14_reg
+aggregator_pairs: 24
+frame_layers: even_indices_in_generic_pair_loop
+global_layers: odd_indices_in_generic_pair_loop
+cached_pairs: [4, 11, 17, 23]
+head_type: joint_camera_tokens_and_per_view_DPT_points_depth
+special_tokens_per_view: 5
+camera_tokens_per_view: 1
+register_tokens_per_view: 4
+first_view_specific_tokens: true
+positions: rotary_yx_patch_indices_plus_one_special_tokens_zero
+pi_hr: scale_zero_based_patch_coordinates_by_effective_hi_lo_grid_ratio_then_add_one
+native_output_pose_convention: world_to_camera
+adapter_output_pose_convention: camera_to_world
+weights_license: CC-BY-NC-4.0
+environment: env/requirements-vggt.txt

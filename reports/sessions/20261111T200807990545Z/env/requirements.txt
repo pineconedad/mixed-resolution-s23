@@ -1,0 +1,13 @@
+# Pi3's required torch/numpy versions; CUDA wheels selected separately on Linux.
+torch==2.5.1
+torchvision==0.20.1
+numpy==1.26.4
+Pillow==11.1.0
+scipy==1.14.1
+pytest==8.3.5
+huggingface-hub==0.28.1
+safetensors==0.5.3
+requests==2.32.3
+PyYAML==6.0.2
+matplotlib==3.10.1
+opencv-python-headless==4.10.0.84

@@ -11,13 +11,16 @@ from urllib3.util.retry import Retry
 
 
 class HTTPRangeReader(io.RawIOBase):
-    def __init__(self, url):
+    def __init__(self, url, length=None):
         self.url = url
         self.session = requests.Session()
         self.session.mount("https://", HTTPAdapter(max_retries=Retry(total=4, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])))
-        response = self.session.head(url, timeout=60)
+        response = self.session.head(url, timeout=60, allow_redirects=True)
         response.raise_for_status()
-        self.length = int(response.headers["Content-Length"])
+        self.url = response.url
+        self.length = int(response.headers.get("Content-Length", length))
+        if length is not None and self.length != length:
+            raise ValueError("Remote archive size differs from pinned metadata")
         self.etag = response.headers.get("ETag")
         self.position = 0
         self.cache = OrderedDict()

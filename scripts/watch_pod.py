@@ -25,7 +25,8 @@ from mixres.safety import Budget, verified_backup
 
 
 def ssh_base(receipt):
-    trust = ["-o", "UserKnownHostsFile=" + receipt["ssh_known_hosts"]] if receipt.get("ssh_known_hosts") else []
+    # OpenSSH parses this option as a filename list, even as one argv element.
+    trust = ["-o", 'UserKnownHostsFile="' + receipt["ssh_known_hosts"].replace('"', '\\"') + '"'] if receipt.get("ssh_known_hosts") else []
     return ["ssh", "-i", receipt["ssh_key"], "-p", str(receipt["ssh_port"]), *trust,
             "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=15",
             "root@" + receipt["ssh_host"]]
@@ -53,7 +54,7 @@ def sync_backup(receipt, destination):
     destination.mkdir(parents=True, exist_ok=True)
     target = destination / Path(remote_path).name
     transfer = ["scp", "-i", receipt["ssh_key"], "-P", str(receipt["ssh_port"]),
-                *(["-o", "UserKnownHostsFile=" + receipt["ssh_known_hosts"]] if receipt.get("ssh_known_hosts") else []),
+                 *(["-o", 'UserKnownHostsFile="' + receipt["ssh_known_hosts"].replace('"', '\\"') + '"'] if receipt.get("ssh_known_hosts") else []),
                 "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=yes", "-o", "ConnectTimeout=15",
                 "root@" + receipt["ssh_host"] + ":" + root + "/" + remote_path, str(target)]
     subprocess.run(transfer, capture_output=True, timeout=120, check=True)
@@ -82,7 +83,13 @@ async def watch(receipt_path, destination, interval=60):
     if receipt.get("created_by_workflow") != "mixres-s23":
         raise ValueError("Receipt is not from this workflow")
     key = runpod_key()
-    created = receipt.get("budget_start_epoch", datetime.fromisoformat(receipt["created_at"].replace("Z", "+00:00")).timestamp())
+    created = receipt.get("budget_start_epoch")
+    if created is None:
+        stamp = receipt["created_at"].replace("Z", "+00:00")
+        # Python 3.10 accepts only three or six fractional-second digits.
+        stamp = re.sub(r"\.(\d+)(?=[+-]|$)",
+                       lambda match: "." + match[1].ljust(6, "0")[:6], stamp)
+        created = datetime.fromisoformat(stamp).timestamp()
     initial_balance = await account_balance(key)
     # Balance is current; add elapsed charges back only for the conservative clock
     # accounting. Both the live balance and the original create-time cap still apply.
@@ -133,16 +140,18 @@ async def watch(receipt_path, destination, interval=60):
                                 "pod_id": receipt["pod_id"], "balance_usd": initial_balance,
                                 "hard_deadline_epoch": created + budget.hard_seconds})
                 last_backup_failed = False
-            except Exception:
+            except Exception as error:
                 last_backup_failed = True
-                event("backup_failed")
+                event("backup_failed", error_type=type(error).__name__,
+                      detail=str(error) if not isinstance(error, subprocess.CalledProcessError) else
+                      repr(error.stderr)[-1500:])
             try:
                 live_balance = await account_balance(key)
                 reason = budget.stop_reason(max(0, time.time() - created), live_balance)
                 event("balance", balance_usd=live_balance)
             except Exception:
                 reason = "balance_unverified"
-            done = Path(receipt["done_marker"]).exists()
+            done = Path(receipt["done_marker"]).exists() or bool(proof and proof.get("job_quiescent"))
             if receipt.get("heartbeat"):
                 heartbeat = Path(receipt["heartbeat"])
                 if not heartbeat.exists() or time.time() - heartbeat.stat().st_mtime > 180:
@@ -182,7 +191,7 @@ async def guarded_watch(receipt_path, destination, interval=60):
     receipt = read_json(receipt_path)
     try:
         await watch(receipt_path, destination, interval)
-    except Exception:
+    except Exception as error:
         # A transport/session exception must not silently disable the cost guard.
         # Reconnect independently and stop compute, retaining unverified disk data.
         for attempt in range(5):
@@ -191,6 +200,8 @@ async def guarded_watch(receipt_path, destination, interval=60):
                     await control.stop_owned(receipt)
                 atomic_json(Path(destination) / "final.json", {
                     "pod_id": receipt["pod_id"], "reason": "watchdog_exception",
+                    "error_type": type(error).__name__,
+                    "error": str(error) if isinstance(error, AccessError) else None,
                     "compute_stopped": True, "terminated": False,
                     "persistent_data_retained": True})
                 return

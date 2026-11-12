@@ -1,0 +1,5 @@
+{"utc": "2026-11-11T12:43:08.013437+00:00", "event": "backup_failed", "pod_id": "r7jn02w51p7eun"}
+{"utc": "2026-11-11T12:43:08.659713+00:00", "event": "balance", "pod_id": "r7jn02w51p7eun", "balance_usd": 12.7673291356}
+{"utc": "2026-11-11T12:43:09.867949+00:00", "event": "final_backup_or_quiesce_failed", "pod_id": "r7jn02w51p7eun"}
+{"utc": "2026-11-11T12:43:11.711443+00:00", "event": "compute_stopped", "pod_id": "r7jn02w51p7eun", "reason": "backup_failed"}
+{"utc": "2026-11-11T12:43:11.711872+00:00", "event": "persistent_disk_retained", "pod_id": "r7jn02w51p7eun", "reason": "latest_backup_unverified", "storage_billing_continues": true}

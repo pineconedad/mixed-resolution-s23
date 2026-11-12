@@ -1,0 +1,6 @@
+PHASE model_sources
+Submodule 'third_party/Depth-Anything-3' (https://github.com/ByteDance-Seed/Depth-Anything-3.git) registered for path 'third_party/Depth-Anything-3'
+Submodule 'third_party/Pi3' (https://github.com/yyfz/Pi3.git) registered for path 'third_party/Pi3'
+Submodule 'third_party/vggt' (https://github.com/facebookresearch/vggt.git) registered for path 'third_party/vggt'
+Cloning into '/workspace/s23/third_party/Depth-Anything-3'...
+Cloning into '/workspace/s23/third_party/Pi3'...

@@ -1,0 +1,31 @@
+study: s23
+models: [pi3, da3, vggt]
+development_datasets: [eth3d, scannetpp, 7scenes]
+held_out_datasets: [dtu, hiroom]
+budgets: [4096, 8192]
+development_seed: 42
+main_seed: 1000
+extra_seeds: [2000, 3000]
+arms: [A0, A1, A2, A3, A4, A5, A6, A7, A8]
+extra_seed_arms: [A1, A2, A3, A4, A8]
+extra_seed_budgets: [4096]
+pool_op: [area, bilinear]
+lift_op: [bilinear, nearest]
+rmfa_layers: [all, first_half, first_quarter]
+head_grid: [lo, hi]
+legacy_s7_configs: null
+legacy_s1_s5_results: null
+baseline_protocol: fresh_v1
+mix:
+  n_views: 12
+  n_sharp: 4
+  rho: 2.0
+uniform:
+  n_views: 12
+  selection: equal_budget_all_views
+alignment_scope: global
+position_scale: actual
+da3_checkpoint: depth-anything/DA3-LARGE-1.1
+da3_checkpoint_policy: corrected_current_release_for_fresh_baseline
+historical_t9_status: unavailable_missing_inputs
+scannetpp_status: user_confirmed_permission_archive_verified_and_extracted

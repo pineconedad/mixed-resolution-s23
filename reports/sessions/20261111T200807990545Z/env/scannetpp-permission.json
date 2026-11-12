@@ -1,0 +1,9 @@
+{
+  "accepted_by": "local_account_user",
+  "accepted_utc": "2026-11-11T15:22:09.223769+00:00",
+  "dataset": "scannetpp",
+  "evidence": "User personally confirmed official application approval and terms acceptance on local approval form",
+  "license_url": "https://kaldir.vc.in.tum.de/scannetpp/static/scannetpp-terms-of-use.pdf",
+  "permission_granted": true,
+  "terms_accepted": true
+}

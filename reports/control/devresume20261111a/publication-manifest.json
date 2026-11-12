@@ -1,0 +1,10 @@
+{
+  "credential_scan_passed": true,
+  "files": {
+    "final.json": "877b36060284d6b34091f15e2c38bcab0358794ab549edc5a5bfbb115323ddb0",
+    "heartbeat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipt.json": "73bf72c5c4eeaaef9e8f277424465b2c19f0c76201692f9dab3b58a338e24b24",
+    "supervisor-console.log": "e305e6fcfb486dd79a5c4e1ef3c533a91a36f5a04891c21a43f12dfcd8d4f320",
+    "watchdog-console.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

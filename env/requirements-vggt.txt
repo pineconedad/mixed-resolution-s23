@@ -11,3 +11,4 @@ requests==2.32.3
 PyYAML==6.0.2
 matplotlib==3.10.1
 einops==0.8.1
+opencv-python-headless==4.10.0.84

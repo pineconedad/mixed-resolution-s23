@@ -1,0 +1,25 @@
+checkpoint: depth-anything/DA3-LARGE-1.1
+checkpoint_revision: 0e109ae307c5982f319a67cf6f9f99ccdc0ec97c
+checkpoint_file: model.safetensors
+checkpoint_policy: corrected_current_release_for_fresh_baseline
+code_commit: 3d835ec1a5802d64a8b8b15f817a1ab54809bfe4
+model_name: da3-large
+patch_size: 14
+image_multiple: 14
+normalization_mean: [0.485, 0.456, 0.406]
+normalization_std: [0.229, 0.224, 0.225]
+maximum_input_side: 504
+backbone_layers: 24
+local_only_prefix: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+alternating_local_layers: [10, 12, 14, 16, 18, 20, 22]
+global_layers: [9, 11, 13, 15, 17, 19, 21, 23]
+head_layers: [11, 15, 19, 23]
+head_type: dual_dpt_depth_ray_plus_joint_camera_decoder
+special_tokens_per_view: 1
+reference_token_policy: first_view
+positions: interpolated_absolute_embedding_plus_local_rope_global_nondifferentiating_rope
+pi_hr: no_direct_equivalent_global_rope_is_spatially_nondifferentiating_A2_equals_A1
+native_output_pose_convention: world_to_camera
+adapter_output_pose_convention: camera_to_world
+rmfa_status: requires_checkpoint_identity_before_use
+rmfa_layers_scope: eight_alternating_pairs_after_the_local_feature_prefix

@@ -28,7 +28,7 @@ def test_t3_mixed_shapes_and_global_budget(tiny_pi3, arm):
     images = [torch.rand(3, 56, 56), torch.rand(3, image_size, image_size)]
     with torch.inference_mode():
         result, trace = run_engine(Pi3Adapter(tiny_pi3), images, views, arm)
-    expected = 32 if arm in {"A3", "A6", "A8"} else 20
+    expected = 32 if arm in {"A0", "A3", "A6", "A8"} else 20
     assert all(layer["patch_tokens"] == expected for layer in trace)
     assert all(layer["total_tokens"] == expected + 10 for layer in trace)
     assert all(torch.isfinite(r["camera_poses"]).all() for r in result)
@@ -67,6 +67,35 @@ def test_lift_updates_does_not_replace_high_frequency_state():
     assert not torch.equal(lifted, resize_tokens(lo + delta, (1, 1), (2, 2), 0, "bilinear"))
 
 
+def test_hi_heads_read_persistent_detail_not_lifted_pooled_tokens():
+    class Block:
+        def __init__(self, update):
+            self.update = update
+
+        def __call__(self, x, xpos):
+            return x + self.update
+
+    class Adapter:
+        patch_size = 1
+        special_count = 0
+        frame_blocks = [Block(0)]
+        global_blocks = [Block(1)]
+        head_layers = (1,)
+
+        def embed(self, images):
+            return [torch.tensor([[[1.0], [-1.0], [-1.0], [1.0]]])]
+
+        def run_heads(self, cache, grids):
+            self.cached = cache[1][0].clone()
+            return [{"points": torch.zeros(2, 2, 3), "local_points": torch.zeros(2, 2, 3),
+                     "conf": torch.zeros(2, 2, 1)}]
+
+    adapter = Adapter()
+    run_engine(adapter, [torch.zeros(3, 2, 2)],
+               [{"hw": [1, 1], "hi_hw": [2, 2]}], "A4", head_grid="hi")
+    assert torch.equal(adapter.cached, torch.tensor([[[2.0], [0.0], [0.0], [2.0]]]))
+
+
 def test_t8_repeat_is_bit_identical(tiny_pi3):
     adapter = Pi3Adapter(tiny_pi3)
     images = [torch.rand(3, 56, 56), torch.rand(3, 56, 56)]
@@ -79,9 +108,12 @@ def test_t8_repeat_is_bit_identical(tiny_pi3):
             assert torch.equal(a[key], b[key])
 
 
-def test_no_invented_uniform_baseline(tiny_pi3):
-    with pytest.raises(ValueError, match="A0"):
-        run_engine(Pi3Adapter(tiny_pi3), [], [], "A0")
+def test_fresh_uniform_baseline_uses_native_uniform_grid(tiny_pi3):
+    images = [torch.rand(3, 42, 56) for _ in range(2)]
+    views = [{"hw": [42, 56], "hi_hw": [42, 56]} for _ in images]
+    result, trace = run_engine(Pi3Adapter(tiny_pi3), images, views, "A0")
+    assert len(result) == 2
+    assert all(layer["patch_tokens"] == 24 for layer in trace)
 
 
 @pytest.mark.parametrize("layers", ["all", "first_half", "first_quarter"])

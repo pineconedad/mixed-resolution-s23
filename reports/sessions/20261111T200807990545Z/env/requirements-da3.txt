@@ -1,0 +1,18 @@
+torch==2.5.1
+torchvision==0.20.1
+numpy==1.26.4
+Pillow==11.1.0
+scipy==1.14.1
+PyYAML==6.0.2
+huggingface-hub==0.28.1
+safetensors==0.5.2
+einops==0.8.1
+e3nn==0.5.6
+xformers==0.0.29.post1; platform_system == "Linux"
+opencv-python-headless==4.10.0.84
+omegaconf==2.3.0
+addict==2.4.0
+plyfile==1.1
+scikit-learn==1.6.1
+matplotlib==3.10.1
+requests==2.32.3

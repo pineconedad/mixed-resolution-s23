@@ -41,7 +41,7 @@ if __name__ == "__main__":
     from scripts.watch_pod import ssh_base
     import shlex
     model = receipt.get("model", "pi3")
-    if model not in {"pi3", "vggt"}:
+    if model not in {"pi3", "vggt", "da3"}:
         raise SystemExit("Unknown model in ownership receipt")
     config = ("configs/vggt-validation.yaml" if receipt.get("validation_only") else "configs/diagnostic-vggt.yaml") if model == "vggt" else "configs/diagnostic.yaml"
     config = receipt.get("config") or config
@@ -50,7 +50,8 @@ if __name__ == "__main__":
               + " scripts/run_session.py --session-id " + shlex.quote(receipt["session_id"])
               + (" --smoke-only" if args.smoke_only else " --config " + shlex.quote(config) + " --model " + model)
               + (" --validation-only" if receipt.get("validation_only") else "")
-              + (" --skip-unit-tests" if receipt.get("skip_unit_tests") else "")
+               + (" --skip-unit-tests" if receipt.get("skip_unit_tests") else "")
+               + (" --task " + shlex.quote(receipt["task"]) if receipt.get("task") else "")
               + " --env-path " + shlex.quote(receipt.get("env_path", ".venv")))
     with (destination / "ssh-console.log").open("w") as output:
         process = subprocess.Popen(ssh_base(receipt) + [remote], stdin=subprocess.DEVNULL,

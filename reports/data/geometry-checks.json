@@ -1,0 +1,70 @@
+{
+  "reports": [
+    {
+      "checks": [
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/eth3d/courtyard/ground_truth_depth/dslr_images/DSC_0287.JPG",
+          "frame": "dslr_images/DSC_0287.JPG",
+          "max_reprojection_error_px": 2.3187656159247056e-12,
+          "mean_reprojection_error_px": 4.653651224831901e-13,
+          "samples": 1000,
+          "valid_depth_pixels": 2433000
+        },
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/eth3d/courtyard/ground_truth_depth/dslr_images/DSC_0318.JPG",
+          "frame": "dslr_images/DSC_0318.JPG",
+          "max_reprojection_error_px": 3.749942721349417e-12,
+          "mean_reprojection_error_px": 3.7401099932014004e-13,
+          "samples": 1000,
+          "valid_depth_pixels": 9173585
+        },
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/eth3d/courtyard/ground_truth_depth/dslr_images/DSC_0295.JPG",
+          "frame": "dslr_images/DSC_0295.JPG",
+          "max_reprojection_error_px": 1.8331451766013172e-12,
+          "mean_reprojection_error_px": 1.7039763390961807e-13,
+          "samples": 1000,
+          "valid_depth_pixels": 1985037
+        }
+      ],
+      "dataset": "eth3d",
+      "mesh": "third_party/Depth-Anything-3/workspace/benchmark_dataset/eth3d/courtyard/combined_mesh.ply",
+      "mesh_bytes": 47246496,
+      "scene": "courtyard",
+      "status": "passed"
+    },
+    {
+      "checks": [
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/7scenes/7Scenes/chess/seq-01/frame-000435.depth.png",
+          "frame": "frame-000435",
+          "max_reprojection_error_px": 1.797546735911271e-13,
+          "mean_reprojection_error_px": 4.1530343184409605e-14,
+          "samples": 1000,
+          "valid_depth_pixels": 254749
+        },
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/7scenes/7Scenes/chess/seq-01/frame-000085.depth.png",
+          "frame": "frame-000085",
+          "max_reprojection_error_px": 2.3437142008433856e-13,
+          "mean_reprojection_error_px": 3.6130492998725926e-14,
+          "samples": 1000,
+          "valid_depth_pixels": 259001
+        },
+        {
+          "depth_file": "third_party/Depth-Anything-3/workspace/benchmark_dataset/7scenes/7Scenes/chess/seq-01/frame-000766.depth.png",
+          "frame": "frame-000766",
+          "max_reprojection_error_px": 2.2737367544323206e-13,
+          "mean_reprojection_error_px": 4.873389661715529e-14,
+          "samples": 1000,
+          "valid_depth_pixels": 256574
+        }
+      ],
+      "dataset": "7scenes",
+      "mesh": "third_party/Depth-Anything-3/workspace/benchmark_dataset/7scenes/7Scenes/meshes/chess.ply",
+      "mesh_bytes": 86246483,
+      "scene": "chess",
+      "status": "passed"
+    }
+  ]
+}

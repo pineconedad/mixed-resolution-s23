@@ -7,6 +7,7 @@ The protocol identifier is stored in every result to prevent mixing them.
 import numpy as np
 
 PROTOCOL = "relative_c2w_exact_auc_v1"
+DA3_PROTOCOL = "da3_pairwise_histogram_c2w_v1"
 
 
 def validate_poses(poses):
@@ -58,4 +59,33 @@ def score_poses(predicted, ground_truth):
     r, t = relative_errors(predicted, ground_truth)
     return {**{f"auc{threshold}": error_auc(np.maximum(r, t), threshold) for threshold in (3, 5, 30)},
             "rotation_errors_deg": r.tolist(), "translation_errors_deg": t.tolist(),
-            "pair_count": len(r)}
+             "pair_count": len(r)}
+
+
+def score_poses_da3(predicted, ground_truth):
+    """Match DA3-BENCH's pairwise integer-bin AUC, accepting c2w inputs."""
+    predicted, ground_truth = validate_poses(predicted), validate_poses(ground_truth)
+    if predicted.shape != ground_truth.shape:
+        raise ValueError("Pose count mismatch")
+    pred_w2c = np.linalg.inv(predicted)
+    gt_w2c = np.linalg.inv(ground_truth)
+    pred_w2c = pred_w2c @ np.linalg.inv(pred_w2c[0])
+    gt_w2c = gt_w2c @ np.linalg.inv(gt_w2c[0])
+    rotation, translation = [], []
+    for i in range(len(pred_w2c)):
+        for j in range(i + 1, len(pred_w2c)):
+            pred = np.linalg.inv(pred_w2c[i]) @ pred_w2c[j]
+            gt = np.linalg.inv(gt_w2c[i]) @ gt_w2c[j]
+            cosine = (np.trace(pred[:3, :3] @ gt[:3, :3].T) - 1) / 2
+            rotation.append(float(np.degrees(np.arccos(np.clip(cosine, -1, 1)))))
+            p, g = pred[:3, 3], gt[:3, 3]
+            denominator = np.linalg.norm(p) * np.linalg.norm(g)
+            translation.append(90.0 if denominator < 1e-15 else
+                               float(np.degrees(np.arccos(np.clip(abs(p @ g / denominator), 0, 1)))))
+    maximum = np.maximum(rotation, translation)
+    metrics = {}
+    for threshold in (3, 5, 15, 30):
+        histogram, _ = np.histogram(maximum, bins=np.arange(threshold + 1))
+        metrics[f"auc{threshold}"] = float(np.mean(np.cumsum(histogram / len(maximum))) * 100)
+    return {**metrics, "rotation_errors_deg": rotation, "translation_errors_deg": translation,
+            "pair_count": len(maximum)}

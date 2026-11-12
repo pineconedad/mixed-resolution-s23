@@ -22,4 +22,23 @@ def timed_inference(forward, warmup=1, repeats=3):
         if i != repeats - 1:
             del result
     return result, {"latency_s": statistics.median(times), "timed_passes_s": times,
-                    "peak_mem_gb": torch.cuda.max_memory_allocated() / 1024**3}
+                     "peak_mem_gb": torch.cuda.max_memory_allocated() / 1024**3}
+
+
+def transformer_flops(trace, embed_dim, mlp_ratio=4):
+    """Projection, attention matmul and MLP FLOPs, at two FLOPs per MAC.
+
+    Includes traced frame prefixes, but excludes the image encoder, heads,
+    normalization, softmax, activations, position encoding and token resizing.
+    Older traces without frame_block_count imply one frame block per pair.
+    """
+    frame = global_ = 0
+    projection_mlp = 4 + 2 * mlp_ratio
+    for layer in trace:
+        frame += 2 * layer.get("frame_block_count", 1) * (
+            projection_mlp * layer["frame_total_tokens"] * embed_dim**2
+            + 2 * layer["frame_attention_quadratic"] * embed_dim)
+        global_ += 2 * (projection_mlp * layer["total_tokens"] * embed_dim**2
+                       + 2 * layer["global_attention_quadratic"] * embed_dim)
+    return {"frame": int(frame), "global": int(global_), "heads": None,
+            "scope": "transformer_attention_projection_mlp_flops_excludes_encoder_and_heads"}

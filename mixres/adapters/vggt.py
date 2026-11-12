@@ -26,6 +26,8 @@ class PositionBlock(nn.Module):
 
 class VGGTAdapter:
     patch_size = 14
+    embed_dim = 1024
+    mlp_ratio = 4
 
     def __init__(self, model):
         self.model = model.eval()

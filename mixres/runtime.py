@@ -41,7 +41,7 @@ def sanity_path(config):
 
 def provenance(config, views_path, checkpoint):
     root = Path(__file__).resolve().parents[1]
-    repositories = {"pi3": "Pi3", "vggt": "vggt"}
+    repositories = {"pi3": "Pi3", "vggt": "vggt", "da3": "Depth-Anything-3"}
     repository = root / "third_party" / repositories[config["model"]]
     revision = subprocess.check_output(["git", "-C", str(repository), "rev-parse", "HEAD"], text=True).strip()
     model_config = root / f"configs/models/{config['model']}.yaml"

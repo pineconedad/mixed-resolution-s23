@@ -14,7 +14,8 @@ def recover(root, session_id):
     root = Path(root).resolve()
     if root != Path("/workspace/s23") or not session_id.isalnum() or not Path("/proc").is_dir():
         raise RuntimeError("Recovery requires the explicit workflow workspace on Linux")
-    entrypoints = {"run_session.py", "01_sanity.py", "04_run.py", "download_checkpoint.py"}
+    entrypoints = {"run_session.py", "01_sanity.py", "04_run.py", "02_dev_sweep.py",
+                   "download_checkpoint.py", "stage_development.py", "prepare_model_sources.py"}
     for process in Path("/proc").glob("[0-9]*"):
         if process.name == str(os.getpid()):
             continue
@@ -42,6 +43,12 @@ def recover(root, session_id):
         "prior_phase": state.get("phase"), "prior_exit_code": state.get("exit_code"),
         "workers_present": False, "classification": "interrupted_setup_not_a_model_result",
         "original_state_and_log_preserved": True}, indent=2) + "\n")
+    control.mkdir(parents=True)
+    (control / "state.json").write_text(json.dumps({
+        "session_id": session_id, "quiescent": True,
+        "phase": "recovered_after_restart", "workers_present": False,
+        "original_control": str(target.relative_to(root)),
+        "model_validation_claimed": False}, indent=2) + "\n")
     print("Interrupted controller state and logs archived without changing observations")
 
 

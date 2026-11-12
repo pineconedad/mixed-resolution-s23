@@ -1,0 +1,15 @@
+{
+  "backup": {
+    "all_members_verified": true,
+    "archive_sha256": "9620abffb7603a7882a6332db8c2ab0f54641288150d72a8315fcc0c70db4cb0",
+    "job_quiescent": false,
+    "local_archive": "/Users/pineconedad/Workspace/research projects/Federated CVPR/artifacts/control/devresume20261111i/session-20261111T125914441371Z.tar.gz",
+    "member_count": 20,
+    "pod_id": "yvcfcbk52vr2x1",
+    "session_id": "devresume20261111i"
+  },
+  "compute_stopped": true,
+  "pod_id": "yvcfcbk52vr2x1",
+  "reason": "backup_failed",
+  "terminated": false
+}

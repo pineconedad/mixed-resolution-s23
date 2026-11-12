@@ -65,3 +65,30 @@ def test_restore_cannot_overwrite_different_local_data(tmp_path):
     with pytest.raises(FileExistsError):
         module.verify_session(path, sha, target)
     assert file.read_bytes() == b"previous valuable result"
+
+
+def test_export_preserves_results_when_submodule_git_status_fails(tmp_path, monkeypatch):
+    import runpy
+    import subprocess
+    import sys
+    import mixres.io
+    from mixres.safety import verified_backup
+
+    root = tmp_path / "runs/control/recovery"
+    root.mkdir(parents=True)
+    (root / "state.json").write_text(json.dumps({"session_id": "recovery", "quiescent": True}))
+    (root / "console.log").write_text("Source clone interrupted\n")
+
+    def unavailable():
+        raise subprocess.CalledProcessError(128, ["git", "status"])
+
+    monkeypatch.setattr(mixres.io, "git_state", unavailable)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("RUNPOD_POD_ID", "owned-test-pod")
+    monkeypatch.setattr(sys, "argv", ["export_session.py", "--session-id", "recovery"])
+    script = Path(__file__).resolve().parents[1] / "scripts/export_session.py"
+    runpy.run_path(str(script), run_name="__main__")
+    archive = next((tmp_path / "artifacts").glob("*.tar.gz"))
+    sha = hashlib.sha256(archive.read_bytes()).hexdigest()
+    proof = verified_backup(archive, sha, "owned-test-pod")
+    assert proof["job_quiescent"] and proof["all_members_verified"]

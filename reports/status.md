@@ -19,14 +19,20 @@ See development/fullscope/README.md for the latest table and architecture-contro
 
 ## Not completed
 
-- DA3 adapter and validated study checkpoint.
+- DA3 adapter is built and has exact small-grid CPU checkpoint identity; full-resolution CUDA identity remains pending.
 - Full five-dataset common conversion/evaluation, including ground-truth consistency checks.
 - Historical S7 best-uniform/mix reconstruction and T9 reproduction; those inputs were not supplied.
 - A0 baseline selection, 24-configuration Pi3 development sweep, committed frozen configurations and predictions.
 - Seeds 1000/2000/3000, all-model/all-dataset/budget frozen matrix, reconstruction, entropy/drift/FLOP probes, final paper tables.
 
-The next research step is common development-data preparation followed by the specified development sweep and DA3 integration, not declaring the current controls to be the full main study.
+## Restart entry point
+
+Read ../STUDY_CHECKLIST.md first. It records exact current resources, verified archives and next commands. AGENTS.md directs future sessions there instead of rediscovering the project.
+
+Fresh execution tooling now includes the available development manifests, native benchmark pose scoring, a 24-config sweep, immutable freeze and committed-artifact checks, entropy/drift probes, native reconstruction bridge, stratified bootstrap/sign-flip inference and the 270+150 frozen/extra matrix. These paths are built but the full study is not executed. ScanNet++ permission, historical T9 and actual-data validation remain explicit gates. No frozen model result has been opened.
 
 ## Cloud and credit
 
-Latest verified balance: $13.8291713412 at 2026-11-10T20:10:54.144810+00:00. Credits are not exhausted. No inference job or GPU is running. All workflow-created completed temporary pods are deleted. User pod u64lksix8j610q is stopped with a 20 GB workspace. User volume oq84uxp88q is 10 GB, unattached, and independent. Those retained resources cost approximately $4.70/month in storage and need explicit deletion authorization for zero residual storage billing.
+Latest verified balance: $11.6413142792 at 2026-11-11T13:11:51.963512+00:00. No GPU compute is running. The user's earlier pod u64lksix8j610q and volume oq84uxp88q were deleted with explicit authorization. Setup pods v3ff0vv5jb5lm2 and r7jn02w51p7eun are also deleted and confirmed 404.
+
+Workflow pod yvcfcbk52vr2x1 is EXITED with a retained 40 GB workspace. The watchdog stopped it when Git source staging temporarily broke the backup export. Periodic archives are verified locally, but the final quiescent archive is not. Restart is currently refused for host GPU capacity. Storage billing continues until recovery and deletion; this is not a zero-resource handoff. No separate network volume exists. See the checklist for the exact recovery command order.

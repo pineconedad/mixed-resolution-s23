@@ -11,6 +11,13 @@
       "expected_sha256": "2a12b961e72566e194d707db02f2be65686ff12ad5f4347cb16b4c266b2d6917",
       "status": "verified",
       "verified_utc": "2026-11-10T19:06:01.853613+00:00"
+    },
+    "scannetpp": {
+      "expected_bytes": 10830641822,
+      "expected_sha256": "01f8ce1996ac64ba1dc9770c4f52db139f91c5c1a0d8a98107ef38fe45490d6c",
+      "permission_receipt_sha256": "9a109e5a2b27b2ff93ec074ce936f2e9f2b45a1c4dd0b76e46b366fd4e5ec979",
+      "status": "verified",
+      "verified_utc": "2026-11-11T15:42:00.405799+00:00"
     }
   },
   "repo": "depth-anything/DA3-BENCH",

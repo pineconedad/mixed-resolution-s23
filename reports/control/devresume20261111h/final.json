@@ -1,0 +1,7 @@
+{
+  "backup": null,
+  "compute_stopped": true,
+  "pod_id": "r7jn02w51p7eun",
+  "reason": "backup_failed",
+  "terminated": false
+}

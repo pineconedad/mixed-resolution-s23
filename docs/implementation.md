@@ -34,7 +34,17 @@ The actual rounded mixed patch count is recorded, not relabelled as the nominal 
 
 ## Missing historical inputs
 
-The user confirmed only the two plans will be provided. Therefore S7 configurations, historical numbers for T9, the DA3 checkpoint choice and original preprocessing cannot be recovered. A0 and historical-reproduction claims are blocked rather than invented. Completing a new full study will require a documented fresh-baseline amendment and development selection of replacement settings. No such settings have been silently selected.
+The user confirmed only the two plans will be provided. Therefore S7 configurations, historical numbers for T9, the DA3 checkpoint choice and original preprocessing cannot be recovered. Historical-reproduction claims remain unavailable rather than being inferred.
+
+## Fresh-baseline amendment
+
+The new study uses `fresh_v1`, fixed before its development sweep. It keeps the setup guide's independent 12-view design: four FPS-selected sharp views, eight small views and rho=2. A0 uses the same 12 frame IDs at one equal-budget uniform resolution. This keeps scene and frame identity fixed across arms rather than inventing an unavailable S7 view-count search. Sizes are derived separately at nominal 4k and 8k, and every result reports the rounded token count.
+
+S23's written positional protocol is authoritative for the frozen study: frame attention and heads use native positions, while A2/A4/A5 use aligned positions in global attention. Alignment uses the effective per-axis high/low grid ratio after patch rounding. The preserved full-scope/nominal-rho results are architecture controls, not frozen S23 cells.
+
+Because this is a new baseline rather than an S1-S22 reproduction, DA3 uses the corrected `depth-anything/DA3-LARGE-1.1` release at the pinned source commit. The deprecated original is not selected merely to mimic an unknown historical checkpoint. DA3 results must identify this choice and cannot be compared as reproductions of old DA3 numbers. DA3's global RoPE deliberately uses nondifferentiating coordinates, so it has no direct `pi_hr` global-position operation. A2 is therefore the explicit no-op position control for DA3 instead of an invented architecture change.
+
+ScanNet++ remains blocked until the user has accepted its terms. This amendment does not treat a public processed mirror as permission. Development code may run on ETH3D and 7-Scenes while that gate is unresolved, but the three-dataset phase-1 sweep cannot be called complete without ScanNet++.
 
 ## DA3 source inspection
 
@@ -43,3 +53,13 @@ At the pinned source, DA3 does have conditional alternating local/global layers 
 VGGT has 24 frame/global pairs, a camera token plus four register tokens, first-view-specific special tokens, and cached DPT features at pairs 4,11,17,23. Its adapter is implemented and locally tested in a separate torch-2.3.1 environment. The joint camera head receives all views together; only dense heads are grouped by output grid. First-view token identity follows the original view index rather than restarting in each resolution group. All 19 local VGGT tests pass, including native-forward identity for A1-A8 at rho=1. Full-checkpoint CUDA validation remains a distinct gate.
 
 The inference package's torch minimum is now 2.3.1 because the pinned VGGT source requests that version. Pi3 still uses its separately pinned torch-2.5.1 environment. No experiment mixes model environments between arms. The worker supports validation-only sessions so a new model can pass native fp32 identity without pretending to complete its dataset or historical-reproduction checks.
+
+## Final build and manual operation
+
+The assistant no longer operates cloud resources. User commands are in GPU_HANDOFF.md. Setup and identity are separate operations; setup does not launch tests, experiments or watchdogs.
+
+`rmfa_layers` selects a fraction of the alternating aggregation pairs. Pi3/VGGT image encoders keep their entry-resolution behavior. DA3's local feature prefix likewise keeps its entry grid; the fraction applies to its eight subsequent global pairs. This mapping is fixed in the model config, not tuned per model.
+
+High-grid head predictions are reduced to the declared low grid for points, confidences and depth. Predicted intrinsics scale with that reduction; camera poses and pose encodings do not. Transformer cost uses two FLOPs per multiply-add, includes DA3's real local-prefix blocks and excludes its identity placeholder. The analytic count is explicitly partial: encoder and head FLOPs are not manufactured. Archived MAC counts remain unchanged and cannot be pooled as new FLOP counts.
+
+The frozen launcher keeps one model loaded per selected model/environment. Its preprocessing cache is CPU-only and bounded to 2 GiB; input hashes remain checked. Reconstruction summaries join separate native recon.json records by cell and scene, with missing reconstruction kept explicit rather than reported as zero.

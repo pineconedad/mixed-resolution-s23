@@ -6,6 +6,7 @@ import io
 import tempfile
 import sys
 import tarfile
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -25,10 +26,24 @@ if __name__ == "__main__":
                    for p in Path(directory).rglob("*") if p.is_file() and not p.name.endswith(".tmp"))
     state_path = Path("runs/control") / str(args.session_id) / "state.json"
     state = read_json(state_path) if args.session_id and state_path.exists() else {}
+    if state.get("quiescent") is True:
+        paths.extend(path for directory in ("mixres", "scripts", "configs")
+                     for path in Path(directory).rglob("*")
+                     if path.is_file() and path.suffix in {".py", ".yaml", ".yml", ".sh", ".toml"})
+        if Path("pyproject.toml").exists():
+            paths.append(Path("pyproject.toml"))
+        paths = sorted(set(paths))
+    try:
+        source_state = git_state()
+    except subprocess.CalledProcessError:
+        # A concurrent submodule clone can temporarily make root git-status fail.
+        # Archiving files must remain available even when source inspection fails.
+        source_state = {"git_commit": None, "dirty_tree": True,
+                        "git_state_unavailable": "checkout incomplete during export"}
     receipt = {"created_utc": stamp, "pod_id": os.environ.get("RUNPOD_POD_ID"),
                "session_id": args.session_id,
                "job_quiescent": state.get("session_id") == args.session_id and state.get("quiescent") is True,
-               **git_state(), "files": {}}
+               **source_state, "files": {}}
     receipt_path = destination / f"session-{stamp}.json"
     archive = destination / f"session-{stamp}.tar.gz"
     with tarfile.open(archive, "w:gz") as tar:

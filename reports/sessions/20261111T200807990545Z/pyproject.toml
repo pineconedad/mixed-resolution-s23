@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mixres-s23"
+version = "0.1.0"
+requires-python = ">=3.10"
+description = "S23 resolution-matched frame attention study"
+dependencies = ["torch>=2.3.1", "numpy>=1.26", "Pillow>=11", "scipy>=1.14", "PyYAML>=6", "requests>=2.32", "huggingface-hub>=0.28", "safetensors>=0.5", "matplotlib>=3.10"]
+
+[tool.setuptools.packages.find]
+include = ["mixres*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "third_party/Pi3", "third_party/vggt"]

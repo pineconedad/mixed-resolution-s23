@@ -1,6 +1,7 @@
 .venv/
 /.venv-ops/
 /.venv-vggt/
+/.venv-da3/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -18,3 +19,5 @@ runs/**
 !runs/sanity/
 !runs/sanity/local-tests.txt
 env/actual-*
+env/**/actual-*
+/env/scannetpp-permission.json

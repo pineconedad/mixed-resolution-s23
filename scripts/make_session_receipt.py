@@ -36,11 +36,12 @@ async def make(args):
                "ssh_host": direct["host"], "ssh_port": direct["port"],
                "ssh_key": str(Path.home() / ".ssh/id_ed25519"), "remote_root": "/workspace/s23",
                "results_mount": "/workspace", "balance_at_create": balance,
-               "model": args.model, "validation_only": args.validation_only,
+                "model": args.model, "validation_only": args.validation_only,
+                "task": args.task,
                "worker_python": args.worker_python, "skip_unit_tests": args.skip_unit_tests,
                "config": args.config, "env_path": args.env_path,
                "hourly_total": pod["cost"] + (pod["disk"] + persistent["size"]) * 0.10 / 730,
-               "reserve_usd": 3, "session_cap_usd": 1, "max_seconds": 3600,
+                "reserve_usd": 3, "session_cap_usd": args.session_cap_usd, "max_seconds": 3600,
                "heartbeat": str(destination / "heartbeat"), "done_marker": str(destination / "done.json")}
     if args.known_hosts:
         trust = Path(args.known_hosts).resolve()
@@ -57,7 +58,8 @@ if __name__ == "__main__":
     parser.add_argument("--created-at", required=True)
     parser.add_argument("--session-id", required=True)
     parser.add_argument("--destination", required=True)
-    parser.add_argument("--model", choices=["pi3", "vggt"], default="pi3")
+    parser.add_argument("--model", choices=["pi3", "vggt", "da3"], default="pi3")
+    parser.add_argument("--task", choices=["development", "identity"])
     parser.add_argument("--validation-only", action="store_true")
     parser.add_argument("--known-hosts")
     parser.add_argument("--user-named", action="store_true")
@@ -65,6 +67,7 @@ if __name__ == "__main__":
     parser.add_argument("--worker-python", default="python")
     parser.add_argument("--config")
     parser.add_argument("--env-path", default=".venv")
+    parser.add_argument("--session-cap-usd", type=float, default=1)
     args = parser.parse_args()
     try:
         asyncio.run(make(args))

@@ -10,6 +10,7 @@ class Arm:
 
 
 ARMS = {
+    "A0": Arm("real", "hi", "hi", "native"),
     "A1": Arm("small", "lo", "lo", "native"),
     "A2": Arm("small", "lo", "lo", "pi_hr"),
     "A3": Arm("pixel", "hi", "hi", "native"),

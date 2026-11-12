@@ -4,6 +4,23 @@ import torch.nn.functional as F
 from PIL import Image
 
 
+# Pinned DA3 3d835ec, utils/constants.py and bench/datasets/scannetpp.py.
+SCANNETPP_HW = (768, 1024)
+SCANNETPP_PREPROCESSING = "native ScanNetPP.load_image undistort/crop/resize required"
+
+
+def scannetpp_camera(aux):
+    import cv2
+
+    raw = np.asarray(aux["ixt_raw_list"], dtype=np.float32)
+    distortion = np.asarray(aux["dist_list"], dtype=np.float32)
+    height, width = aux["cam_hw_list"]
+    # Match load_image's fallback when aux has no scene/cache reference.
+    optimal, _ = cv2.getOptimalNewCameraMatrix(
+        raw, distortion, (width, height), 1, (width, height))
+    return raw, distortion, optimal
+
+
 def resize_image(image, size, *, downsample):
     if tuple(image.shape[-2:]) == tuple(size):
         return image
@@ -14,6 +31,16 @@ def resize_image(image, size, *, downsample):
 def load_view(path, view, entry):
     with Image.open(path) as image:
         image = image.convert("RGB")
+        aux = view.get("source_metadata", {}).get("aux", {})
+        if aux.get("preprocessing") == SCANNETPP_PREPROCESSING:
+            import cv2
+
+            raw, distortion, optimal = scannetpp_camera(aux)
+            pixels = cv2.undistort(np.array(image), raw, distortion, newCameraMatrix=optimal)
+            x, y, w, h = aux["roi_list"]
+            pixels = cv2.resize(pixels[y:y+h, x:x+w], SCANNETPP_HW[::-1],
+                                interpolation=cv2.INTER_AREA)
+            image = Image.fromarray(pixels)
         width, height = image.size
         left, top, right, bottom = view["crop"]
         image = image.crop((round(left * width), round(top * height),

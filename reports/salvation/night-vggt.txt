@@ -1,0 +1,80 @@
+Salvation track C, vggt (exploratory development data)
+
+Fresh draws (seeds 43+): 70 scene-draws paired across 16 arms
+
+arm             AUC@3  AUC@5  AUC@30   GFLOPs   lat s  enc tok  glob Q  glob KV
+A1               0.51   1.85   31.09     9896   0.457     4200    4260     4260
+A2               1.68   6.98   63.17     9896   0.451     4200    4260     4260
+A2_bias_both     2.46   9.37   66.97     9896   0.470     4200    4260     4260
+A4               1.42   4.39   49.27    15527   0.623     8280    4260     4260
+A9               3.28  11.89   68.52    15527   0.612     8280    4260     4260
+A0               1.10   4.28   62.52     9295   1.258     4032    4092     4092
+A0_5k            2.42   9.16   70.12    12614   5.394     5184    5244     5244
+A0_6k            3.71  12.27   73.32    15925   0.431     6240    6300     6300
+A0_7k            5.61  17.11   76.33    18658   0.449     7056    7116     7116
+A10              2.56   9.59   66.36    20231   0.497     4200    8340     8340
+A11              1.90   7.32   61.49    16886   0.605     4200    8340     4260
+A11_nobias       2.12   8.09   63.75    16886   0.586     4200    8340     4260
+A3_kv            1.29   5.00   52.56    19699   0.592     8280    8340     4260
+A8_kv            5.18  16.29   74.50    19699   0.587     8280    8340     4260
+A3               4.01  12.86   69.73    23044   0.491     8280    8340     8340
+A8               7.13  20.27   77.83    23044   0.496     8280    8340     8340
+
+Paired differences, mean [95% bootstrap interval]:
+  A10 - A3 (auc3): -1.45 [-2.23, -0.80], wins 19/70
+  A11 - A10 (auc3): -0.67 [-0.97, -0.37], wins 18/70
+  A11_nobias - A11 (auc3): +0.23 [-0.01, +0.46], wins 43/70
+  A8_kv - A8 (auc3): -1.95 [-3.12, -0.99], wins 21/70
+  A3_kv - A3 (auc3): -2.72 [-3.48, -2.09], wins 7/70
+  A11 - A4 (auc30): +12.22 [+10.04, +14.42], wins 62/70
+  A2_bias_both - A2 (auc3): +0.78 [+0.51, +1.06], wins 49/70
+  A10 - A0 (auc3): +1.47 [+1.07, +1.89], wins 54/70
+
+Gate C candidates:
+  A11: FAIL
+    vs A3 (pixel upsampling): -2.11 AUC@3 [-2.84, -1.49]  (rule: mean >= -1.0)
+    vs A0_7k (uniform resize with at least as much compute, 18658 vs 16886 GFLOPs): -3.71 AUC@3 [-4.71, -2.82], wins 7/70  (rule: interval above 0)
+    vs A0 on AUC@30 (coarse robustness): -1.03 [-3.02, +0.92]  (rule: mean >= -2.0)
+  A10: FAIL
+    vs A3 (pixel upsampling): -1.45 AUC@3 [-2.23, -0.80]  (rule: mean >= -1.0)
+    vs A8 (uniform resize with at least as much compute, 23044 vs 20231 GFLOPs): -4.57 AUC@3 [-5.94, -3.42], wins 4/70  (rule: interval above 0)
+    vs A0 on AUC@30 (coarse robustness): +3.83 [+2.38, +5.25]  (rule: mean >= -2.0)
+Gate C on fresh draws: FAIL (PASS = A11 passes; PARTIAL = only A10 passes; FAIL = neither).
+
+Seed 42 (already seen, shown for continuity): 5 scene-draws paired across 14 arms
+
+arm             AUC@3  AUC@5  AUC@30   GFLOPs   lat s  enc tok  glob Q  glob KV
+A1               0.59   1.71   30.34     9896   0.452     4200    4260     4260
+A2               3.05   9.35   65.98     9896   0.369     4200    4260     4260
+A4               1.33   4.64   50.74    15527   0.615     8280    4260     4260
+A0               0.37   3.11   60.88     9295   1.265     4032    4092     4092
+A0_5k            2.07   8.68   68.63    12614   5.458     5184    5244     5244
+A0_6k            3.17  11.89   72.87    15925   0.425     6240    6300     6300
+A0_7k            5.71  17.86   74.84    18658   0.389     7056    7116     7116
+A10              3.54  10.57   65.50    20231   0.550     4200    8340     8340
+A11              2.58   8.98   63.35    16886   0.597     4200    8340     4260
+A11_nobias       2.26   9.50   65.30    16886   0.472     4200    8340     4260
+A3_kv            1.47   4.80   48.83    19699   0.592     8280    8340     4260
+A8_kv            6.97  20.92   74.65    19699   0.659     8280    8340     4260
+A3               4.50  15.63   68.46    23044   0.492     8280    8340     8340
+A8               7.91  21.74   77.98    23044   0.482     8280    8340     8340
+
+Paired differences, mean [95% bootstrap interval]:
+  A10 - A3 (auc3): -0.96 [-1.62, -0.26], wins 1/5
+  A11 - A10 (auc3): -0.96 [-1.41, -0.42], wins 1/5
+  A11_nobias - A11 (auc3): -0.31 [-0.73, +0.13], wins 2/5
+  A8_kv - A8 (auc3): -0.94 [-2.64, +0.76], wins 2/5
+  A3_kv - A3 (auc3): -3.02 [-4.44, -1.25], wins 1/5
+  A11 - A4 (auc30): +12.60 [+6.55, +19.12], wins 5/5
+  A10 - A0 (auc3): +3.17 [+1.43, +4.85], wins 5/5
+
+Gate C candidates:
+  A11: FAIL
+    vs A3 (pixel upsampling): -1.92 AUC@3 [-2.71, -0.75]  (rule: mean >= -1.0)
+    vs A0_7k (uniform resize with at least as much compute, 18658 vs 16886 GFLOPs): -3.14 AUC@3 [-4.70, -1.27], wins 1/5  (rule: interval above 0)
+    vs A0 on AUC@30 (coarse robustness): +2.46 [-1.69, +6.14]  (rule: mean >= -2.0)
+  A10: FAIL
+    vs A3 (pixel upsampling): -0.96 AUC@3 [-1.62, -0.26]  (rule: mean >= -1.0)
+    vs A8 (uniform resize with at least as much compute, 23044 vs 20231 GFLOPs): -4.37 AUC@3 [-6.15, -1.93], wins 1/5  (rule: interval above 0)
+    vs A0 on AUC@30 (coarse robustness): +4.61 [+1.54, +7.76]  (rule: mean >= -2.0)
+

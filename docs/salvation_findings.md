@@ -31,6 +31,10 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 | F21 | Pi3 has a resolution floor, then is flat | ETH3D uniform: 13.33 at 154x224; 26-29 at every size from 210x322 to 420x630 | 8 scenes |
 | F22 | For Pi3, mixing is worse than making every view small | A2 5.83 vs all views at 154x224 13.33: +7.50 [2.82, 12.72], 7/8 scenes | 8 scenes; interval excludes zero |
 | F23 | VGGT's peak is at its training width | ETH3D AUC@3 by width 224..630: 0.24, 2.60, 5.66, 10.55, 23.12 (504), 21.00, 14.06, 9.18 | 8 scenes; large effect |
+| F24 | VGGT's peak at its training width replicates on HiRoom | AUC@3 by side 182..630: 0.09, 0.22, 6.0, 10.7, 45.5 (504), 41.5, 31.3, 19.6; 19 scenes | Two datasets, 27 scenes |
+| F25 | Pi3 mix worse than all-small replicates on HiRoom | A2 10.0 vs 27.9: +17.9 [13.1, 23.0], 19/19 | Two datasets |
+| F26 | Pi3 is not flat on HiRoom: it rises, then plateaus near 504 px | 27.9, 49.7, 57.1, 59.8, 62.9, 63.4, 63.0, 61.2 | Corrects F17/F21: plateau point is dataset-dependent |
+| F27 | At each model's best size the Pi3-VGGT gap is far smaller than at the study's sizes | HiRoom: 63 vs 45 at best size; 57 vs 6 at the mix's sharp size | Two datasets (ETH3D: 29 vs 23; 28 vs 11) |
 
 **Warning added after F16:** F2, F3, F11, F13 and F14 are AUC@3 effects measured only on 7-Scenes. Treat them as unconfirmed until replicated on ETH3D or ScanNet++.
 

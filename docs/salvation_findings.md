@@ -24,6 +24,10 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 | F14 | Fusing predictions from several input sizes never beats the best member | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
 | F15 | Classical two-view refinement lowers Pi3 accuracy and helps VGGT only at small sizes | Pi3 A0 9.36 -> 7.88; VGGT A0 1.10 -> 2.39; 28% of pairs matched | Solid |
 | F16 | 7-Scenes cannot resolve rotations below about 1.6-2 degrees | SIFT, Pi3 and VGGT all have 1.6-1.9 deg median error on the best-matched pairs, at any focal length | Solid for the floor; cause unverified |
+| F17 | On ETH3D, Pi3 is resolution-invariant under uniform resize | AUC@3 28.5, 27.4, 28.2, 28.2, 29.3 from 4k to 16k tokens (6x compute) | 8 scenes; consistent across 5 sizes |
+| F18 | On ETH3D, the same Pi3 collapses when sizes are mixed | A2 5.83 vs A0 28.51 at equal budget, 8/8 scenes; upsampling the small views restores 29.76 | 8 scenes; very large effect |
+| F19 | VGGT's accuracy peaks near its training width and falls on both sides | 2.6, 6.0, 10.6, 21.0, 9.2 at widths 322, 392, 448, 546, 630; last step -11.8, 0/8 wins | 8 scenes; large effect |
+| F20 | F2 and F3 (Pi3 non-monotonic on 7-Scenes) did not reproduce on ETH3D | Pi3 curve is flat there | Retract F2/F3 as general claims |
 
 **Warning added after F16:** F2, F3, F11, F13 and F14 are AUC@3 effects measured only on 7-Scenes. Treat them as unconfirmed until replicated on ETH3D or ScanNet++.
 

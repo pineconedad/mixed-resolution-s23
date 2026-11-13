@@ -24,6 +24,8 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 
 Dead hypotheses, for the record: damage lives only in frame attention; feature-scale drift; real pixels rescue RMFA on Pi3; keys can be pooled for free; aspect mismatch.
 
+| F14 | Fusing predictions from several input sizes never beats the best member | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
+
 ## 2. Candidate angles
 
 | Angle | Claim | Rests on | Problem |
@@ -41,7 +43,7 @@ What angle C still needs before it can be written:
 2. The same sweep on VGGT and DA3, and on ETH3D, to show it is model-specific and not a 7-Scenes effect.
 3. One mechanism test: the same pixels at a peak size and an off-peak size with positions rescaled to the peak grid. If accuracy follows the positions, the response is a positional effect.
 
-## 3. Daring direction: resolution ensembling
+## 3. Resolution ensembling (tested, failed: see F14)
 
 F3 says Pi3's errors change with input size in a non-smooth way. If errors at different sizes are partly independent, running the same views at two cheap sizes and averaging the relative poses should beat one run at a large size. Two runs at 4k and 5k tokens cost 17.9k GFLOPs, less than one full-resolution run (18.7k).
 

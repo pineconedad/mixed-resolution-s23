@@ -4,6 +4,8 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- ENSEMBLE RESULT (reports/salvation/ensemble.txt, commit 070b908, 70 fresh scene-draws): Gate E FAILED on both models. Pi3 A0_5k+A0_7k 13.74 vs A0_7k alone 14.36 (-0.62 [-0.99, -0.28]); VGGT 3.82 vs A8 7.13 (-3.31). No ensemble of any size beats its better member, so errors across input sizes are strongly correlated. Direction closed.
+- STATE: tracks A, B, C, D and E all negative. Remaining supported paper-1 material is docs/salvation_findings.md (angle C). No further method test is built.
 - RESOLUTION ENSEMBLE BUILT, NOT RUN ON REAL DATA: mixres/eval/ensemble.py (similarity-align runs, chordal rotation mean), scripts/salvation_ensemble.py, tests/test_ensemble.py. Offline, reads stored predicted_c2w from runs/salvation_c and runs/salvation_d*. Primary pair A0_5k+A0_7k and the rule are fixed in the script. NEXT COMMAND (user, same PC, no GPU): `python scripts/salvation_ensemble.py --models pi3 vggt --push`, then read reports/salvation/ensemble.txt.
 - ALL FINDINGS AND THE RECOMMENDED ANGLE: docs/salvation_findings.md. Recommended angle C (resolution response is model-specific and non-monotonic on Pi3). NEXT BUILD: offline resolution-ensemble test from stored predicted_c2w (no GPU), then a fine uniform-size sweep.
 - TRACK D RESULT (reports/salvation/aspect.txt, 75 paired scene-draws per model): aspect lead is DEAD as an explanation of the mix failure. Mix damage (A8 - A2) is unchanged with exact 4:3 sizes: Pi3 7.34 -> 7.55, VGGT 5.41 -> 7.71. All arms gain 1-3 AUC@3 with the 4:3 sizes, but those sizes also carry more tokens, so the gain cannot be attributed to aspect.

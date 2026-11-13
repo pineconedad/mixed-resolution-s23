@@ -43,6 +43,14 @@ def parse_variant(entry):
 
 def scene_views(views, arm, config, uniform_budget=None):
     """A0 resizes every view to one size at the mix's nominal token budget (or uniform_budget)."""
+    sizes = config.get("sizes")
+    if sizes:
+        # Track D: replace every view size, e.g. with exactly 4:3 sizes, keeping the same frames.
+        if arm == "A0":
+            return [{**view, "hw": list(sizes["uniform"]), "hi_hw": list(sizes["uniform"]),
+                     "sharp": True, "rho": 1.0} for view in views]
+        return [{**view, "hw": list(sizes["hi"] if view["sharp"] else sizes["lo"]),
+                 "hi_hw": list(sizes["hi"])} for view in views]
     if arm != "A0":
         return views
     uniform = budget_sizes(uniform_budget or config["budget_tokens"], len(views), 0, 1.0,

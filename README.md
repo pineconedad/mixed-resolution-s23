@@ -1,6 +1,18 @@
 # Mixed-resolution S23
 
-## Start here: the unattended overnight run (track C)
+## Start here: track D, the aspect-ratio check
+
+Track C failed on both models (`reports/salvation/night-*.txt`). Those runs showed Pi3 doing best at sizes that are exactly 4:3, while the study's sizes are slightly squeezed, and by different amounts for sharp (1.304) and small (1.25) views. Track D reruns A1, A2, A3, A8 and A0 on the same frames with exactly 4:3 sizes. It needs the overnight run's downloaded draws; about 30 minutes for Pi3.
+
+```powershell
+git pull
+.venv\Scripts\Activate.ps1
+python scripts/salvation_aspect.py --models pi3 vggt --push
+```
+
+Read `runs/salvation_night/reports/aspect.txt` (pushed as `reports/salvation/aspect.txt`). The key line is `Mix damage (A8 - A2)`: if it is much smaller with exact 4:3 sizes, part of the mixed-resolution failure is an aspect mismatch introduced by resizing.
+
+## The unattended overnight run (track C)
 
 Tracks A and B both failed on Pi3 (reports under `runs/salvation_a`, `runs/salvation_b`). Track C tests the restructured method: encode each view at its own size, lift the small views' tokens to the sharp grid, run the decoder on the sharp grid (arm `A10`), and let global attention read small views through pooled keys while every token keeps its own query (`A11`).
 

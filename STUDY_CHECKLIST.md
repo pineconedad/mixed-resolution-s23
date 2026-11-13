@@ -4,6 +4,9 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- TRACK C RESULT (commit 613a4ea, 70 fresh scene-draws per model, all steps ok): Gate C FAILED on Pi3 and VGGT. A10 trails A3 by 7.1 AUC@3 on Pi3; kv pooling costs about 2. Uniform resize beats every in-model arm at matched compute on both models. Reports: reports/salvation/night-*.txt.
+- OPEN LEAD: Pi3 uniform curve is non-monotonic and peaks at exactly-4:3 sizes (A0_7k 14.36 > A8 12.64). Study sizes are anisotropic (sharp 1.304, small 1.25). Hypothesis only; VGGT curve is monotonic.
+- TRACK D BUILT, NOT RUN: `sizes` override in scripts/04_run.py and scripts/salvation_aspect.py. NEXT COMMAND (user, local GPU): `python scripts/salvation_aspect.py --models pi3 vggt --push`, then read reports/salvation/aspect.txt.
 - TRACK C BUILT, NOT RUN (restructured method after gates A and B failed): arm A10 (encode each view at its own size, lift tokens, sharp-grid decoder), option `kv_pool=mix` (dense queries, pooled keys/values for small views; `asymmetric_block` in mixres/rmfa/calibration.py), A0 at other budgets via `uniform_budget`, development draws seeds 43-52 via scripts/prepare_quick.py (`study: salvation_draw`, frames bound to seed 42 and frozen seeds excluded). The exploratory runner now accepts any `salvation_*` study with seed 42-999; seeds from 1000 up remain frozen-only.
 - NEXT COMMAND (user, local GPU, unattended): `python scripts/salvation_night.py --push`. Reads: runs/salvation_night/reports/night-pi3.txt. Gate C rule is pre-stated in scripts/salvation_night_report.py; do not edit it after results exist.
 - Not verified here: the 7-Scenes range downloads for new draws and all GPU paths (CPU tiny-model tests only). kv_pool has no checkpoint-backed identity gate of its own; it falls back to the gated path when no view is pooled.

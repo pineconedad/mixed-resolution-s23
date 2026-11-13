@@ -54,5 +54,69 @@ eth3d / vggt: 8 scenes, 13/13 arms complete
     A0_w546 - A8 (width 546 vs sharp size): +10.45 [+1.97, +22.02], wins 6/8
     A0_w630 - A0_w546 (width 630 vs 546): -11.82 [-19.81, -5.30], wins 0/8
 
-scannetpp: skipped, licence receipt env/scannetpp-permission.json is not on this machine.
+hiroom / pi3: 19 scenes, 13/13 arms complete
+  mix arm     AUC@3  AUC@30  GFLOPs
+  A1           1.30   55.43    7785
+  A2          10.00   76.67    7785
+  A3          56.03   94.21   18176
+  A4          18.19   81.79   12664
+  A8          57.14   94.50   18176
+  A9          15.99   80.25   12664
+  uniform size   tokens  AUC@3  AUC@30  GFLOPs
+  182x182          2028  27.89   89.42    3498  <- the mix's small size
+  252x252          3888  49.71   93.59    7294
+  364x364          8112  57.14   94.50   18176  <- the mix's sharp size
+  392x392          9408  59.76   94.63   22145
+  504x504         15552  62.85   95.03   44986
+  546x546         18252  63.43   95.30   57126
+  588x588         21168  63.02   95.23   71680
+  630x630         24300  61.16   94.91   88980
+  Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+    A8 - A2 (mix damage): +47.13 [+41.81, +52.09], wins 19/19
+    A0_small - A2 (all views at the small size vs the mix): +17.89 [+13.07, +23.02], wins 19/19
+    A8 - A0_small (sharp size vs small size, uniform): +29.24 [+23.52, +35.20], wins 19/19
+    A0 - A2 (uniform vs mix at equal budget): +39.70 [+34.74, +44.50], wins 19/19
+    A4 - A0 (RMFA vs uniform): -31.51 [-35.57, -27.36], wins 0/19
+    A8 - A3 (real vs upsampled pixels): +1.11 [-1.10, +3.36], wins 11/19
+    A0_w546 - A8 (width 546 vs sharp size): +6.29 [+2.88, +9.77], wins 13/19
+    A0_w630 - A0_w546 (width 630 vs 546): -2.27 [-5.51, +1.06], wins 4/19
+
+hiroom / vggt: 19 scenes, 13/13 arms complete
+  mix arm     AUC@3  AUC@30  GFLOPs
+  A1           0.49   29.17    9495
+  A2           1.59   58.19    9495
+  A3           3.53   61.26   22422
+  A4           0.99   44.70   15073
+  A8           6.00   74.69   22422
+  A9           2.35   64.63   15073
+  uniform size   tokens  AUC@3  AUC@30  GFLOPs
+  182x182          2028   0.09   26.86    4245  <- the mix's small size
+  252x252          3888   0.22   45.53    8901
+  364x364          8112   6.00   74.69   22422  <- the mix's sharp size
+  392x392          9408  10.71   78.88   27391
+  504x504         15552  45.49   89.00   56190
+  546x546         18252  41.51   88.83   71584
+  588x588         21168  31.28   87.59   90088
+  630x630         24300  19.56   84.90  112136
+  Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+    A8 - A2 (mix damage): +4.41 [+3.08, +5.88], wins 18/19
+    A0_small - A2 (all views at the small size vs the mix): -1.50 [-1.93, -1.04], wins 1/19
+    A8 - A0_small (sharp size vs small size, uniform): +5.91 [+4.43, +7.51], wins 19/19
+    A0 - A2 (uniform vs mix at equal budget): -1.37 [-1.89, -0.92], wins 0/19
+    A4 - A0 (RMFA vs uniform): +0.77 [+0.40, +1.16], wins 13/19
+    A8 - A3 (real vs upsampled pixels): +2.47 [+0.94, +4.08], wins 17/19
+    A0_w546 - A8 (width 546 vs sharp size): +35.51 [+27.10, +43.83], wins 19/19
+    A0_w630 - A0_w546 (width 630 vs 546): -21.95 [-28.31, -15.53], wins 1/19
+
+hiroom: scene skipped, too few frames: 20241230/828745/cam_sampled_05 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828750/cam_sampled_08 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828757/cam_sampled_06 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828760/cam_sampled_04 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828763/cam_sampled_12 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828774/cam_sampled_23 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828784/cam_sampled_03 (11 frames)
+hiroom: scene skipped, too few frames: 20241230/828785/cam_sampled_12 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828786/cam_sampled_10 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828790/cam_sampled_04 (10 frames)
+hiroom: scene skipped, too few frames: 20241230/828812/cam_sampled_10 (11 frames)
 Small scene counts: read directions and large effects, not small differences.

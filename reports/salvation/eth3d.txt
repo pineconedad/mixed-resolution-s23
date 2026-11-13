@@ -1,0 +1,48 @@
+ETH3D replication (seed 42, exploratory; laser-scanned ground truth)
+
+pi3: 8 scenes, 10/10 arms complete
+arm        AUC@3  AUC@5  AUC@30  GFLOPs  tokens  size (sharp view)
+A1          0.96   1.99   40.94    7869    4156                mix
+A2          5.83  15.24   61.62    7869    4156                mix
+A4          6.13  13.32   54.83   12645    4156                mix
+A9          6.38  14.07   54.77   12645    4156                mix
+A3         29.76  45.20   80.25   18035    8124          upsampled
+A0         28.51  43.91   82.53    7855    4200            uniform
+A0_6k      27.37  42.89   81.91   12466    6108            uniform
+A8         28.21  42.77   79.02   18035    8124            uniform
+A0_12k     28.15  42.20   79.48   31583   12228            uniform
+A0_16k     29.33  43.22   80.15   47783   16260            uniform
+Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+  A8 - A2 (mix damage): +22.39 [+16.79, +29.01], wins 8/8
+  A2 - A1 (position alignment): +4.86 [+2.76, +7.13], wins 8/8
+  A8 - A3 (real vs upsampled pixels): -1.54 [-2.56, -0.60], wins 1/8
+  A0 - A2 (uniform vs mix, same budget): +22.68 [+16.71, +30.68], wins 8/8
+  A4 - A0 (RMFA vs uniform): -22.37 [-29.19, -16.36], wins 0/8
+  A8 - A0_6k (8k vs 6k uniform): +0.84 [-0.90, +2.47], wins 6/8
+  A0_12k - A8 (12k vs 8k uniform): -0.06 [-1.77, +1.40], wins 5/8
+  A0_16k - A0_12k (16k vs 12k uniform): +1.18 [-1.14, +3.91], wins 4/8
+
+vggt: 8 scenes, 10/10 arms complete
+arm        AUC@3  AUC@5  AUC@30  GFLOPs  tokens  size (sharp view)
+A1          0.49   1.98   18.75    9600    4156                mix
+A2          2.63   7.94   50.58    9600    4156                mix
+A4          0.99   3.09   31.09   15059    4156                mix
+A9          3.92  10.72   47.53   15059    4156                mix
+A3          4.53  10.69   49.96   22245    8124          upsampled
+A0          2.60   5.58   42.27    9593    4200            uniform
+A0_6k       5.97  11.75   57.80   15304    6108            uniform
+A8         10.55  21.92   68.60   22245    8124            uniform
+A0_12k     21.00  33.91   76.77   39257   12228            uniform
+A0_16k      9.18  19.62   67.36   59732   16260            uniform
+Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+  A8 - A2 (mix damage): +7.92 [+4.88, +10.93], wins 8/8
+  A2 - A1 (position alignment): +2.13 [+0.69, +3.73], wins 6/8
+  A8 - A3 (real vs upsampled pixels): +6.01 [+2.70, +9.96], wins 8/8
+  A0 - A2 (uniform vs mix, same budget): -0.02 [-2.02, +1.59], wins 6/8
+  A4 - A0 (RMFA vs uniform): -1.61 [-3.04, -0.26], wins 2/8
+  A8 - A0_6k (8k vs 6k uniform): +4.57 [+1.61, +7.48], wins 7/8
+  A0_12k - A8 (12k vs 8k uniform): +10.45 [+1.97, +22.02], wins 6/8
+  A0_16k - A0_12k (16k vs 12k uniform): -11.82 [-19.81, -5.30], wins 0/8
+
+Eight scenes only: intervals are wide. Compare directions and sizes of effects with
+reports/salvation/night-*.txt (7-Scenes), not small differences.

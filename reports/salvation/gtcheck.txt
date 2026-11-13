@@ -1,0 +1,14 @@
+7-Scenes precision diagnostic (70 fresh scene-draws, exploratory, not a gate)
+
+Rotation error against ground truth on well-matched pairs (at least 100 inliers), degrees:
+ focal  pairs  SIFT median  SIFT <1deg  Pi3 median  VGGT median  Pi3 A0+geo  VGGT A0+geo
+   500    348         1.86          6%        1.63         1.87        7.47         2.44
+   525    354         1.86          6%        1.64         1.90        8.12         2.78
+   550    355         1.90          6%        1.64         1.91        8.36         2.61
+   585    346         2.04          4%        1.63         1.90        7.88         2.39
+   620    346         2.21          3%        1.62         1.89        6.90         1.96
+
+Forward pass alone, A0 AUC@3: Pi3 9.36, VGGT 1.10
+Pi3/VGGT medians use the A0_7k poses on the same pairs. 'A0+geo' is AUC@3 after refinement.
+Reading: if SIFT's median error on its best pairs stays near or above 1 degree at every focal,
+the ground truth or calibration, not the methods, limits AUC@3 on this dataset.

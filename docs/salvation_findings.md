@@ -46,6 +46,6 @@ What angle C still needs before it can be written:
 F3 says Pi3's errors change with input size in a non-smooth way. If errors at different sizes are partly independent, running the same views at two cheap sizes and averaging the relative poses should beat one run at a large size. Two runs at 4k and 5k tokens cost 17.9k GFLOPs, less than one full-resolution run (18.7k).
 
 - **Free first test, no GPU:** every result file already stores `predicted_c2w` for A0, A0_5k, A0_6k, A0_7k and A8 on all 70 draws. Average relative rotations and translation directions across two or three of them offline and rescore.
-- **Pass rule (set now):** the best two-size ensemble beats the best single size at equal or higher compute (A0_7k, 14.36 on Pi3) with a bootstrap interval above zero on the fresh draws.
+- **Pass rule (as built in `scripts/salvation_ensemble.py`):** one pair fixed in advance, A0_5k + A0_7k, must beat the best single size that costs no more compute, with a bootstrap interval above zero on the fresh draws. Other ensembles are reported as exploratory.
 - **If it passes:** training-free method with a cost-accuracy win over the strongest baseline in this repo, motivated directly by angle C. If it fails, the offline hour cost nothing and angle C stands alone.
 - **Risk:** errors across sizes may be strongly correlated, in which case averaging gains little. This is untested.

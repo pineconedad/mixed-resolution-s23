@@ -1,6 +1,19 @@
 # Mixed-resolution S23
 
-## Start here: track D, the aspect-ratio check
+## Start here: resolution ensembling (offline, no GPU)
+
+Tracks A to D are done; the findings are collected in `docs/salvation_findings.md`. This test asks whether fusing poses predicted at two uniform input sizes beats one run at a larger size. It reads the poses the overnight run already stored, so it needs that PC but no GPU, and takes a few minutes.
+
+```powershell
+git pull
+.venv\Scripts\Activate.ps1
+python -m pytest -q tests/test_ensemble.py
+python scripts/salvation_ensemble.py --models pi3 vggt --push
+```
+
+Read `reports/salvation/ensemble.txt`. The verdict is `Gate E`: the pair fixed in advance (`A0_5k+A0_7k`) must beat the best single size that costs no more compute, with the bootstrap interval above zero. All other rows are exploratory.
+
+## Track D, the aspect-ratio check
 
 Track C failed on both models (`reports/salvation/night-*.txt`). Those runs showed Pi3 doing best at sizes that are exactly 4:3, while the study's sizes are slightly squeezed, and by different amounts for sharp (1.304) and small (1.25) views. Track D reruns A1, A2, A3, A8 and A0 on the same frames with exactly 4:3 sizes. It needs the overnight run's downloaded draws; about 30 minutes for Pi3.
 

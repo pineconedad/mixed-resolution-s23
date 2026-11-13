@@ -4,6 +4,8 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- TRACK D RESULT (reports/salvation/aspect.txt, 75 paired scene-draws per model): aspect lead is DEAD as an explanation of the mix failure. Mix damage (A8 - A2) is unchanged with exact 4:3 sizes: Pi3 7.34 -> 7.55, VGGT 5.41 -> 7.71. All arms gain 1-3 AUC@3 with the 4:3 sizes, but those sizes also carry more tokens, so the gain cannot be attributed to aspect.
+- STATE AFTER TRACKS A-D: no in-model method beats uniform resize at matched compute on Pi3 or VGGT. The only supported paper-1 claim is the negative result plus the four-cause decomposition. No further track is built or planned.
 - TRACK C RESULT (commit 613a4ea, 70 fresh scene-draws per model, all steps ok): Gate C FAILED on Pi3 and VGGT. A10 trails A3 by 7.1 AUC@3 on Pi3; kv pooling costs about 2. Uniform resize beats every in-model arm at matched compute on both models. Reports: reports/salvation/night-*.txt.
 - OPEN LEAD: Pi3 uniform curve is non-monotonic and peaks at exactly-4:3 sizes (A0_7k 14.36 > A8 12.64). Study sizes are anisotropic (sharp 1.304, small 1.25). Hypothesis only; VGGT curve is monotonic.
 - TRACK D BUILT, NOT RUN: `sizes` override in scripts/04_run.py and scripts/salvation_aspect.py. NEXT COMMAND (user, local GPU): `python scripts/salvation_aspect.py --models pi3 vggt --push`, then read reports/salvation/aspect.txt.

@@ -21,10 +21,9 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 | F11 | Logit bias for coarse tokens helps VGGT slightly, not Pi3 | A2_bias_both - A2: VGGT +0.78 [0.51, 1.06]; Pi3 +0.02 | Solid, small |
 | F12 | RMFA collapses coarse accuracy | A4 AUC@30: Pi3 72.4 vs A0 79.4; VGGT 49.3 vs 62.5 | Solid |
 | F13 | Exact 4:3 sizes score 1-3 points higher on every arm | Track D | Weak: token counts also rose |
+| F14 | Fusing predictions from several input sizes never beats the best member | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
 
 Dead hypotheses, for the record: damage lives only in frame attention; feature-scale drift; real pixels rescue RMFA on Pi3; keys can be pooled for free; aspect mismatch.
-
-| F14 | Fusing predictions from several input sizes never beats the best member | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
 
 ## 2. Candidate angles
 

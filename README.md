@@ -1,6 +1,17 @@
 # Mixed-resolution S23
 
-## Start here: coarse tokens, fine geometry (offline, no GPU)
+## Start here: ETH3D replication (GPU, about 1 to 1.5 hours)
+
+The geometry test failed, and its diagnostic (`reports/salvation/gtcheck.txt`) showed 7-Scenes cannot resolve rotations below roughly 1.6 to 2 degrees. Fine AUC@3 results from 7-Scenes therefore need checking on ETH3D, whose ground truth is laser-scanned. This downloads only the 96 seed-42 images (roughly 1 GB), then runs the mix arms and a uniform-size curve on Pi3 and then VGGT.
+
+```bash
+git pull
+python scripts/salvation_eth3d.py --push
+```
+
+Read `reports/salvation/eth3d.txt`. Pi3 runs first; `--hours 2` (the default) stops new work after two hours, and `--models pi3` runs Pi3 only. Do not commit or edit files while it runs.
+
+## Coarse tokens, fine geometry (offline, tested, failed)
 
 Resolution ensembling failed (`reports/salvation/ensemble.txt`). This test goes back to first principles: the cheapest forward pass already gets the coarse layout right, and extra tokens mostly buy precision. So take the cheapest pass (A0) and buy the precision with classical two-view geometry on the original full-resolution images instead. It reads the stored poses and the images already on the overnight PC. CPU only; expect about 20 to 40 minutes the first time (pair matches are cached afterwards).
 

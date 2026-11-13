@@ -28,6 +28,9 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 | F18 | On ETH3D, the same Pi3 collapses when sizes are mixed | A2 5.83 vs A0 28.51 at equal budget, 8/8 scenes; upsampling the small views restores 29.76 | 8 scenes; very large effect |
 | F19 | VGGT's accuracy peaks near its training width and falls on both sides | 2.6, 6.0, 10.6, 21.0, 9.2 at widths 322, 392, 448, 546, 630; last step -11.8, 0/8 wins | 8 scenes; large effect |
 | F20 | F2 and F3 (Pi3 non-monotonic on 7-Scenes) did not reproduce on ETH3D | Pi3 curve is flat there | Retract F2/F3 as general claims |
+| F21 | Pi3 has a resolution floor, then is flat | ETH3D uniform: 13.33 at 154x224; 26-29 at every size from 210x322 to 420x630 | 8 scenes |
+| F22 | For Pi3, mixing is worse than making every view small | A2 5.83 vs all views at 154x224 13.33: +7.50 [2.82, 12.72], 7/8 scenes | 8 scenes; interval excludes zero |
+| F23 | VGGT's peak is at its training width | ETH3D AUC@3 by width 224..630: 0.24, 2.60, 5.66, 10.55, 23.12 (504), 21.00, 14.06, 9.18 | 8 scenes; large effect |
 
 **Warning added after F16:** F2, F3, F11, F13 and F14 are AUC@3 effects measured only on 7-Scenes. Treat them as unconfirmed until replicated on ETH3D or ScanNet++.
 

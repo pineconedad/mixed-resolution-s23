@@ -4,6 +4,11 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- ACCURATE-DATASET RESULT (reports/salvation/accurate.txt, commit f9ce2cc): ETH3D only, 8 scenes, both models, 13/13 arms. ScanNet++ was SKIPPED (no licence receipt on the GPU machine); DA3 not attempted.
+  - Pi3 uniform curve: 13.33 at 154x224, then flat 26-29 from 210x322 to 420x630. So Pi3 has a floor below about 0.07 MP and is invariant above it.
+  - Pi3 mix is worse than making every view small: A2 5.83 vs all-small 13.33 (+7.50 [2.82, 12.72], 7/8). More pixels in four views makes the result worse.
+  - VGGT peak is at 336x504 (23.12), next to its 518 training width: 0.24 / 2.60 / 5.66 / 10.55 / 23.12 / 21.00 / 14.06 / 9.18 across widths 224 to 630. For VGGT the mix (2.63) beats all-small (0.24) but is far below the peak.
+- STILL NEEDED before any submission claim: a second accurate dataset (ScanNet++ needs the receipt copied to the GPU machine), more scenes or seeds, and the freeze procedure.
 - ACCURATE-DATASET RUN BUILT, NOT RUN: scripts/salvation_accurate.py. ETH3D and ScanNet++ (seed-42 development views, 8 and 20 scenes), Pi3 then VGGT, optional best-effort DA3. Arms: A1, A2, A3, A4, A8, A9 plus uniform sizes at the mix's small size, the manifest uniform size, and widths 392/504/546/588/630. Runner additions: explicit `uniform_hw` for A0 variants, an in-process image cache, `da3` accepted by the exploratory runner. NEXT COMMAND (user, GPU): `python scripts/salvation_accurate.py --push`, then read reports/salvation/accurate.txt.
 - NOT BUILT, deliberately: frozen seed-1000 runs. They require the freeze procedure (predictions and configs committed before any seed >= 1000 result); the arms and claims changed since that machinery was written, so it needs a new amendment first.
 - ETH3D RESULT (reports/salvation/eth3d.txt, commit 20014af, 8 scenes, seed 42, exploratory):

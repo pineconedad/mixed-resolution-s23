@@ -1,0 +1,47 @@
+Coarse tokens, fine geometry: pi3 (offline, exploratory, calibrated two-view step)
+
+Fresh draws (seeds 43+): 70 scene-draws
+size      GFLOPs  fwd AUC@3  +geo AUC@3       gain [95% interval]  fwd AUC@30  +geo AUC@30  pairs used
+A0          7613       9.36        7.88      -1.48 [-2.25, -0.74]       79.37        77.36        28%
+A0_5k      10299      12.66        9.88      -2.78 [-3.72, -1.88]       81.33        78.51        28%
+A0_6k      12966      11.70        9.39      -2.31 [-3.13, -1.49]       81.31        78.38        28%
+A0_7k      15161      14.36       10.91      -3.46 [-4.40, -2.54]       82.38        78.94        28%
+A8         18674      12.64        9.80      -2.84 [-3.67, -2.02]       81.86        78.61        28%
+Geometry step: 0.9 s CPU per scene-draw (12 images, 66 pairs), no transformer compute.
+
+Gate G (A0 + geometry vs best forward pass A0_7k, fixed in advance): FAIL. -6.48 AUC@3 [-7.86, -5.12], wins 4/70 (rule: interval above 0, and AUC@30 not reduced by more than 1).
+  AUC@30 change from geometry on A0: -2.00 [-2.82, -1.22]
+
+Seed 42: 5 scene-draws
+size      GFLOPs  fwd AUC@3  +geo AUC@3       gain [95% interval]  fwd AUC@30  +geo AUC@30  pairs used
+A0          7613       7.47        6.85      -0.63 [-2.73, +0.61]       80.03        78.25        21%
+A0_5k      10299      11.81        9.26      -2.55 [-4.90, -0.22]       81.74        79.34        21%
+A0_6k      12966      11.29        9.25      -2.05 [-4.74, +0.03]       82.15        79.62        21%
+A0_7k      15161      14.68       11.49      -3.19 [-6.25, -0.58]       82.85        80.11        21%
+A8         18674      13.17       10.25      -2.93 [-6.09, -0.57]       82.71        79.94        21%
+Geometry step: 0.8 s CPU per scene-draw (12 images, 66 pairs), no transformer compute.
+
+Coarse tokens, fine geometry: vggt (offline, exploratory, calibrated two-view step)
+
+Fresh draws (seeds 43+): 70 scene-draws
+size      GFLOPs  fwd AUC@3  +geo AUC@3       gain [95% interval]  fwd AUC@30  +geo AUC@30  pairs used
+A0          9295       1.10        2.39      +1.30 [+0.90, +1.72]       62.52        65.74        28%
+A0_5k      12614       2.42        3.69      +1.27 [+0.74, +1.80]       70.12        70.68        28%
+A0_6k      15925       3.71        4.46      +0.75 [+0.22, +1.28]       73.32        72.76        28%
+A0_7k      18658       5.61        5.92      +0.31 [-0.32, +0.93]       76.33        74.62        28%
+A8         23044       7.13        6.71      -0.42 [-1.09, +0.24]       77.83        75.47        28%
+Geometry step: 0.9 s CPU per scene-draw (12 images, 66 pairs), no transformer compute.
+
+Gate G (A0 + geometry vs best forward pass A8, fixed in advance): FAIL. -4.74 AUC@3 [-6.19, -3.46], wins 6/70 (rule: interval above 0, and AUC@30 not reduced by more than 1).
+  AUC@30 change from geometry on A0: +3.22 [+2.11, +4.31]
+
+Seed 42: 5 scene-draws
+size      GFLOPs  fwd AUC@3  +geo AUC@3       gain [95% interval]  fwd AUC@30  +geo AUC@30  pairs used
+A0          9295       0.37        2.68      +2.31 [+0.63, +4.00]       60.88        64.24        20%
+A0_5k      12614       2.07        3.89      +1.83 [+0.35, +3.31]       68.63        70.54        20%
+A0_6k      15925       3.17        5.04      +1.87 [+0.67, +3.08]       72.87        73.32        20%
+A0_7k      18658       5.71        6.76      +1.05 [+0.27, +2.16]       74.84        75.06        20%
+A8         23044       7.91        8.25      +0.34 [-1.13, +1.89]       77.98        77.61        20%
+Geometry step: 0.8 s CPU per scene-draw (12 images, 66 pairs), no transformer compute.
+
+Settings (fixed before any real image was processed): {'SIFT_FEATURES': 4000, 'RATIO': 0.8, 'RANSAC_PIXELS': 1.0, 'MIN_INLIERS': 30, 'MAX_ROTATION_DISAGREEMENT_DEG': 15.0, 'REFINED_WEIGHT': 3.0, 'COARSE_WEIGHT': 1.0}

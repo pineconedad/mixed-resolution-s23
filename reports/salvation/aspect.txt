@@ -1,0 +1,26 @@
+Track D: exact 4:3 sizes vs original sizes (exploratory)
+
+pi3: 75 paired scene-draws
+arm    orig AUC@3  4:3 AUC@3  change  orig AUC@30  4:3 AUC@30
+A1           1.43       1.56   +0.13        51.12       52.16
+A2           5.34       7.55   +2.21        74.45       75.49
+A3          12.27      14.70   +2.42        81.42       82.21
+A8          12.68      15.10   +2.43        81.92       82.70
+A0           9.23      12.60   +3.37        79.41       81.36
+
+Mix damage (A8 - A2), AUC@3: original sizes 7.34, exact 4:3 7.55
+Token counts differ between the two size sets (mix 4200 vs 4608, uniform 4032 vs 5184),
+so compare gaps between arms within a column, not one arm across columns.
+
+vggt: 75 paired scene-draws
+arm    orig AUC@3  4:3 AUC@3  change  orig AUC@30  4:3 AUC@30
+A1           0.51       0.75   +0.24        31.04       32.46
+A2           1.77       2.66   +0.90        63.36       65.17
+A3           4.04       5.85   +1.80        69.64       70.74
+A8           7.18      10.38   +3.20        77.84       79.79
+A0           1.05       2.40   +1.35        62.41       70.02
+
+Mix damage (A8 - A2), AUC@3: original sizes 5.41, exact 4:3 7.71
+Token counts differ between the two size sets (mix 4200 vs 4608, uniform 4032 vs 5184),
+so compare gaps between arms within a column, not one arm across columns.
+

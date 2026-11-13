@@ -1,0 +1,58 @@
+Accurate-ground-truth datasets: mix arms and uniform-size curve (seed 42, exploratory)
+
+eth3d / pi3: 8 scenes, 13/13 arms complete
+  mix arm     AUC@3  AUC@30  GFLOPs
+  A1           0.96   40.94    7869
+  A2           5.83   61.62    7869
+  A3          29.76   80.25   18035
+  A4           6.13   54.83   12645
+  A8          28.21   79.02   18035
+  A9           6.38   54.77   12645
+  uniform size   tokens  AUC@3  AUC@30  GFLOPs
+  154x224          2112  13.33   76.72    3657  <- the mix's small size
+  210x322          4140  28.51   82.53    7855
+  266x392          6384  26.26   79.64   13344
+  294x448          8064  28.21   79.02   18035  <- the mix's sharp size
+  336x504         10368  28.23   79.74   25276
+  364x546         12168  28.15   79.48   31583
+  392x588         14112  29.13   79.60   39036
+  420x630         16200  29.33   80.15   47783
+  Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+    A8 - A2 (mix damage): +22.39 [+16.79, +29.01], wins 8/8
+    A0_small - A2 (all views at the small size vs the mix): +7.50 [+2.82, +12.72], wins 7/8
+    A8 - A0_small (sharp size vs small size, uniform): +14.88 [+9.91, +20.41], wins 8/8
+    A0 - A2 (uniform vs mix at equal budget): +22.68 [+16.71, +30.68], wins 8/8
+    A4 - A0 (RMFA vs uniform): -22.37 [-29.19, -16.36], wins 0/8
+    A8 - A3 (real vs upsampled pixels): -1.54 [-2.56, -0.60], wins 1/8
+    A0_w546 - A8 (width 546 vs sharp size): -0.06 [-1.77, +1.40], wins 5/8
+    A0_w630 - A0_w546 (width 630 vs 546): +1.18 [-1.14, +3.91], wins 4/8
+
+eth3d / vggt: 8 scenes, 13/13 arms complete
+  mix arm     AUC@3  AUC@30  GFLOPs
+  A1           0.49   18.75    9600
+  A2           2.63   50.58    9600
+  A3           4.53   49.96   22245
+  A4           0.99   31.09   15059
+  A8          10.55   68.60   22245
+  A9           3.92   47.53   15059
+  uniform size   tokens  AUC@3  AUC@30  GFLOPs
+  154x224          2112   0.24   22.46    4438  <- the mix's small size
+  210x322          4140   2.60   42.27    9593
+  266x392          6384   5.66   57.13   16396
+  294x448          8064  10.55   68.60   22245  <- the mix's sharp size
+  336x504         10368  23.12   77.21   31320
+  364x546         12168  21.00   76.77   39257
+  392x588         14112  14.06   73.47   48663
+  420x630         16200   9.18   67.36   59732
+  Paired differences, AUC@3, mean [95% bootstrap interval over scenes]:
+    A8 - A2 (mix damage): +7.92 [+4.88, +10.93], wins 8/8
+    A0_small - A2 (all views at the small size vs the mix): -2.39 [-4.20, -0.89], wins 1/8
+    A8 - A0_small (sharp size vs small size, uniform): +10.31 [+6.60, +13.96], wins 8/8
+    A0 - A2 (uniform vs mix at equal budget): -0.02 [-2.02, +1.59], wins 6/8
+    A4 - A0 (RMFA vs uniform): -1.61 [-3.04, -0.26], wins 2/8
+    A8 - A3 (real vs upsampled pixels): +6.01 [+2.70, +9.96], wins 8/8
+    A0_w546 - A8 (width 546 vs sharp size): +10.45 [+1.97, +22.02], wins 6/8
+    A0_w630 - A0_w546 (width 630 vs 546): -11.82 [-19.81, -5.30], wins 0/8
+
+scannetpp: skipped, licence receipt env/scannetpp-permission.json is not on this machine.
+Small scene counts: read directions and large effects, not small differences.

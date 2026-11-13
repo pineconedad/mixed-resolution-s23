@@ -1,0 +1,806 @@
+{
+  "arm": "A3",
+  "auc3": 6.445564754398611,
+  "auc30": 76.82258712396961,
+  "auc5": 20.689674121074603,
+  "global_trace": [
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 1,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 3,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 5,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 7,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 9,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 11,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 13,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 15,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 17,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 19,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 21,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 23,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 25,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 27,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 29,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 31,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 33,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 35,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 37,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 39,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 41,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 43,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 45,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    },
+    {
+      "encoder_attention_quadratic": 5713200,
+      "encoder_patch_tokens": 8280,
+      "frame_attention_quadratic": 5796300,
+      "frame_block_count": 1,
+      "frame_total_tokens": 8340,
+      "global_attention_quadratic": 69555600,
+      "global_kv_tokens": 8340,
+      "group_shift": null,
+      "layer": 47,
+      "patch_tokens": 8280,
+      "special_tokens": 60,
+      "total_tokens": 8340
+    }
+  ],
+  "identity": "bf04a83d096014fcdca57dfeab6078b3a4268687afdc79660eeb6109d715fe3c",
+  "latency_s": 0.4465480969993223,
+  "pair_count": 66,
+  "peak_mem_gb": 10.840628147125244,
+  "predicted_c2w": [
+    [
+      [
+        0.9999972581863403,
+        -9.450054494664073e-05,
+        0.002346040215343237,
+        0.0005539547419175506
+      ],
+      [
+        9.415110253030434e-05,
+        1.0,
+        0.00014906008436810225,
+        4.095389522262849e-05
+      ],
+      [
+        -0.002346054185181856,
+        -0.00014883879339322448,
+        0.9999972581863403,
+        0.00045096452231518924
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.7370887398719788,
+        -0.5578166246414185,
+        0.38149794936180115,
+        -0.3104953169822693
+      ],
+      [
+        0.47375982999801636,
+        0.8290882110595703,
+        0.2969246506690979,
+        -0.12432785332202911
+      ],
+      [
+        -0.48192504048347473,
+        -0.03812144324183464,
+        0.8753828406333923,
+        0.25285232067108154
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.437223345041275,
+        -0.5100432634353638,
+        0.74073725938797,
+        -0.13972309231758118
+      ],
+      [
+        0.260803759098053,
+        0.8601474165916443,
+        0.438323974609375,
+        -0.11988425254821777
+      ],
+      [
+        -0.8607073426246643,
+        0.0015415465459227562,
+        0.5090976357460022,
+        0.8352621793746948
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.8100862503051758,
+        -0.039813898503780365,
+        -0.5849573612213135,
+        0.12218592315912247
+      ],
+      [
+        -0.07334159314632416,
+        0.9829742312431335,
+        -0.16847218573093414,
+        -0.010781567543745041
+      ],
+      [
+        0.5817055106163025,
+        0.1793787032365799,
+        0.7933738231658936,
+        0.48938214778900146
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.7165339589118958,
+        -0.3904019296169281,
+        0.5780704021453857,
+        -0.14988549053668976
+      ],
+      [
+        0.2956317663192749,
+        0.920566201210022,
+        0.2552641034126282,
+        -0.12521618604660034
+      ],
+      [
+        -0.6318076848983765,
+        -0.012009444646537304,
+        0.7750321626663208,
+        0.5661194324493408
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.12909924983978271,
+        -0.6652868390083313,
+        0.7353414297103882,
+        -0.1673680692911148
+      ],
+      [
+        0.20303238928318024,
+        0.743570864200592,
+        0.6370872855186462,
+        -0.11740752309560776
+      ],
+      [
+        -0.9706240892410278,
+        0.06705056875944138,
+        0.23106920719146729,
+        0.789928674697876
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.7419564723968506,
+        -0.551628053188324,
+        0.3810606896877289,
+        -0.3141219913959503
+      ],
+      [
+        0.4792253375053406,
+        0.8338342905044556,
+        0.2739773690700531,
+        -0.1165333166718483
+      ],
+      [
+        -0.4688750207424164,
+        -0.020665306597948074,
+        0.8830227851867676,
+        0.2259005457162857
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.9982030391693115,
+        -0.010568138211965561,
+        -0.0589829757809639,
+        0.01222902536392212
+      ],
+      [
+        0.010732119902968407,
+        0.9999393224716187,
+        0.002464054385200143,
+        0.007602714467793703
+      ],
+      [
+        0.058953359723091125,
+        -0.00309263844974339,
+        0.9982559084892273,
+        -0.07540193200111389
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.7414901852607727,
+        -0.5633388161659241,
+        0.36447474360466003,
+        -0.30224737524986267
+      ],
+      [
+        0.48453596234321594,
+        0.825334906578064,
+        0.28990909457206726,
+        -0.11200255155563354
+      ],
+      [
+        -0.4641307294368744,
+        -0.03836365044116974,
+        0.8849356174468994,
+        0.23779211938381195
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.3339255452156067,
+        -0.3491818308830261,
+        0.8755373954772949,
+        -0.24029043316841125
+      ],
+      [
+        0.2961443364620209,
+        0.9206849336624146,
+        0.25423964858055115,
+        -0.18132078647613525
+      ],
+      [
+        -0.8948699235916138,
+        0.1743883490562439,
+        0.4108484387397766,
+        0.6307821869850159
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.40340620279312134,
+        -0.6503477692604065,
+        0.6436700224876404,
+        -0.34984686970710754
+      ],
+      [
+        0.3852873742580414,
+        0.7587765455245972,
+        0.5251778364181519,
+        -0.06248242035508156
+      ],
+      [
+        -0.8299500942230225,
+        0.03613801300525665,
+        0.5566660761833191,
+        0.5897237658500671
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    [
+      [
+        0.9017226696014404,
+        -0.40962839126586914,
+        0.13820567727088928,
+        -0.14118190109729767
+      ],
+      [
+        0.2554894685745239,
+        0.7628225088119507,
+        0.5939923524856567,
+        -0.07392020523548126
+      ],
+      [
+        -0.3487425148487091,
+        -0.500306248664856,
+        0.7925101518630981,
+        0.5104040503501892
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  ],
+  "rotation_errors_deg": [
+    2.7002257942182215,
+    5.570359424970648,
+    0.9876055633380161,
+    3.373057732151368,
+    4.472971450586381,
+    2.6526781836065196,
+    0.7942496391724831,
+    2.646984178470533,
+    4.133763968156715,
+    3.664398849906997,
+    3.4560054410142995,
+    4.148028394403533,
+    3.3767098461542053,
+    1.8163586348943495,
+    2.9839354097643525,
+    1.0074700318385474,
+    2.900407563203992,
+    1.0574923744177989,
+    1.727820680341644,
+    2.500895836385372,
+    2.0120160041792268,
+    5.874755223583392,
+    2.440140891681299,
+    2.7506296501639396,
+    3.541092720638126,
+    5.300442334974941,
+    3.550823842631615,
+    2.699954150507924,
+    1.7778742431063144,
+    2.6606769734286084,
+    3.9063513537497356,
+    4.64654932313412,
+    3.2496946058281306,
+    0.816198278478822,
+    3.2159585946509552,
+    4.733639125211751,
+    3.97451427204416,
+    4.027493447421533,
+    2.46819667746096,
+    1.4407696398633607,
+    3.3116297929099936,
+    1.494438388023239,
+    1.4073766285178506,
+    0.6497523388044301,
+    0.790247415141674,
+    2.5837361784227615,
+    4.383768736836827,
+    2.504899281757589,
+    2.102427320487544,
+    2.1050318366812495,
+    2.9863462810779695,
+    2.564366318166868,
+    0.11612064232764356,
+    1.3757359873702613,
+    1.4512049396789928,
+    1.3631096680318802,
+    2.6763134231533923,
+    4.166079986967641,
+    3.3443882798983435,
+    3.3398074976999155,
+    1.4037107139848233,
+    1.4593753232541289,
+    1.449884987784287,
+    1.7728619291630205,
+    1.7869914482762426,
+    1.487810447507464
+  ],
+  "scene": "chess",
+  "status": "completed",
+  "timed_passes_s": [
+    0.44646541200017964,
+    0.45420510999974795,
+    0.4465480969993223
+  ],
+  "translation_errors_deg": [
+    1.9100230279003032,
+    7.906783809311858,
+    10.116444016023443,
+    2.109930719222762,
+    4.040014115854105,
+    3.1901572309742203,
+    33.11506152479047,
+    3.7774094871363477,
+    1.6242834229588539,
+    1.8137156224244029,
+    3.4707954176586067,
+    7.482125294510212,
+    12.700941576913513,
+    1.0802965513444829,
+    2.700799255286375,
+    39.112945329081704,
+    5.200575760784092,
+    79.52094455439787,
+    2.7279800884847187,
+    5.060315701845667,
+    0.8481074755138008,
+    2.718977664764398,
+    12.950105288730139,
+    52.53550564749301,
+    3.978389528515577,
+    2.9130669499305784,
+    4.4067425133098395,
+    16.700828503573373,
+    9.168762084353743,
+    10.41683399047675,
+    9.03072923239593,
+    1.9645262115078053,
+    13.071156277585448,
+    11.977512050060257,
+    14.075186505325524,
+    6.842106685662919,
+    6.985514181893058,
+    9.525311723191445,
+    6.003123991316898,
+    1.4883757558807327,
+    0.6865307246120481,
+    1.668264651844326,
+    6.416870288262161,
+    2.581204756904158,
+    4.7982478529081245,
+    0.6988689569291159,
+    0.5988400269555122,
+    0.9028048268216081,
+    9.244096185943585,
+    2.6824725594053955,
+    3.5293536264704284,
+    0.6175910010153607,
+    8.314159781181093,
+    2.4711790861581884,
+    2.0246772289508357,
+    3.653563150021435,
+    2.012383590193248,
+    2.3472527932853966,
+    2.565024466209495,
+    4.179988696406789,
+    2.005885165670095,
+    2.2378591533177166,
+    3.9121942117852,
+    6.3235668913049485,
+    7.944429261645556,
+    8.507313229430684
+  ],
+  "variant": "A3"
+}

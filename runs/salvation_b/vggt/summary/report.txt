@@ -1,0 +1,17 @@
+Salvation track B, vggt, 7scenes 5 scenes, seed 42 (exploratory)
+
+variant                 AUC@3  AUC@5  AUC@30   d vs A0  wins   lat s  mem GB  glob tok  shift
+A0                       0.37   3.11   60.88     +0.00     0   0.507   24.49      4092       
+A2                       3.05   9.35   65.98     +2.68     5   0.502   11.34      4260       
+A4                       1.33   4.64   50.74     +0.96     5   0.675   11.47      4260       
+A3                       4.50  15.63   68.46     +4.13     4   0.496   10.85      8340       
+A8                       7.91  21.74   77.98     +7.54     4   0.522   10.89      8340       
+A4_headhi                1.33   4.64   50.74     +0.96     5   0.728   10.93      4260       
+A5_headhi                2.08   7.95   62.31     +1.71     5   0.652   10.91      4260       
+A9                       2.31  10.71   68.58     +1.94     5   0.648   11.51      4260       
+A9_headhi                2.31  10.71   68.58     +1.94     5   0.670   10.89      4260       
+A9_headhi_bias           2.50  11.44   67.86     +2.13     5   0.847   10.93      4260       
+
+Gate B: PASS. Best candidate A9_headhi_bias: +2.13 AUC@3 vs A0, better in 5/5 scenes (rule: at least +2.0 and 4 scene wins).
+  Cost is NOT matched: A9_headhi_bias takes 1.67x the latency of A0. A pass here only earns the cost-matched comparison, it is not the claim.
+  The best of 3 candidates on five scenes is optimistic; confirm the single chosen variant on fresh development scenes before freezing.

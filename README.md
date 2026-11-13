@@ -1,6 +1,20 @@
 # Mixed-resolution S23
 
-## Start here: resolution ensembling (offline, no GPU)
+## Start here: coarse tokens, fine geometry (offline, no GPU)
+
+Resolution ensembling failed (`reports/salvation/ensemble.txt`). This test goes back to first principles: the cheapest forward pass already gets the coarse layout right, and extra tokens mostly buy precision. So take the cheapest pass (A0) and buy the precision with classical two-view geometry on the original full-resolution images instead. It reads the stored poses and the images already on the overnight PC. CPU only; expect about 20 to 40 minutes the first time (pair matches are cached afterwards).
+
+```bash
+git pull
+python -m pytest -q tests/test_refine.py tests/test_ensemble.py
+python scripts/salvation_geometry.py --models pi3 vggt --push
+```
+
+Read `reports/salvation/geometry.txt`. The verdict is `Gate G`: A0 plus geometry must beat the best single forward pass of any size, with the bootstrap interval above zero on the fresh draws, without lowering AUC@30 by more than 1. The `pairs used` column shows how many view pairs classical matching could handle; the rest keep the model's pose.
+
+This is the calibrated setting: the two-view step uses the dataset's known intrinsics, which the models do not get. A pass earns the fair version with the model's own predicted focal length (needs a GPU rerun that saves it).
+
+## Resolution ensembling (offline, tested, failed)
 
 Tracks A to D are done; the findings are collected in `docs/salvation_findings.md`. This test asks whether fusing poses predicted at two uniform input sizes beats one run at a larger size. It reads the poses the overnight run already stored, so it needs that PC but no GPU, and takes a few minutes.
 

@@ -112,3 +112,13 @@ The user allowed continued autonomous work. Download only ETH3D and 7-Scenes dev
 5. Both development archives download and verify locally: ETH3D 15101568883 bytes and 7-Scenes 3553806786 bytes, pinned DA3-BENCH revision cb98821d5d4f721704f11bafde0403826b82b638. They are not yet extracted/indexed for the larger study. No ScanNet++ license is assumed; no held-out data or seed>=1000 result is opened.
 6. At the report checkpoint, official CLI balance is 13.8291713412 USD. No GPU is running. The user's stopped pod and unattached network volume remain, with approximately $4.70/month combined storage at the documented rates. They were not deleted without authorization.
 7. The full S23 study is not complete. DA3 implementation/checkpoint selection, full common data preparation, A0 selection, the 24-configuration development sweep, frozen configs/predictions, frozen and extra-seed runs, reconstruction and mechanism probes remain. Historical T9 cannot be performed from absent old results; do not fabricate a pass.
+
+## 2026-11-13: HiRoom unsealed for exploratory development
+
+Decision by the user. Tracks A to G on RMFA-style methods all failed their pre-stated gates, and the 7-Scenes diagnostic showed its ground truth cannot resolve rotations below about 1.6 to 2 degrees. The surviving resolution-response findings rest on 8 ETH3D scenes, and ScanNet++ cannot be used on the GPU machine because its licence receipt is not there. HiRoom is the smallest verified archive with accurate ground truth, so it is used as a second development dataset.
+
+Consequences:
+
+- HiRoom is development data from this date. It must never be reported as held-out, and any future freeze amendment must list DTU as the only held-out set.
+- DTU stays sealed. The gates in `mixres/data/benchmark.py` are unchanged and still refuse HiRoom and DTU on the S23 path; HiRoom is read only by `scripts/salvation_hiroom_data.py`, behind the explicit `--unseal-hiroom` flag.
+- Only seed 42 views are drawn. No HiRoom result existed before this decision.

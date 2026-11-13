@@ -33,9 +33,9 @@ MIX = ["A1", "A2", "A3", "A4", "A8", "A9"]  # neighbours share decoded images
 RECEIPT = "env/scannetpp-permission.json"
 
 
-def build(dataset):
-    """Quick-runner manifest and arm list from the committed S23 seed-42 manifest. Same frames and sizes."""
-    source_path = ROOT / "runs/views/s23" / dataset / "seed42.json"
+def build(dataset, source_path=None):
+    """Quick-runner manifest and arm list from an S23-format seed-42 manifest. Same frames and sizes."""
+    source_path = source_path or ROOT / "runs/views/s23" / dataset / "seed42.json"
     source = read_json(source_path)
     identity = {"study": "salvation_accurate_views", "dataset": dataset, "seed": 42, "budget_tokens": BUDGET,
                 "source_sha256": file_hash(source_path)}
@@ -111,7 +111,10 @@ def table(dataset, model, scenes, curve):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--datasets", nargs="+", default=["eth3d", "scannetpp"], choices=list(ASPECT))
+    parser.add_argument("--datasets", nargs="+", default=["eth3d", "scannetpp"],
+                        choices=["eth3d", "scannetpp", "hiroom"])
+    parser.add_argument("--unseal-hiroom", action="store_true",
+                        help="required for hiroom: confirms it is now development data, not a held-out set")
     parser.add_argument("--models", nargs="+", default=["pi3", "vggt"], choices=["pi3", "vggt", "da3"])
     parser.add_argument("--hours", type=float, default=4.0)
     parser.add_argument("--push", action="store_true")
@@ -119,6 +122,22 @@ def main():
     night = Night(args.hours)
     plans, notes = [], []
     for dataset in args.datasets:
+        if dataset == "hiroom":
+            if not args.unseal_hiroom:
+                parser.error("hiroom was a sealed held-out set; pass --unseal-hiroom to use it as development data")
+            try:
+                import salvation_hiroom_data as hiroom
+                night.say("hiroom: downloading and verifying the 0.7 GB archive")
+                manifest, ASPECT["hiroom"] = hiroom.make_manifest(hiroom.fetch())
+                source = WORK / "views" / "hiroom-s23-seed42.json"
+                atomic_json(source, manifest)
+                notes.extend(f"hiroom: scene skipped, too few frames: {item}" for item in manifest["skipped_scenes"])
+                plans.append((dataset, *build(dataset, source)))
+                night.say(f"hiroom: {len(manifest['scenes'])} scenes ready")
+            except Exception as error:  # reported, never hidden; other datasets continue
+                notes.append(f"hiroom: skipped, preparation failed: {type(error).__name__}: {error}")
+                night.say(notes[-1])
+            continue
         if dataset == "scannetpp" and not (ROOT / RECEIPT).exists():
             notes.append(f"scannetpp: skipped, licence receipt {RECEIPT} is not on this machine.")
             night.say(notes[-1])

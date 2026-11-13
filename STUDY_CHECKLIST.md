@@ -4,6 +4,7 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- HIROOM UNSEALED BY USER DECISION 2026-11-13 (docs/decisions.md). It is development data now; DTU is the only remaining held-out set. Built, not run: scripts/salvation_hiroom_data.py (pinned archive download, SHA-256 check, seed-42 sampling mirroring make_manifest) wired into scripts/salvation_accurate.py behind `--unseal-hiroom`. Verified offline on a synthetic tree only; the real archive's layout, scene count and image sizes are unconfirmed. NEXT COMMAND (user, GPU): `python scripts/salvation_accurate.py --datasets eth3d hiroom --unseal-hiroom --push`.
 - ACCURATE-DATASET RESULT (reports/salvation/accurate.txt, commit f9ce2cc): ETH3D only, 8 scenes, both models, 13/13 arms. ScanNet++ was SKIPPED (no licence receipt on the GPU machine); DA3 not attempted.
   - Pi3 uniform curve: 13.33 at 154x224, then flat 26-29 from 210x322 to 420x630. So Pi3 has a floor below about 0.07 MP and is invariant above it.
   - Pi3 mix is worse than making every view small: A2 5.83 vs all-small 13.33 (+7.50 [2.82, 12.72], 7/8). More pixels in four views makes the result worse.

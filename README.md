@@ -1,6 +1,17 @@
 # Mixed-resolution S23
 
-## Start here: resolution response on accurate datasets (GPU, about 1.5 to 2 hours)
+## Start here: HiRoom as the second accurate dataset (GPU)
+
+ScanNet++ could not run (no licence receipt on the GPU machine), so the user unsealed HiRoom on 2026-11-13; see `docs/decisions.md`. It is development data from now on, not a held-out set. DTU stays sealed.
+
+```bash
+git pull
+python scripts/salvation_accurate.py --datasets hiroom --unseal-hiroom --push
+```
+
+This downloads and checksum-verifies the 0.7 GB archive, draws seed-42 views for every scene with at least 12 frames, and runs the same arms as on ETH3D for Pi3 then VGGT. The report `reports/salvation/accurate.txt` is rewritten with HiRoom only; the ETH3D numbers stay in git history (commit f9ce2cc) and in `STUDY_CHECKLIST.md`. To get both in one report, run with `--datasets eth3d hiroom --unseal-hiroom` (finished ETH3D scenes are skipped).
+
+## Resolution response on accurate datasets: ETH3D (done)
 
 The ETH3D replication (`reports/salvation/eth3d.txt`) showed Pi3 is indifferent to uniform resolution yet collapses when resolutions are mixed, and VGGT peaks near its 518 px training width. This run closes the open gaps: a uniform run at the mix's own small size, a finer size curve around 518, and a second dataset (ScanNet++, 20 scenes).
 

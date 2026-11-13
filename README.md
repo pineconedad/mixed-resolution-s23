@@ -1,6 +1,20 @@
 # Mixed-resolution S23
 
-## Start here: ETH3D replication (GPU, about 1 to 1.5 hours)
+## Start here: resolution response on accurate datasets (GPU, about 1.5 to 2 hours)
+
+The ETH3D replication (`reports/salvation/eth3d.txt`) showed Pi3 is indifferent to uniform resolution yet collapses when resolutions are mixed, and VGGT peaks near its 518 px training width. This run closes the open gaps: a uniform run at the mix's own small size, a finer size curve around 518, and a second dataset (ScanNet++, 20 scenes).
+
+```bash
+git pull
+python scripts/salvation_accurate.py --push
+```
+
+Read `reports/salvation/accurate.txt`. Order: Pi3 on both datasets, then VGGT. A failed step is logged and the rest continue; `--hours 4` is the default limit. Do not commit or edit files while it runs.
+
+- **ScanNet++** runs only if `env/scannetpp-permission.json` (the licence receipt) is on this machine; otherwise it is skipped and the report says so. Copy the receipt from the machine where the licence was accepted; do not recreate it.
+- **DA3 (optional, untested here):** add `--models pi3 vggt da3`. It first needs `git submodule update --init third_party/Depth-Anything-3` and `pip install omegaconf==2.3.0 addict==2.4.0 e3nn==0.5.6 plyfile==1.1 scikit-learn==1.6.1`. Its identity gate has not passed on current code, its adapter caps input width at 504, and the staged images live inside its source folder, which may trip the clean-source check. If any of that fails, DA3 is logged as failed and Pi3/VGGT results are unaffected.
+
+## ETH3D replication (done)
 
 The geometry test failed, and its diagnostic (`reports/salvation/gtcheck.txt`) showed 7-Scenes cannot resolve rotations below roughly 1.6 to 2 degrees. Fine AUC@3 results from 7-Scenes therefore need checking on ETH3D, whose ground truth is laser-scanned. This downloads only the 96 seed-42 images (roughly 1 GB), then runs the mix arms and a uniform-size curve on Pi3 and then VGGT.
 

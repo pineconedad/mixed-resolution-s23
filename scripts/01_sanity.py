@@ -25,7 +25,7 @@ def sanity(config, checkpoint):
     meta = provenance(config, config["views"], checkpoint)
     manifest = read_json(config["views"])
     validate_views(config, manifest)
-    adapter = load_adapter(config["model"], checkpoint, "cuda")
+    adapter = load_adapter(config["model"], Path(checkpoint).parent if config["model"] == "da3" else checkpoint, "cuda")
     comparisons = []
     with torch.inference_mode():
         for scene in manifest["scenes"][:2]:

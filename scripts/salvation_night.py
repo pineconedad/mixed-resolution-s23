@@ -47,7 +47,8 @@ class Night:
         WORK.mkdir(parents=True, exist_ok=True)
         self.log = (WORK / "log.txt").open("a", encoding="utf-8")
         self.env = dict(os.environ)
-        paths = [str(ROOT / "third_party/Pi3"), str(ROOT / "third_party/vggt"), str(ROOT)]
+        paths = [str(ROOT / "third_party/Pi3"), str(ROOT / "third_party/vggt"),
+                 str(ROOT / "third_party/Depth-Anything-3/src"), str(ROOT)]
         self.env["PYTHONPATH"] = os.pathsep.join(paths + [p for p in [os.environ.get("PYTHONPATH")] if p])
         self.env.update(CUBLAS_WORKSPACE_CONFIG=":4096:8", PYTHONHASHSEED="0", XFORMERS_DISABLED="1",
                         PYTHONIOENCODING="utf-8")

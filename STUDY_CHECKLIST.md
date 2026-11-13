@@ -4,6 +4,8 @@ Read this file first after interruption. Update it before provisioning, after a 
 
 ## Current checkpoint
 
+- ACCURATE-DATASET RUN BUILT, NOT RUN: scripts/salvation_accurate.py. ETH3D and ScanNet++ (seed-42 development views, 8 and 20 scenes), Pi3 then VGGT, optional best-effort DA3. Arms: A1, A2, A3, A4, A8, A9 plus uniform sizes at the mix's small size, the manifest uniform size, and widths 392/504/546/588/630. Runner additions: explicit `uniform_hw` for A0 variants, an in-process image cache, `da3` accepted by the exploratory runner. NEXT COMMAND (user, GPU): `python scripts/salvation_accurate.py --push`, then read reports/salvation/accurate.txt.
+- NOT BUILT, deliberately: frozen seed-1000 runs. They require the freeze procedure (predictions and configs committed before any seed >= 1000 result); the arms and claims changed since that machinery was written, so it needs a new amendment first.
 - ETH3D RESULT (reports/salvation/eth3d.txt, commit 20014af, 8 scenes, seed 42, exploratory):
   - Pi3 is resolution-invariant under uniform resize: AUC@3 28.5 / 27.4 / 28.2 / 28.2 / 29.3 at 4k / 6k / 8k / 12k / 16k tokens. The 7-Scenes non-monotonic Pi3 curve did NOT reproduce; treat F2/F3 as a 7-Scenes artifact.
   - Pi3 collapses under mixing: A2 5.83 vs A0 28.51 at the same budget (-22.7 [16.7, 30.7], 8/8). RMFA 6.13, A9 6.38. Pixel upsampling (A3 29.76) recovers everything.

@@ -26,7 +26,7 @@ from mixres.runtime import provenance, seed_everything, validate_views, sanity_p
 
 METHOD_KEYS = ("pool_op", "lift_op", "token_interp", "head_grid", "rmfa_layers")
 OPTIONAL_KEYS = ("alignment_scope", "position_scale", "calibrate", "logit_bias", "kv_pool")
-RUNNER_KEYS = ("uniform_budget",)  # A0 only: uniform size at another token budget
+RUNNER_KEYS = ("uniform_budget", "uniform_hw")  # A0 only: uniform size by token budget or explicit size
 
 
 def parse_variant(entry):
@@ -41,7 +41,7 @@ def parse_variant(entry):
     return name, arm, overrides
 
 
-def scene_views(views, arm, config, uniform_budget=None):
+def scene_views(views, arm, config, uniform_budget=None, uniform_hw=None):
     """A0 resizes every view to one size at the mix's nominal token budget (or uniform_budget)."""
     sizes = config.get("sizes")
     if sizes:
@@ -53,6 +53,9 @@ def scene_views(views, arm, config, uniform_budget=None):
                  "hi_hw": list(sizes["hi"])} for view in views]
     if arm != "A0":
         return views
+    if uniform_hw is not None:
+        return [{**view, "hw": list(uniform_hw), "hi_hw": list(uniform_hw), "sharp": True, "rho": 1.0}
+                for view in views]
     uniform = budget_sizes(uniform_budget or config["budget_tokens"], len(views), 0, 1.0,
                            config.get("aspect", 4 / 3))[0]
     return [{**view, "hw": list(uniform), "hi_hw": list(uniform), "sharp": True, "rho": 1.0}
@@ -66,7 +69,7 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
     salvation = config["study"].startswith("salvation_")
     # Salvation studies may use extra development draws; seeds from 1000 up belong to frozen runs.
     seed_allowed = 42 <= config["seed"] < 1000 if salvation else config["seed"] == 42
-    if (not salvation and config["study"] not in {"quick", "diagnostic", "alignment"}) or not seed_allowed or config["model"] not in {"pi3", "vggt"}:
+    if (not salvation and config["study"] not in {"quick", "diagnostic", "alignment"}) or not seed_allowed or config["model"] not in {"pi3", "vggt", "da3"}:
         raise RuntimeError("Only exploratory development is enabled; full-study prerequisites are not satisfied")
     if not torch.cuda.is_available():
         raise RuntimeError("Run on a CUDA GPU; no CPU or MPS substitution for research runs")
@@ -79,7 +82,9 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
     sanity = read_json(sanity_path(config))
     if sanity["status"] != "passed" or sanity["scope"] != f"{config['study']}-{config['model']}-fp32-T1" or sanity["provenance"] != meta:
         raise RuntimeError("Run 01_sanity.py with this exact code/config/checkpoint/GPU first")
-    adapter = load_adapter(config["model"], checkpoint, "cuda")
+    # DA3 loads from its checkpoint folder (config.json + weights); provenance still hashes the weights.
+    adapter = load_adapter(config["model"], Path(checkpoint).parent if config["model"] == "da3" else checkpoint, "cuda")
+    image_cache = {}
     started = time.monotonic()
 
     def identity_of(scene, name, arm_name, overrides):
@@ -136,12 +141,20 @@ def run(config, checkpoint, max_seconds=None, stop_file=None):
             record = {"scene": scene["scene"], "arm": arm_name, "variant": name, "identity": identity, "status": "failed"}
             try:
                 images = []
-                views = scene_views(scene["views"], arm_name, config, overrides.get("uniform_budget"))
+                views = scene_views(scene["views"], arm_name, config, overrides.get("uniform_budget"),
+                                    overrides.get("uniform_hw"))
                 for view in views:
                     path = Path(config["data_root"]) / view["image"]
                     if file_hash(path) != view["image_sha256"]:
                         raise RuntimeError(f"Image checksum mismatch: {path}")
-                    images.append(load_view(path, view, ARMS[arm_name].entry).cuda())
+                    # Same pixels for arms that share an entry and size; avoids re-decoding large photos.
+                    key = (str(path), tuple(view["hw"]), tuple(view["hi_hw"]), bool(view["sharp"]),
+                           "real" if view["sharp"] else ARMS[arm_name].entry)
+                    if key not in image_cache:
+                        if len(image_cache) >= 128:
+                            image_cache.pop(next(iter(image_cache)))
+                        image_cache[key] = load_view(path, view, ARMS[arm_name].entry)
+                    images.append(image_cache[key].cuda())
                 def forward():
                     autocast = torch.autocast("cuda", dtype=torch.bfloat16) if config["precision"] == "bf16" else nullcontext()
                     with torch.inference_mode(), autocast:

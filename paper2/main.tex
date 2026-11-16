@@ -1,0 +1,45 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[review]{cvpr}
+\input{preamble}
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+\usepackage[capitalize]{cleveref}
+\crefname{section}{Sec.}{Secs.}
+\Crefname{section}{Section}{Sections}
+\crefname{table}{Tab.}{Tabs.}
+\crefname{figure}{Fig.}{Figs.}
+
+\def\paperID{*****}
+\def\confName{CVPR}
+\def\confYear{2027}
+
+\title{Views or Pixels? How Feed-Forward 3D Models Fail on Mixed-Resolution Input,\\and How to Spend a Token Budget}
+\author{Anonymous CVPR submission\\\\Paper ID \paperID}
+
+\begin{document}
+\twocolumn[{%
+\renewcommand\twocolumn[1][]{#1}%
+\maketitle
+\vspace{-1.6em}
+\begin{center}
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig_teaser.pdf}
+  \captionof{figure}{\textbf{Mixed-resolution input breaks feed-forward 3D models, and for two of them the loss is mostly not missing information.} (a) One HiRoom scene given as 4 sharp views and 8 views at half resolution. (b) Pose accuracy (\auc, higher is better) over 19 HiRoom scenes. Fed as it is, the mix collapses for all three models. Aligning positions or correcting attention inside the model recovers a little. Upsampling the small views adds no information, yet brings \pithree and \dathree close to the result with all 12 views sharp. VGGT stays low at this token level whatever the input (\cref{sec:diagnosis}).}
+  \label{fig:teaser}
+\end{center}
+\vspace{0.8em}
+}]
+\input{sec/0_abstract}
+\input{sec/1_intro}
+\input{sec/2_related}
+\input{sec/3_setup}
+\input{sec/4_diagnosis}
+\input{sec/5_fixes}
+\input{sec/6_budget}
+\input{sec/7_discussion}
+{
+  \small
+  \bibliographystyle{ieeenat_fullname}
+  \bibliography{main}
+}
+\end{document}

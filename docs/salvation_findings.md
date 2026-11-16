@@ -21,7 +21,7 @@ Strength: **solid** = 70+ paired scene-draws with an interval excluding zero; **
 | F11 | Logit bias for coarse tokens helps VGGT slightly, not Pi3 | A2_bias_both - A2: VGGT +0.78 [0.51, 1.06]; Pi3 +0.02 | Solid, small |
 | F12 | RMFA collapses coarse accuracy | A4 AUC@30: Pi3 72.4 vs A0 79.4; VGGT 49.3 vs 62.5 | Solid |
 | F13 | Exact 4:3 sizes score 1-3 points higher on every arm | Track D | Weak: token counts also rose |
-| F14 | Fusing predictions from several input sizes never beats the best member | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
+| F14 | Fusing predictions from several input sizes never beats the best single size at no more compute (one Pi3 ensemble, A0_5k+A8 at 12.94, does exceed both its members) | 20 ensembles per model; best Pi3 pair 13.74 vs 14.36 alone; errors across sizes are correlated | Solid |
 | F15 | Classical two-view refinement lowers Pi3 accuracy and helps VGGT only at small sizes | Pi3 A0 9.36 -> 7.88; VGGT A0 1.10 -> 2.39; 28% of pairs matched | Solid |
 | F16 | 7-Scenes cannot resolve rotations below about 1.6-2 degrees | SIFT, Pi3 and VGGT all have 1.6-1.9 deg median error on the best-matched pairs, at any focal length | Solid for the floor; cause unverified |
 | F17 | On ETH3D, Pi3 is resolution-invariant under uniform resize | AUC@3 28.5, 27.4, 28.2, 28.2, 29.3 from 4k to 16k tokens (6x compute) | 8 scenes; consistent across 5 sizes |

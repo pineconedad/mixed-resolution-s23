@@ -1,0 +1,10 @@
+\section{How a model uses resolution}
+\label{sec:concept}
+
+We first state what we mean by a model's use of resolution. A view of $h\times w$ pixels becomes $(h/14)(w/14)$ tokens, and every stage of the network then works on those tokens. Higher resolution gives the model finer image evidence and more tokens to compute with, at a higher cost. We posit that a model's use of resolution has two measurable aspects.
+
+\paragraph{Response.} When every view of a scene is resized to the same size, accuracy should change smoothly with that size. A model that uses extra resolution well keeps improving until the images contain nothing more it can exploit, and then levels off. A model that has only learned to work at one size will peak at that size and degrade away from it, even when the larger input contains more information.
+
+\paragraph{Stage use.} A feed-forward 3D model is a pipeline: pixels go into an image encoder, the encoder's tokens pass through frame attention (within each view) and global attention (across views), and prediction heads read the result. If a stage does not need full resolution, lowering its resolution while the rest of the network keeps it should cost nothing. If a stage does need it, the loss shows how much. Because the stages feed each other, the losses need not add up; a stage can be necessary without being sufficient.
+
+These two aspects are not exhaustive, but they correspond to two practical questions: what input size to use, and where in the network compute can be saved.

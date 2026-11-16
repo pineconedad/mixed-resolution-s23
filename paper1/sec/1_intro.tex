@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:intro}
+
+Feed-forward multi-view models now recover cameras and dense geometry from a set of unposed images in a single forward pass~\cite{wang2024dust3r,leroy2024mast3r,wang2025vggt,wang2025pi3}. VGGT~\cite{wang2025vggt} and \pithree~\cite{wang2025pi3} cut each view into $14{\times}14$ patches, encode them with a vision transformer, and then alternate attention within each view and across all views. Every patch is a token, so the resolution of the input decides how much the model costs to run. Resolution is also the main knob a practitioner can turn without retraining: images can be resized before they enter the model, and recent work changes how tokens are produced or kept inside it~\cite{goodtoken2026,redt2026,hdvggt2026}.
+
+These choices rest on an assumption that is rarely tested: that more resolution helps, and that it helps everywhere in the network. If a model's accuracy saturates at some size, larger inputs only add cost. If one stage of the network can work at lower resolution without loss, that stage is where compute can be saved. If accuracy depends on a particular input size, comparisons between models at one size may say more about the size than about the models.
+
+The goal of this paper is to measure how these models use resolution. We consider two properties. The first is the model's \emph{response} to resolution: how its accuracy changes when every view is made larger or smaller. The second is \emph{where} resolution is used: which stages of the network lose accuracy when their own resolution is lowered while the rest of the network keeps full resolution. We study both with frozen weights. For the second, we design probes that lower the resolution at a single stage, for 8 of the 12 views of a scene, while holding everything else fixed (\cref{tab:probes}). This lets us attribute a loss in accuracy to a stage rather than to the input as a whole.
+
+Our experiments show the following.
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{The two models respond to resolution in opposite ways} (\cref{fig:response}). VGGT is most accurate near the 518\,px width it uses by default and loses much of its accuracy on either side of it. \pithree improves with resolution and then levels off. At one fixed size, VGGT can look nearly ten times worse than \pithree; at each model's best tested size, the gap is far smaller.
+  \item \textbf{Resolution is needed at more than one stage.} For \pithree, lowering the encoder's resolution alone, or global attention's alone, costs most of what lowering it everywhere costs. Restoring full resolution in the encoder and frame attention while global attention stays low recovers only 2--30\% of the loss.
+  \item \textbf{The models differ in whether they use fine pixel detail.} Removing detail above half resolution, while keeping the input size, does not hurt \pithree but costs VGGT 2.5 to 6 \auc.
+  \item \textbf{In global attention, queries need resolution more than keys.} Pooling only the keys and values of the reduced views costs about 2 \auc; pooling their queries as well costs about twice as much.
+  \item \textbf{Errors at different input sizes are correlated.} Fusing the poses predicted at two or three sizes never beats the best single size of no greater cost.
+  \item \textbf{7-Scenes has a precision floor.} Three unrelated pose estimators, including classical two-view geometry, agree with its ground truth only to about 1.6--2.2\textdegree{} on well-matched pairs, so differences in \auc on this dataset should be read with care.
+\end{itemize}

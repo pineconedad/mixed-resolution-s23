@@ -1,0 +1,14 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{What the findings imply.}
+Our results suggest four practical consequences. First, a feed-forward 3D model should be evaluated, and compared with others, across a range of input sizes or at its own best size; a single shared size can change a comparison between VGGT and \pithree by almost a factor of ten. Second, more pixels are not automatically better: VGGT degrades above its preferred size, and \pithree stops improving at a size that depends on the data, so larger inputs can add cost without adding accuracy. Third, methods that save compute inside these models should keep the image encoder and the queries of global attention at full resolution; reducing the keys and values of global attention costs less, though at 12 views it is not free. Fourth, fine pose comparisons need ground truth that is more precise than the threshold being measured, which 7-Scenes is not at 3\textdegree.
+
+\paragraph{Why do the models differ?}
+VGGT's narrow optimum is consistent with a model that has learned to work at one input size, and \pithree's plateau with one that tolerates a range of sizes. We did not examine the models' training procedures, and we do not establish the cause. Training with a range of input sizes would be the natural way to test it.
+
+\paragraph{Limitations.}
+We study two models; Depth Anything~3 and other recent models are not included. All results are exploratory: on ETH3D and HiRoom each scene has one draw of frames, with 8 and 19 scenes, and only 7-Scenes has repeated draws (70 scene-draws). Our probes lower resolution by a factor of 2 per side, for 8 of 12 views, while 4 views stay at full resolution, so they describe how a stage copes with lower resolution in part of the input, not a fully low-resolution stage. One probe lowers global attention and the heads' view of the probed views together, so it does not separate the two. We measure pose only, not reconstruction. We report bootstrap intervals for the comparisons for which we computed them and means otherwise. Our pose metric integrates the exact error distribution, so absolute values differ from those of other evaluation code.
+
+\paragraph{Conclusion.}
+We probed how VGGT and \pithree use input resolution. Their responses to resolution have opposite shapes: VGGT works well only near its default input size, while \pithree improves and then levels off. Inside the network, resolution is needed by both the image encoder and global attention, and in global attention more by the queries than by the keys. Their errors at different input sizes are largely shared, and on 7-Scenes the ground truth itself limits how precisely such effects can be measured. We hope these findings help choose input sizes, compare models fairly, and decide where compute can be saved.

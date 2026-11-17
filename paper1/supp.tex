@@ -59,6 +59,7 @@ before the models' own offset of one is added, and apply the same mapping in fra
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lccc@{}}
 \toprule
  & 7-Scenes & ETH3D & HiRoom \\
@@ -72,6 +73,7 @@ Scenes                  & 7 & 8 & 19 \\
 Frame draws per scene   & 10 (+1 development) & 1 & 1 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Inputs.} Sizes are height $\times$ width in pixels. Every scene has 12 views, 4 of which always stay at full resolution.}
 \label{tab:s_sizes}
 \end{table}
@@ -104,6 +106,7 @@ We estimate compute by counting the multiply-adds of the projection, attention a
 \begin{table*}[t]
 \centering\small
 \setlength{\tabcolsep}{4pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lccccccccc@{}}
 \toprule
  & & \multicolumn{4}{c}{\pithree} & \multicolumn{4}{c}{VGGT} \\
@@ -129,6 +132,7 @@ Uniform $280{\times}364$                 & 6{,}240 & 11.70 & 28.10 & 81.31 & 12{
 Uniform $294{\times}392$                 & 7{,}056 & 14.36 & 31.64 & 82.38 & 15{,}161 & 5.61 & 17.11 & 76.33 & 18{,}658 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{All 7-Scenes results} (70 scene-draws, seeds 43--52). ``Enc.\ tokens'' is the number of patch tokens the encoder processes over all 12 views; uniform inputs are listed by their common size, and Full resolution is the same as uniform $322{\times}420$. ``Global lowered, detail removed'' combines the two probes. ``+ logit bias'' adds the bias of the Keys lowered probe to the lowered views' keys in both frame and global attention. GFLOPs follow \cref{sec:s_flops}.}
 \label{tab:s_7s}
 \end{table*}
@@ -136,6 +140,7 @@ Uniform $294{\times}392$                 & 7{,}056 & 14.36 & 31.64 & 82.38 & 15{
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{2.5pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcc@{}}
 \toprule
 Difference in \auc & \pithree & VGGT \\
@@ -153,6 +158,7 @@ Encoder lowered vs Detail removed        & 2 & 19 \\
 Keys lowered vs Full                     & 25 & 21 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Paired differences on 7-Scenes} (70 scene-draws), mean and 95\% bootstrap interval. The last comparison sets the encoder-lowered probe, which runs the encoder on 4{,}200 tokens, against a uniform input with a similar encoder cost (4{,}032 tokens).}
 \label{tab:s_diff}
 \end{table}
@@ -160,6 +166,7 @@ Keys lowered vs Full                     & 25 & 21 \\
 \begin{table*}[t]
 \centering\small
 \setlength{\tabcolsep}{4pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
  & & \multicolumn{3}{c}{\pithree} & \multicolumn{3}{c}{VGGT} \\
@@ -182,6 +189,7 @@ Uniform $392{\times}588$               & 14{,}112 & 29.13 & 79.60 & 39{,}036 & 1
 Uniform $420{\times}630$               & 16{,}200 & 29.33 & 80.15 & 47{,}783 & 9.18 & 67.36 & 59{,}732 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{All ETH3D results} (8 scenes, one draw). ``Tokens'' counts patch tokens over all 12 views at the input. Full resolution is also the uniform $294{\times}448$ point of Fig.~1 in the main paper.}
 \label{tab:s_eth}
 \end{table*}
@@ -189,6 +197,7 @@ Uniform $420{\times}630$               & 16{,}200 & 29.33 & 80.15 & 47{,}783 & 9
 \begin{table*}[t]
 \centering\small
 \setlength{\tabcolsep}{4pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
  & & \multicolumn{3}{c}{\pithree} & \multicolumn{3}{c}{VGGT} \\
@@ -211,6 +220,7 @@ Uniform $588{\times}588$               & 21{,}168 & 63.02 & 95.23 & 71{,}680 & 3
 Uniform $630{\times}630$               & 24{,}300 & 61.16 & 94.91 & 88{,}980 & 19.56 & 84.90 & 112{,}136 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{All HiRoom results} (19 scenes, one draw).}
 \label{tab:s_hir}
 \end{table*}
@@ -218,6 +228,7 @@ Uniform $630{\times}630$               & 24{,}300 & 61.16 & 94.91 & 88{,}980 & 1
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{2.5pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}llcc@{}}
 \toprule
  & Difference in \auc & \pithree & VGGT \\
@@ -238,6 +249,7 @@ Uniform $630{\times}630$               & 24{,}300 & 61.16 & 94.91 & 88{,}980 & 1
  & 630 $-$ 546 (uniform)        & $-2.27$ \ci{-5.51}{1.06} & $-21.95$ \ci{-28.31}{-15.53} \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Paired differences on ETH3D and HiRoom}, mean and 95\% bootstrap interval over scenes. Uniform inputs are named by their width in pixels; ``Full'' is the full-resolution input of each dataset.}
 \label{tab:s_diff_acc}
 \end{table}
@@ -249,11 +261,12 @@ Three observations in these tables are not discussed in the main paper. First, o
 \section{Additional probes}
 \label{sec:s_extra}
 
-During development we ran further variants on the 5 seed-42 7-Scenes scenes. They are too few to support conclusions on their own, and we report them only to document the choices made for the main probes (\cref{tab:s_dev}).
+During development we ran further variants on the 5 seed-42 7-Scenes scenes. \Cref{fig:s_cameras} shows what the main probes do to the predicted cameras of one of these scenes. They are too few to support conclusions on their own, and we report them only to document the choices made for the main probes (\cref{tab:s_dev}).
 
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
  & \multicolumn{2}{c}{\pithree} & \multicolumn{2}{c}{VGGT} \\
@@ -273,9 +286,17 @@ All lowered                                  & 5.63 & 74.31 & 3.05 & 65.98 \\
 All lowered, positions not mapped            & 1.48 & 49.50 & 0.59 & 30.34 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Development probes on the 5 seed-42 scenes of 7-Scenes} (chess, fire, heads, office, pumpkin). These scenes were used to build the probes and are excluded from the main results.}
 \label{tab:s_dev}
 \end{table}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig_cameras.pdf}
+  \caption{\textbf{Predicted camera layouts under the probes}, one development scene (7-Scenes \emph{Heads}, seed 42), seen from above. Open circles are the ground-truth camera centres; filled markers are the predicted ones after a similarity alignment to the ground truth, with squares for the 4 anchor views and circles for the 8 probed views; grey lines join each prediction to its ground truth. Removing fine detail leaves \pithree's layout unchanged and moves several of VGGT's cameras; lowering every stage displaces the probed views; without position mapping the layout breaks down for both models. This scene was used during development and is shown only as an illustration.}
+  \label{fig:s_cameras}
+\end{figure*}
 
 \paragraph{Heads.}
 The \emph{Global lowered} probe also lets the heads read the 8 views at half resolution. Letting the heads read the full-resolution tokens instead gives nearly identical results for both models (8.64 against 8.69 \auc for \pithree, 2.31 for VGGT in both cases), so the loss attributed to this probe comes from global attention rather than from the heads.
@@ -296,6 +317,7 @@ One explanation for the cost of lowering resolution is that tokens from lower-re
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
  & \multicolumn{2}{c}{\pithree} & \multicolumn{2}{c}{VGGT} \\
@@ -310,6 +332,7 @@ logit bias, frame and global           & 6.83 & 77.34 & 3.40 & 68.43 \\
 statistics matched + logit bias        & 3.24 & 61.43 & 2.70 & 55.57 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Corrections based on token statistics and attention mass}, on the 5 development scenes. ``Read only'' applies the matching to the tokens global attention reads but passes the original tokens on.}
 \label{tab:s_stats}
 \end{table}
@@ -324,6 +347,7 @@ To fuse predictions made at several input sizes, we align each prediction's came
 \begin{table}[t]
 \centering\scriptsize
 \setlength{\tabcolsep}{2pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 Sizes fused (tokens) & \auc & GFLOPs & vs best single at $\le$ cost \\
@@ -359,6 +383,7 @@ Sizes fused (tokens) & \auc & GFLOPs & vs best single at $\le$ cost \\
 6k+7k+8k        & 5.42 & 57{,}627 & $-1.71$ \ci{-2.25}{-1.25} \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Fusing predictions from several input sizes} (7-Scenes, 70 scene-draws). Sizes are named by their token count: 4k $=224{\times}294$, 5k $=252{\times}336$, 6k $=280{\times}364$, 7k $=294{\times}392$, 8k $=322{\times}420$. The last column compares each ensemble with the most accurate single size whose compute is not higher (for \pithree always the 7k input, 14.36 \auc; for VGGT the 7k input for the cheapest ensemble and the 8k input, 7.13 \auc, for all others). For VGGT we list the cheapest ensemble, the ensemble fixed in advance and the four ensembles closest to the best single size; all 20 are significantly worse.}
 \label{tab:s_ens}
 \end{table}
@@ -378,6 +403,7 @@ For every pair of the 12 views in each of the 70 scene-draws, we detected up to 
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}cccccc@{}}
 \toprule
 Focal & Pairs & SIFT median & SIFT ${<}1^\circ$ & \pithree median & VGGT median \\
@@ -389,6 +415,7 @@ Focal & Pairs & SIFT median & SIFT ${<}1^\circ$ & \pithree median & VGGT median 
 620 & 346 & 2.21 & 3\% & 1.62 & 1.89 \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Rotation error against the 7-Scenes ground truth on well-matched pairs} (degrees, 70 scene-draws). The pair set changes slightly with the assumed focal length because the inlier count does.}
 \label{tab:s_gt}
 \end{table}
@@ -401,6 +428,7 @@ We also used the classical estimates to refine each model's predicted poses. A p
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{2.5pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
  & \multicolumn{2}{c}{\pithree \auc} & \multicolumn{2}{c}{VGGT \auc} \\
@@ -414,6 +442,7 @@ $294{\times}392$ & 14.36 & 10.91 \ci{-4.40}{-2.54} & 5.61 & 5.92 \ci{-0.32}{0.93
 $322{\times}420$ & 12.64 & 9.80 \ci{-3.67}{-2.02} & 7.13 & 6.71 \ci{-1.09}{0.24} \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Refining predicted poses with classical two-view geometry} (7-Scenes, 70 scene-draws). Intervals are for the difference between refined and model poses.}
 \label{tab:s_geo}
 \end{table}

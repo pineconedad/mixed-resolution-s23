@@ -15,6 +15,7 @@ We use the published weights of VGGT-1B~\cite{wang2025vggt} and \pithree~\cite{w
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3pt}
+\begin{adjustbox}{max width=\linewidth}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
 Probe & Pixels & Encoder & Frame att. & Global att. \\
@@ -27,6 +28,7 @@ Global lowered         & full & full & full & half$^\ddagger$ \\
 All lowered            & half & half & half & half \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \caption{\textbf{Probes.} Each probe changes the resolution of one or more stages for 8 of the 12 views of a scene; the other 4 views stay at full resolution throughout. ``half$\uparrow$'': the image is reduced to half resolution and upsampled back, so the encoder receives a full-size image without its fine detail. $^\dagger$The encoder's half-resolution tokens are interpolated to the full grid. $^\ddagger$The views' tokens are pooled to half resolution before each global-attention block and the block's update is interpolated back; the prediction heads read these views at half resolution. All probes that use half-resolution positions map them onto the full-resolution grid.}
 \label{tab:probes}
 \end{table}

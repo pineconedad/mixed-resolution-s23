@@ -36,3 +36,14 @@ Paper 1 uses reduced-resolution views only as a probing tool: lower the resoluti
 - The repository's own relative-pose AUC (exact empirical CDF), not the DA3 benchmark histogram AUC.
 - Intervals are reported only where they were computed; other differences are means.
 - Correction found while drafting: one of the 20 resolution ensembles on π³ (A0_5k + A8, 12.94) does exceed both members (12.66, 12.64). The claim is therefore "no ensemble beats the best single size at no more compute", not "no ensemble beats its members".
+
+## Narrative (added for the submission version)
+
+The results are told as a chain of questions, each raised by the previous answer:
+1. Response: does accuracy rise and saturate with input size? No: VGGT peaks and falls, so size itself matters to the network.
+2. Stages: which stages depend on it? The encoder and global attention both do; π³ does not use fine pixel detail.
+3. Queries vs keys: global attention is the costly stage that needs resolution; keys tolerate lowering better than queries.
+4. Correlated errors: can errors at several cheap sizes be averaged away? No, they are shared.
+5. Benchmark precision: why was 7-Scenes irregular throughout? Its ground truth has a ~2° floor.
+
+Figures: Fig. 1 response curves, Fig. 2 stage probes (both in the main paper), Fig. S1 predicted camera layouts (supplement). All drawn from data in this repository by `scripts/`.

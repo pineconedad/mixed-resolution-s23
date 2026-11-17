@@ -4,7 +4,7 @@
 \subsection{Response to input resolution}
 \label{sec:response}
 
-We begin with the most direct question: what happens to accuracy when every view is made larger or smaller? If more pixels simply meant more information, accuracy should rise and then saturate for both models. \Cref{fig:response} shows pose accuracy when all 12 views of a scene are resized to one size, on ETH3D and HiRoom.
+We begin with the most direct question: what happens to accuracy when every view is made larger or smaller? If more pixels simply meant more information, accuracy should rise and then saturate for both models. \Cref{fig:response} shows pose accuracy when all 12 views of a scene are resized to one size, on ETH3D and HiRoom. We test eight sizes per dataset, from the half-resolution size used by our probes up to a width of 630\,px, which brackets the 518\,px width VGGT uses by default. All 12 views keep their native positions, so this experiment involves no probe.
 
 \paragraph{VGGT has a narrow optimum.}
 On both datasets VGGT is most accurate at a width of 504\,px, the tested size closest to the 518\,px it uses by default, where it reaches 23.1 \auc on ETH3D and 45.5 on HiRoom. Larger inputs make it worse even though they contain more detail: at 588--630\,px it loses 31--60\% of that accuracy, and the step from 546 to 630\,px alone costs 11.8 \auc on ETH3D \ci{-19.8}{-5.3} and 22.0 on HiRoom \ci{-28.3}{-15.5}, with the larger input better in 0 of 8 and 1 of 19 scenes. Smaller inputs cost more: at 392--448\,px VGGT loses 54--76\% of its best accuracy. VGGT therefore works well only in a narrow band of input sizes around the one it uses by default.

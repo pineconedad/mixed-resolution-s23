@@ -46,4 +46,4 @@ The results are told as a chain of questions, each raised by the previous answer
 4. Correlated errors: can errors at several cheap sizes be averaged away? No, they are shared.
 5. Benchmark precision: why was 7-Scenes irregular throughout? Its ground truth has a ~2° floor.
 
-Figures: Fig. 1 response curves, Fig. 2 stage probes (both in the main paper), Fig. S1 predicted camera layouts (supplement). All drawn from data in this repository by `scripts/`.
+Figures: Fig. 1 response curves, Fig. 2 real input views of one ETH3D scene (from the contact sheet in reports/data), Fig. 3 stage probes (all in the main paper), Fig. S1 predicted camera layouts (supplement). All drawn from data in this repository by `scripts/`.

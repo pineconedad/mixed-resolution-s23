@@ -78,6 +78,12 @@ Frame draws per scene   & 10 (+1 development) & 1 & 1 \\
 \label{tab:s_sizes}
 \end{table}
 
+\paragraph{Operating range of the probes.}
+The full resolution of every dataset (\cref{tab:s_sizes}) is below the 504\,px width at which VGGT is most accurate (Fig.~1 of the main paper), and VGGT's accuracy at these sizes is correspondingly low. VGGT's probe results therefore describe how it uses resolution below its preferred input size; we did not repeat the probes at its preferred size. For \pithree, the full resolution lies on or near the plateau of its response on ETH3D, and below it on HiRoom.
+
+\paragraph{Which probes ran where.}
+All probes ran on 7-Scenes. On ETH3D and HiRoom we ran the probes and input sizes of \cref{tab:s_eth,tab:s_hir}, which together fitted into the single GPU session available for these two datasets; the encoder and key probes were not repeated there.
+
 \paragraph{Frame sampling.}
 On 7-Scenes, each draw picks 12 frames uniformly at random from one sequence of a scene (\texttt{seq-01}, or \texttt{seq-02} for Stairs), using the draw's seed. Frames that had been used during the development of our probes (seed 42) or that are reserved for later frozen evaluations are excluded from the draws. The 10 draws used in the main paper have seeds 43 to 52. ETH3D and HiRoom use one draw per scene. On ETH3D, 3 of the 11 scenes (\emph{pipes}, \emph{relief} and \emph{relief\_2}) have too few eligible frames for our sampling and are left out; on HiRoom, 11 of the 30 scenes have fewer than 12 frames and are left out.
 
@@ -468,5 +474,8 @@ Each failure removed one explanation of where the models use resolution, and tog
 \label{sec:s_repro}
 
 The code accompanying this paper contains the stage decomposition and probes, the identity check, the data preparation for all three datasets, the configuration file of every probe, and the scripts that produce each table here from the stored per-scene results. Every result file records the code version, the configuration, the frames used with their checksums, the checkpoint and its checksum, and the GPU, and the runner refuses to overwrite a result produced under a different configuration. A full run of all experiments in this paper takes several hours on one RTX 5090.
+
+\paragraph{Figures.}
+Every figure is drawn by a script from stored results, without manual editing. Fig.~1 of the main paper plots the uniform-size rows of \cref{tab:s_eth,tab:s_hir}. Fig.~2 shows the 12 input views of the ETH3D \emph{courtyard} scene, cut from a contact sheet of the exact inputs of our ETH3D runs, with the anchors taken from the stored list of views. Fig.~3 plots the probe rows of \cref{tab:s_7s,tab:s_eth,tab:s_hir}. \Cref{fig:s_cameras} plots the camera poses predicted in the development runs, stored with each result, against the ground-truth poses of the same views.
 
 \end{document}

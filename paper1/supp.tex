@@ -24,7 +24,7 @@
 
 \appendix
 
-\noindent This supplement gives the implementation details behind the probes (\cref{sec:s_impl}), the complete results from which the main paper's numbers are taken (\cref{sec:s_full}), additional probes (\cref{sec:s_extra}), the hypotheses we tested and rejected (\cref{sec:s_rejected}), the full analysis of 7-Scenes' precision (\cref{sec:s_floor}), how the study developed and which of our pre-stated tests failed (\cref{sec:s_history}), and how to reproduce the results (\cref{sec:s_repro}). Probe names follow Tab.~1 of the main paper.
+\noindent This supplement gives the implementation details behind the probes (\cref{sec:s_impl}), the complete results from which the main paper's numbers are taken (\cref{sec:s_full}), additional probes (\cref{sec:s_extra}), the hypotheses we tested and rejected (\cref{sec:s_rejected}), the full analysis of 7-Scenes' precision (\cref{sec:s_floor}), and how to reproduce the results (\cref{sec:s_repro}). Probe names follow Tab.~1 of the main paper.
 
 %--------------------------------------------------------------------
 \section{Implementation}
@@ -45,13 +45,15 @@ All probes act on the same 8 of the 12 views; the 4 views chosen by farthest-poi
   \item \textbf{All lowered}: the 8 views enter at half resolution and stay there through every stage.
 \end{itemize}
 
+Lowering a stage's resolution inside a network that otherwise runs at full resolution requires resampling tokens between the two grids. The \emph{Encoder lowered} probe interpolates the encoder's tokens up to the full grid, and the \emph{Global lowered} probe pools tokens down and interpolates the blocks' updates back up. The loss each probe measures therefore covers both the stage's lower resolution and this resampling; the probes cannot separate the two.
+
 \paragraph{Positions.}
 Both models give each patch a 2D rotary position from its row and column index. When a view's tokens sit on the half-resolution grid while other views are at full resolution, we map the zero-based index $p$ of each axis to
 \begin{equation}
   \tilde p = \rho\,p,\qquad \rho=2,
   \label{eq:s_pos}
 \end{equation}
-before the models' own offset of one is added, and apply the same mapping in frame attention, global attention and the heads. Rotary embeddings accept fractional positions; with $\rho=2$ all mapped positions are integers. The probe \emph{All lowered, positions not mapped} omits this mapping.
+before the models' own offset of one is added, and apply the same mapping in frame attention, global attention and the heads. Rotary embeddings accept fractional positions; with $\rho=2$ all mapped positions are integers. Because image sizes are rounded to multiples of 14\,px, the half-resolution grid is not always exactly half the full one: on 7-Scenes the height goes from 23 to 12 patches and on ETH3D from 21 to 11 (\cref{tab:s_sizes}). Along these axes, \cref{eq:s_pos} places the outermost half-resolution patches up to about 2\% of the image height away from the corresponding full-resolution positions. The probe \emph{All lowered, positions not mapped} omits this mapping.
 
 \subsection{Inputs}
 \Cref{tab:s_sizes} lists the image sizes. Images are resized to the target size as a whole, without cropping, so the aspect ratio changes slightly; for example, 7-Scenes' $480{\times}640$ frames become $322{\times}420$, a width-to-height ratio of 1.30 instead of 1.33. \Cref{sec:s_rejected} shows that this does not explain our findings.
@@ -85,21 +87,21 @@ The full resolution of every dataset (\cref{tab:s_sizes}) is below the 504\,px w
 All probes ran on 7-Scenes. On ETH3D and HiRoom we ran the probes and input sizes of \cref{tab:s_eth,tab:s_hir}, which together fitted into the single GPU session available for these two datasets; the encoder and key probes were not repeated there.
 
 \paragraph{Frame sampling.}
-On 7-Scenes, each draw picks 12 frames uniformly at random from one sequence of a scene (\texttt{seq-01}, or \texttt{seq-02} for Stairs), using the draw's seed. Frames that had been used during the development of our probes (seed 42) or that are reserved for later frozen evaluations are excluded from the draws. The 10 draws used in the main paper have seeds 43 to 52. ETH3D and HiRoom use one draw per scene. On ETH3D, 3 of the 11 scenes (\emph{pipes}, \emph{relief} and \emph{relief\_2}) have too few eligible frames for our sampling and are left out; on HiRoom, 11 of the 30 scenes have fewer than 12 frames and are left out.
+On 7-Scenes, each draw picks 12 frames uniformly at random from one sequence of a scene (\texttt{seq-01}, or \texttt{seq-02} for Stairs), using the draw's seed. Frames that had been used during the development of our probes (seed 42) or that are reserved for a separate held-out evaluation are excluded from the draws. The 10 draws used in the main paper have seeds 43 to 52. ETH3D and HiRoom use one draw per scene. On ETH3D, 3 of the 11 scenes (\emph{pipes}, \emph{relief} and \emph{relief\_2}) have too few eligible frames for our sampling and are left out; on HiRoom, 11 of the 30 scenes have fewer than 12 frames and are left out.
 
 \subsection{Metric}
-For each pair of views $(i,j)$, $i<j$, let $R$ and $t$ be the relative rotation and translation from view $i$ to view $j$ computed from the camera-to-world poses. The rotation error $e^R_{ij}$ is the angle of $R_{\mathrm{pred}}R_{\mathrm{gt}}^\top$, and the translation error $e^t_{ij}$ is the angle between the predicted and ground-truth translation directions, ignoring sign, so it lies in $[0^\circ,90^\circ]$. With $e_{ij}=\max(e^R_{ij},e^t_{ij})$ and $F$ the empirical distribution of these errors over all pairs (66 for 12 views),
+For each pair of views $(i,j)$, $i<j$, let $R$ and $t$ be the relative rotation and translation from view $i$ to view $j$ computed from the camera-to-world poses. The rotation error $e^R_{ij}$ is the angle of $R_{\mathrm{pred}}R_{\mathrm{gt}}^\top$, and the translation error $e^t_{ij}$ is the angle between the predicted and ground-truth translation directions, ignoring sign, so it lies in $[0^\circ,90^\circ]$; a predicted translation of zero length is assigned $90^\circ$. With $e_{ij}=\max(e^R_{ij},e^t_{ij})$, let $e_{(1)}\le\dots\le e_{(n)}$ be the sorted errors over all $n$ pairs (66 for 12 views), and let $\hat F$ be the piecewise-linear function through the points $(0,0)$ and $(e_{(k)},k/n)$ for every $e_{(k)}<\tau$, held constant from the last such point to $\tau$. Then
 \begin{equation}
-  \mathrm{AUC@}\tau \;=\; \frac{100}{\tau}\int_0^{\tau} F(e)\,de ,
+  \mathrm{AUC@}\tau \;=\; \frac{100}{\tau}\int_0^{\tau} \hat F(e)\,de ,
 \end{equation}
-computed exactly from the sorted errors. A pair whose ground-truth translation had zero length would have no defined direction and would be excluded from every probe alike.
+evaluated with the trapezoidal rule. This is the definition behind every number in the paper and in this supplement. The main paper describes the metric as integrating the exact empirical error distribution; more precisely, it integrates this linear interpolation of it, which gives slightly higher values than integrating the step-shaped empirical distribution (for example 29.9 instead of 29.1 for 66 errors drawn at random). All probes are scored with the same definition on the same frames, so the differences between them, and the conclusions drawn from them, do not depend on this choice. A pair whose ground-truth translation had zero length would have no defined direction and would be excluded from every probe alike.
 
 \subsection{Statistics}
-All comparisons are paired: two probes are run on the same frames and their per-scene (or per-scene-draw) scores are subtracted. We resample these differences with replacement 10{,}000 times and report the 2.5th and 97.5th percentiles of the resampled means. Where it helps, we also report how many scenes favour each side. On 7-Scenes, the 70 scene-draws are treated as independent units; draws of the same scene share the scene, so the intervals may be somewhat narrower than intervals that account for this grouping would be.
+All comparisons are paired: two probes are run on the same frames and their per-scene (or per-scene-draw) scores are subtracted. We resample these differences with replacement 10{,}000 times and report the 2.5th and 97.5th percentiles of the resampled means. Where it helps, we also report how many scenes favour each side. We do not correct the intervals for multiple comparisons; our conclusions rest on large effects or on effects that repeat across datasets, not on single borderline intervals. On 7-Scenes, the 70 scene-draws are treated as independent units; draws of the same scene share the scene, so the intervals may be somewhat narrower than intervals that account for this grouping would be.
 
 \subsection{Compute estimate}
 \label{sec:s_flops}
-We estimate compute by counting the multiply-adds of the projection, attention and MLP layers of the encoder (24 layers, width 1{,}024) and of every frame- and global-attention block, at 2 floating-point operations per multiply-add, and exclude the prediction heads. For a layer with $N$ tokens in total and $N_v$ tokens in view $v$, projections and the MLP cost $12Nd^2$ multiply-adds and attention costs $2\sum_v N_v^2 d$ in frame attention or $2N\,N_{\mathrm{kv}}d$ in global attention, where $N_{\mathrm{kv}}$ is the number of keys. These estimates depend only on token counts. Our runs also recorded latencies, but some of them contain outliers we could not explain (for example 5.4\,s for one VGGT input size against 1.3\,s and 0.4\,s for the neighbouring sizes), so we do not use them.
+We estimate compute by counting the multiply-adds of the projection, attention and MLP layers of the encoder (24 layers, width 1{,}024) and of every frame- and global-attention block, at 2 floating-point operations per multiply-add, and exclude the prediction heads. For a layer with $N$ tokens in total and $N_v$ tokens in view $v$, projections and the MLP cost $12Nd^2$ multiply-adds and attention costs $2\sum_v N_v^2 d$ in frame attention or $2N\,N_{\mathrm{kv}}d$ in global attention, where $N_{\mathrm{kv}}$ is the number of keys. These estimates depend only on the number of patch tokens; register and camera tokens are not counted. Our runs also recorded latencies, but some of them contain outliers we could not explain (for example 5.4\,s for one VGGT input size against 1.3\,s and 0.4\,s for the neighbouring sizes), so we do not use them.
 
 \paragraph{Hardware and software.} All runs used one NVIDIA RTX 5090, PyTorch 2.8 with CUDA 12.8, and bfloat16 autocast; the identity checks used 32-bit precision.
 
@@ -261,7 +263,7 @@ Uniform $630{\times}630$               & 24{,}300 & 61.16 & 94.91 & 88{,}980 & 1
 \end{table}
 
 \paragraph{What the complete tables add.}
-Three observations in these tables are not discussed in the main paper. First, on 7-Scenes the encoder-lowered probe is worse for \pithree than a uniform input with a similar encoder cost ($-4.18$ \auc, \cref{tab:s_diff}), but better for VGGT ($+1.47$); for VGGT, the uniform $224{\times}294$ input is far from its preferred size, which is consistent with Fig.~1 of the main paper. Second, on every dataset VGGT's \emph{Global lowered, detail removed} probe is much worse than either change alone (for example 0.99 \auc on ETH3D, against 3.92 and 4.53), whereas for \pithree the combination costs no more than lowering global attention. Third, \aucc follows \auc in most comparisons, but not in all: for \pithree, \emph{Global lowered} has a lower \aucc than \emph{All lowered} on ETH3D (54.8 against 61.6), but a higher one on HiRoom (80.3 against 76.7).
+Three observations in these tables are not discussed in the main paper. First, on 7-Scenes the encoder-lowered probe is worse for \pithree than a uniform input with a similar encoder cost ($-4.18$ \auc, \cref{tab:s_diff}), but better for VGGT ($+1.47$); for VGGT, the uniform $224{\times}294$ input is far from its preferred size, which is consistent with Fig.~1 of the main paper. Second, on every dataset VGGT's \emph{Global lowered, detail removed} probe is much worse than either change alone (for example 0.99 \auc on ETH3D, against 3.92 and 4.53), whereas for \pithree the combination costs about the same as lowering global attention alone. Third, \aucc follows \auc in most comparisons, but not in all: for \pithree, \emph{Global lowered} has a lower \aucc than \emph{All lowered} on ETH3D (54.8 against 61.6), but a higher one on HiRoom (80.3 against 76.7).
 
 %--------------------------------------------------------------------
 \section{Additional probes}
@@ -397,7 +399,7 @@ Sizes fused (tokens) & \auc & GFLOPs & vs best single at $\le$ cost \\
 One \pithree ensemble exceeds both of its members: 5k+8k reaches 12.94 \auc against 12.66 and 12.64, a gain of 0.28 for which we did not compute an interval. Every other ensemble lies between its members or below them.
 
 \subsection{Aspect ratio}
-Resizing frames without cropping changes their aspect ratio slightly, and differently for full- and half-resolution views (on 7-Scenes, 1.30 and 1.25 instead of 1.33). To check that this does not explain the cost of lowered resolution, we repeated the uniform, full-resolution and lowered inputs with sizes that are exactly 4:3 on 7-Scenes ($336{\times}448$ full, $168{\times}224$ half, $252{\times}336$ uniform), on the 75 scene-draws including the development scenes. The loss from lowering every stage (Full $-$ All lowered) was 7.34 \auc for \pithree with the original sizes and 7.55 with exact 4:3 sizes; for VGGT it was 5.41 and 7.71. The loss is not smaller with exact sizes, so the aspect change does not explain it. All inputs scored 1--3 \auc higher with the exact sizes, but those sizes also carry more tokens (for example 4{,}608 instead of 4{,}200 for the lowered input), so this gain cannot be attributed to the aspect ratio.
+Resizing frames without cropping changes their aspect ratio slightly, and differently for full- and half-resolution views (on 7-Scenes, 1.30 and 1.25 instead of 1.33). To check that this does not explain the cost of lowered resolution, we repeated the uniform, full-resolution and lowered inputs with sizes that are exactly 4:3 on 7-Scenes ($336{\times}448$ full, $168{\times}224$ half, $252{\times}336$ uniform), on the 75 scene-draws including the development scenes. The loss from lowering every stage (Full $-$ All lowered) was 7.34 \auc for \pithree with the original sizes and 7.55 with exact 4:3 sizes; for VGGT it was 5.41 and 7.71. The loss is not smaller with exact sizes, so the aspect change does not explain it. Every input scored higher with the exact sizes, by 0.1 to 3.4 \auc, but those sizes also carry more tokens (for example 4{,}608 instead of 4{,}200 for the lowered input), so this gain cannot be attributed to the aspect ratio.
 
 %--------------------------------------------------------------------
 \section{7-Scenes precision}
@@ -426,7 +428,7 @@ Focal & Pairs & SIFT median & SIFT ${<}1^\circ$ & \pithree median & VGGT median 
 \label{tab:s_gt}
 \end{table}
 
-The error of the classical estimate hardly depends on the assumed focal length, so an error in the nominal intrinsics alone does not explain it. Lens distortion, misregistration between the colour camera and the depth camera from which the poses were tracked, or errors in the tracked poses themselves would all produce a floor of this kind; we did not determine which.
+The error of the classical estimate hardly depends on the assumed focal length, so an error in the nominal intrinsics alone does not explain it. Lens distortion, misregistration between the colour camera and the depth camera from which the poses were tracked, or errors in the tracked poses themselves would all produce a floor of this kind. So would properties of the images that limit every estimator alike, such as motion blur or weak texture; keeping only pairs with at least 100 inlier matches reduces this possibility but does not rule it out. Our experiment cannot separate these causes. What it does show is that three different estimators agree with the 7-Scenes ground truth only to about 2\textdegree{} on well-matched pairs, so differences in \auc on this dataset that correspond to rotation differences of this size should be read with care.
 
 \paragraph{Refining the models' poses with two-view geometry.}
 We also used the classical estimates to refine each model's predicted poses. A pair estimate is accepted if it has at least 30 inliers and its rotation is within 15\textdegree{} of the model's; accepted pairs replace the model's relative rotation and translation direction, and all pairs are fused back into one set of poses by rotation averaging and a least-squares solve for the camera centres, in which accepted pairs constrain only the direction between two cameras and keep the model's distance. With no accepted pair, the output equals the model's poses. These thresholds were fixed before any real image was processed. Only 28\% of pairs were accepted. \Cref{tab:s_geo} shows that refinement lowers \pithree's \auc at every input size and its \aucc by 2.0 to 3.4, while it raises VGGT's \auc at the three smallest sizes, where VGGT is far from its preferred size. A classical estimate is thus not more accurate than \pithree against this ground truth.
@@ -452,22 +454,6 @@ $322{\times}420$ & 12.64 & 9.80 \ci{-3.67}{-2.02} & 7.13 & 6.71 \ci{-1.09}{0.24}
 \caption{\textbf{Refining predicted poses with classical two-view geometry} (7-Scenes, 70 scene-draws). Intervals are for the difference between refined and model poses.}
 \label{tab:s_geo}
 \end{table}
-
-%--------------------------------------------------------------------
-\section{How the study developed}
-\label{sec:s_history}
-
-This study began as an attempt to design a training-free change to these models that would let them process some views at lower resolution without losing accuracy. We report how it developed because it explains the probes and because several of our pre-stated tests failed.
-
-Our first design fed the lowered views to the encoder upsampled to full size, ran frame attention at full resolution, and let global attention read them at half resolution; this is the \emph{Global lowered, detail removed} probe of \cref{tab:s_7s}. On the 5 development scenes, it was better than lowering every stage for \pithree (8.40 against 5.63 \auc, \cref{tab:s_dev}) and worse for VGGT (1.33 against 3.05). We then wrote down, before running them, a sequence of tests, each with a numeric pass rule:
-\begin{itemize}[nosep,leftmargin=*]
-  \item \textbf{Zero-cost corrections} (\cref{tab:s_stats}): pass if the best correction improved the lowered input by at least 2 \auc and in at least 4 of 5 scenes. It failed for both models (best: $+1.20$ for \pithree, $+0.35$ for VGGT).
-  \item \textbf{Real pixels with global attention lowered}: pass if it beat a uniform input of the same nominal budget by at least 2 \auc in at least 4 of 5 scenes. It failed for \pithree ($+1.21$, 2 of 5 scenes) and passed for VGGT ($+2.13$, 5 of 5), but on the 70 fresh scene-draws VGGT's \emph{Global lowered} input (3.28) is below the uniform $280{\times}364$ input of similar compute (3.71), so we did not pursue it.
-  \item \textbf{Encoder lowered, with and without keys lowered}, on the 70 fresh draws: pass if within 1 \auc of the \emph{Detail removed} input, significantly better than a uniform input of no lower compute, and at most 2 \aucc below the smallest uniform input. Both failed for both models (\cref{tab:s_7s,tab:s_diff}).
-  \item \textbf{Fusing predictions across sizes}: pass if the fixed pair 5k+7k beat the best single size at no more compute with an interval above zero. It failed for both models (\cref{tab:s_ens}).
-  \item \textbf{Refining poses with two-view geometry}: pass if the smallest input plus refinement beat the best single input. It failed for both models (\cref{tab:s_geo}).
-\end{itemize}
-Each failure removed one explanation of where the models use resolution, and together they led to the probing study in the main paper. All results above, including the failed tests, use the same code, data and metric as the main paper.
 
 %--------------------------------------------------------------------
 \section{Reproducing the results}
